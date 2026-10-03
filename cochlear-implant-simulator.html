@@ -95,6 +95,17 @@
     .choices b { margin-right: 4px; }
     .choices button.on { background: var(--accent); color: var(--onAccent); border-color: var(--accent); font-weight: bold; }
 
+    /* The four "Sound from" choices: a 2-by-2 grid of tiles, clearly different from the round buttons inside each choice */
+    #sourceTabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    #sourceTabs b { grid-column: 1 / -1; margin: 0; }
+    #sourceTabs button { border-radius: 12px; padding: 11px 8px; text-align: center; border-width: 2px; }
+    [id^="source-"] { margin-top: 12px; padding: 10px 14px 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--page); }
+    .contrast [id^="source-"] { border-width: 2px; }
+    [id^="source-"] > p:first-child { margin-top: 0; }
+    .youtubeRow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .youtubeRow input[type=text] { flex: 1 1 180px; }
+    .youtubeRow button { white-space: nowrap; }
+    [id^="source-"] details ul { margin: 4px 0; padding-left: 20px; }
     .top      { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
     .top .panel { flex: 1; min-width: 300px; margin-bottom: 0; }
     .videoPanel { flex: 0 0 300px !important; min-width: 300px; text-align: center; }
@@ -1258,12 +1269,7 @@
     let steps;
     if (ON_THE_WEB) {
       link.placeholder = 'Paste a YouTube link';
-      steps = ['Paste a YouTube link here:',
-               'Click this button. The video opens in a small window called "YouTube video for the simulator".',
-               'Come back to this page and click this button. In the box Chrome shows, click the tab named <b>YouTube video for the simulator</b>, '
-               + 'keep "Also share tab audio" switched on, and click Share.',
-               'Use the play and 10-second skip buttons under the video on this page. If you hear nothing, look at the small video window '
-               + 'and make sure the YouTube player is <b>not muted</b> and its volume slider is all the way up.'];
+      steps = [];      // online, the steps are replaced by one box and one button (built just below)
     } else {
       // Opened as a file from a computer: YouTube will not play inside the page, so there is nothing to connect
       link.hidden = true;
@@ -1277,14 +1283,53 @@
     youtubeSteps.innerHTML = steps.map((step) => '<li>' + step + '</li>').join('');
 
     // Put the link box and the Connect button inside the steps they belong to
-    // Online there are two buttons, because Chrome allows only one of "open a window" and "share a tab" per click
-    const openButton = document.createElement('button');
-    openButton.textContent = 'Open the video';
+    // Online: one link box and ONE button that changes as you go:
+    //   "Open the video"  ->  "Connect the sound"  ->  "Disconnect"
+    // (Chrome allows only one of "open a window" and "share a tab" per click, so it takes two clicks.)
+    const openButton = document.createElement('button');     // these two are never shown; the one button below runs them
+    const youtubeButton = document.createElement('button');
+    const youtubeHint = document.createElement('p');
+    youtubeHint.className = 'hint';
     if (ON_THE_WEB) {
-      youtubeSteps.children[0].append(link);
-      youtubeSteps.children[1].append(openButton);
-      youtubeSteps.children[2].append(connectButton);
+      const row = document.createElement('div');
+      row.className = 'youtubeRow';
+      row.append(link, youtubeButton);
+      youtubeSteps.before(row, youtubeHint);
+      youtubeSteps.hidden = true;
+      connectButton.hidden = true;
+      const help = document.createElement('details');
+      help.className = 'hint';
+      help.innerHTML = '<summary>Not working?</summary>'
+        + '<ul><li>In the box Chrome shows, pick the tab named <b>YouTube video for the simulator</b>, and keep "Also share tab audio" switched on.</li>'
+        + '<li>If you hear nothing, look at the small video window and make sure the YouTube player is not muted and its volume is all the way up.</li>'
+        + '<li>If no small window opens, allow pop-ups for this page with the icon at the right end of the address bar.</li></ul>';
+      youtubeHint.after(help);
+      youtubeButton.onclick = async () => {
+        if (tabStream) stopYouTube();
+        else if (videoWindow && !videoWindow.closed) await connectButton.onclick();
+        else openButton.onclick();
+        showYouTubeStep();
+      };
+      setInterval(showYouTubeStep, 1000);     // notices when the small window is closed by hand
     }
+
+    // Make the one button and its hint match where things stand
+    function showYouTubeStep() {
+      if (!ON_THE_WEB) return;
+      const windowOpen = videoWindow !== null && !videoWindow.closed;
+      if (tabStream) {
+        youtubeButton.textContent = 'Disconnect';
+        youtubeHint.textContent = '';
+      } else if (windowOpen) {
+        youtubeButton.textContent = 'Connect the sound';
+        youtubeHint.innerHTML = 'The video is open in a small window. Now click <b>Connect the sound</b>, choose <b>YouTube video for the simulator</b> in the box Chrome shows, and click Share.';
+      } else {
+        youtubeButton.textContent = 'Open the video';
+        youtubeHint.textContent = 'Paste a YouTube link, then click Open the video.';
+      }
+      youtubeButton.classList.toggle('playing', windowOpen && !tabStream);    // highlighted while it is waiting for the second click
+    }
+    showYouTubeStep();
 
     openButton.onclick = () => {
       const videoId = youtubeIdFrom(link.value);
@@ -1293,7 +1338,7 @@
       videoPlaying = false;
       videoWindow = window.open(location.pathname + '?youtube=' + encodeURIComponent(videoId), 'simulatorVideo', 'width=854,height=480');
       if (!videoWindow) say('Chrome blocked the video window. Allow pop-ups for this page (the icon at the right end of the address bar), then click Open the video again.');
-      else say('The video is open in its own small window. Now come back to this page and click Connect YouTube.');
+      else say('');
     };
 
     // Pull the video's ID out of any kind of YouTube link
@@ -1394,7 +1439,7 @@
       }
 
       // The video has to be open in its own small window first, so that the buttons on this page can control it
-      if (!videoWindow || videoWindow.closed) { say('First paste a YouTube link and click Open the video. Then click Connect YouTube.'); return; }
+      if (!videoWindow || videoWindow.closed) { say('First paste a YouTube link and click Open the video.'); return; }
 
       stopYouTube(true);      // keep the video window that is open
       stopMicrophone();
@@ -1469,6 +1514,7 @@
 
     // Disconnect YouTube (also runs when you click "Stop sharing" in Chrome)
     function stopYouTube(keepWindow) {
+      setTimeout(showYouTubeStep, 0);
       if (!keepWindow) {
         if (videoWindow && !videoWindow.closed) videoWindow.close();
         videoWindow = null;
@@ -1516,8 +1562,8 @@
     // The choice is remembered on this computer, and shared with the hearing loss page.
     const themeChoice = document.getElementById('themeChoice');
     const textChoice  = document.getElementById('textChoice');
-    function remember(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* not allowed here */ } }
-    function recall(key)          { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    function remember(key, value) { try { localStorage.setItem(key, value); } catch (E) { /* not allowed here */ } }
+    function recall(key)          { try { return localStorage.getItem(key); } catch (E) { return null; } }
     function showLook() {
       document.body.classList.toggle('dark', themeChoice.value === 'dark');
       document.body.classList.toggle('contrast', themeChoice.value === 'contrast');
@@ -1564,7 +1610,7 @@
     if (location.protocol === 'file:' && !new URLSearchParams(location.search).get('youtube')) {
       const offline = document.createElement('p');
       offline.textContent = 'You opened this page as a file on your computer. The built-in recordings will be silent here, because they only work when the page is online. '
-                          + 'Your own files, YouTube and the microphone still work.';
+                          + 'Your own files and the microphone still work.';
       offline.style.cssText = 'margin: 0 0 12px 0; padding: 10px 16px; border-radius: 14px; border: 2px solid #c79a00; background: #fff4c2; color: #111; font-weight: bold;';
       document.body.insertBefore(offline, document.body.firstChild);
     }
