@@ -1210,7 +1210,12 @@
 
     // ----- Sound sources -----
     const sourceTabs = document.querySelectorAll('#sourceTabs button');
+    let sourceShown = '';           // which "Sound from" tile is chosen
+    let builtInChosen = false;      // has a built-in recording been picked yet?
+    let transportReady = false;     // are the play and skip buttons under the video drawn yet?
     function showSource(name) {
+      sourceShown = name;
+      if (transportReady) showButtons();
       sourceTabs.forEach((tab) => {
         tab.classList.toggle('on', tab.dataset.source === name);
         document.getElementById('source-' + tab.dataset.source).hidden = tab.dataset.source !== name;
@@ -1232,6 +1237,7 @@
     // Play or pause a built-in recording (with no name given: whichever one is loaded)
     function playClip(name) {
       startAudio();
+      builtInChosen = true;
       name = name || clipChosen;
       if (name !== clipChosen) { clipChosen = name; storyClip.src = BUILT_IN[name]; }
       else if (!storyClip.paused) { storyClip.pause(); return; }
@@ -1383,15 +1389,30 @@
 
     // ----- Play, pause and skip buttons (work for files and for YouTube) -----
 
+    // What the play and skip buttons under the video control right now: 'youtube', 'file', 'builtin', or nothing (null).
+    // They only run a built-in recording once someone has chosen "Built-in recordings" and picked one.
+    function transportTarget() {
+      if (controllingYouTube()) return 'youtube';
+      if (tabStream) return null;
+      const inGame = document.body.classList.contains('game');
+      if ((sourceShown === 'story' || inGame) && builtInChosen) return 'builtin';
+      if (sourceShown === 'file' && player.src) return 'file';
+      if (player.src && !player.paused) return 'file';       // something is already playing: keep control of it
+      if (!storyClip.paused) return 'builtin';
+      return null;
+    }
+
     playButton.onclick = () => {
-      if (controllingYouTube()) { startAudio(); tellVideo(videoPlaying ? 'pause' : 'play'); }
-      else if (player.src) { if (player.paused) player.play(); else player.pause(); }
-      else playClip();
+      const target = transportTarget();
+      if (target === 'youtube') { startAudio(); tellVideo(videoPlaying ? 'pause' : 'play'); }
+      else if (target === 'file') { if (player.paused) player.play(); else player.pause(); }
+      else if (target === 'builtin') playClip();
     };
 
     function skip(seconds) {
-      if (controllingYouTube()) tellVideo('skip', seconds);
-      else { const clip = player.src ? player : storyClip; clip.currentTime = clip.currentTime + seconds; }
+      const target = transportTarget();
+      if (target === 'youtube') tellVideo('skip', seconds);
+      else if (target) { const clip = target === 'file' ? player : storyClip; clip.currentTime = clip.currentTime + seconds; }
     }
     backButton.onclick    = () => skip(-10);
     forwardButton.onclick = () => skip(10);
@@ -1419,15 +1440,19 @@
     // Keep the buttons' pictures and on/off state up to date
     function showButtons() {
       const sharedTabOnly = tabStream !== null && !controllingYouTube();   // a tab we cannot control
-      const nothingLoaded = false;    // with no file chosen, the buttons run the built-in story
-      const playing = controllingYouTube() ? videoPlaying : player.src ? !player.paused : !storyClip.paused;
+      const target = transportTarget();
+      const nothingLoaded = target === null && !sharedTabOnly;
+      const playing = target === 'youtube' ? videoPlaying : target === 'file' ? !player.paused : target === 'builtin' ? !storyClip.paused : false;
 
       const showPause = playing && !sharedTabOnly;
       playButton.innerHTML = showPause ? ICONS.pause : ICONS.play;
       playButton.setAttribute('aria-label', showPause ? 'Pause' : 'Play');
 
       transportNote.textContent = sharedTabOnly ? 'Play, pause and skip in the YouTube tab. These buttons cannot reach it.'
-                                : nothingLoaded ? 'Choose a file to use these buttons.'
+                                : nothingLoaded ? (sourceShown === 'story' ? 'Choose a recording to use these buttons.'
+                                                 : sourceShown === 'file' ? 'Choose a file to use these buttons.'
+                                                 : sourceShown === 'youtube' ? 'Connect a YouTube video to use these buttons.'
+                                                 : 'These buttons are not used with the microphone.')
                                 : (videoWindow && !videoWindow.closed) ? 'If the video starts with an ad, these buttons work once the ad is over. To skip the ad, do it in the small video window.' : '';
 
       [playButton, backButton, forwardButton].forEach((button) => {
@@ -1435,6 +1460,7 @@
         button.title = sharedTabOnly ? 'Use the controls in the YouTube tab' : button.getAttribute('aria-label');
       });
     }
+    transportReady = true;
     showButtons();
 
     // Ask Chrome to share a tab's sound and picture with this page
@@ -1546,7 +1572,7 @@
       let stream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
-      } catch (E) { say('The microphone could not be turned on. Allow it with the icon at the left end of the address bar, then try again.'); return; }
+      } catch (e) { say('The microphone could not be turned on. Allow it with the icon at the left end of the address bar, then try again.'); return; }
       stopYouTube(); player.pause(); storyClip.pause();
       micStream = stream;
       micSource = ctx.createMediaStreamSource(stream);
