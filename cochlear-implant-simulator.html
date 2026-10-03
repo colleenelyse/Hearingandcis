@@ -106,6 +106,13 @@
     .youtubeRow input[type=text] { flex: 1 1 180px; }
     .youtubeRow button { white-space: nowrap; }
     [id^="source-"] details ul { margin: 4px 0; padding-left: 20px; }
+    .youtubeGuide { margin: 10px 0 6px 0; padding-left: 22px; }
+    .youtubeGuide li { margin-bottom: 5px; opacity: 0.6; }
+    .youtubeGuide li.now { opacity: 1; color: var(--ink, inherit); }
+    .youtubeGuide li.now::marker { color: var(--pink, var(--accent, #e6007e)); font-weight: 800; }
+    .contrast .youtubeGuide li { opacity: 1; }
+    .contrast .youtubeGuide li.now::marker { color: #ffe600; }
+    #transportNote { font-size: 12.5px; line-height: 1.3; }
     .top      { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
     .top .panel { flex: 1; min-width: 300px; margin-bottom: 0; }
     .videoPanel { flex: 0 0 300px !important; min-width: 300px; text-align: center; }
@@ -1288,8 +1295,11 @@
     // (Chrome allows only one of "open a window" and "share a tab" per click, so it takes two clicks.)
     const openButton = document.createElement('button');     // these two are never shown; the one button below runs them
     const youtubeButton = document.createElement('button');
-    const youtubeHint = document.createElement('p');
-    youtubeHint.className = 'hint';
+    const youtubeHint = document.createElement('ol');        // the three steps; the one to do next is highlighted
+    youtubeHint.className = 'hint youtubeGuide';
+    youtubeHint.innerHTML = '<li><b>Open.</b> Paste a YouTube link in the box and click <b>Open the video</b>. The video opens in its own small window.</li>'
+      + '<li><b>Connect.</b> Come back to this page and click <b>Connect the sound</b>. Chrome shows a box: click the tab named <b>YouTube video for the simulator</b>, then click <b>Share</b>.</li>'
+      + '<li><b>Listen.</b> Use the play and skip buttons under the video on this page. The sound now goes through the simulator.</li>';
     if (ON_THE_WEB) {
       const row = document.createElement('div');
       row.className = 'youtubeRow';
@@ -1313,20 +1323,15 @@
       setInterval(showYouTubeStep, 1000);     // notices when the small window is closed by hand
     }
 
-    // Make the one button and its hint match where things stand
+    // Make the one button and the three steps match where things stand
+    let shownYouTubeStep = 0;
     function showYouTubeStep() {
       if (!ON_THE_WEB) return;
       const windowOpen = videoWindow !== null && !videoWindow.closed;
-      if (tabStream) {
-        youtubeButton.textContent = 'Disconnect';
-        youtubeHint.textContent = '';
-      } else if (windowOpen) {
-        youtubeButton.textContent = 'Connect the sound';
-        youtubeHint.innerHTML = 'The video is open in a small window. Now click <b>Connect the sound</b>, choose <b>YouTube video for the simulator</b> in the box Chrome shows, and click Share.';
-      } else {
-        youtubeButton.textContent = 'Open the video';
-        youtubeHint.textContent = 'Paste a YouTube link, then click Open the video.';
-      }
+      const step = tabStream ? 2 : windowOpen ? 1 : 0;
+      youtubeButton.textContent = ['Open the video', 'Connect the sound', 'Disconnect'][step];
+      [...youtubeHint.children].forEach((item, n) => item.classList.toggle('now', n === step));
+      if (step !== shownYouTubeStep) { shownYouTubeStep = step; showButtons(); }     // also updates the note under the play button
       youtubeButton.classList.toggle('playing', windowOpen && !tabStream);    // highlighted while it is waiting for the second click
     }
     showYouTubeStep();
@@ -1422,7 +1427,8 @@
       playButton.setAttribute('aria-label', showPause ? 'Pause' : 'Play');
 
       transportNote.textContent = sharedTabOnly ? 'Play, pause and skip in the YouTube tab. These buttons cannot reach it.'
-                                : nothingLoaded ? 'Choose a file to use these buttons.' : '';
+                                : nothingLoaded ? 'Choose a file to use these buttons.'
+                                : (videoWindow && !videoWindow.closed) ? 'If the video starts with an ad, these buttons work once the ad is over. To skip the ad, do it in the small video window.' : '';
 
       [playButton, backButton, forwardButton].forEach((button) => {
         button.disabled = sharedTabOnly || nothingLoaded;
@@ -1540,7 +1546,7 @@
       let stream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
-      } catch (e) { say('The microphone could not be turned on. Allow it with the icon at the left end of the address bar, then try again.'); return; }
+      } catch (E) { say('The microphone could not be turned on. Allow it with the icon at the left end of the address bar, then try again.'); return; }
       stopYouTube(); player.pause(); storyClip.pause();
       micStream = stream;
       micSource = ctx.createMediaStreamSource(stream);
