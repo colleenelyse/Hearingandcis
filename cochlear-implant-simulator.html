@@ -1260,23 +1260,41 @@
       link.placeholder = 'Paste a YouTube link';
       steps = ['Paste a YouTube link here:',
                'Click this button. The video opens in a small window called "YouTube video for the simulator".',
-               share,
+               'Come back to this page and click this button. In the box Chrome shows, click the tab named <b>YouTube video for the simulator</b>, '
+               + 'keep "Also share tab audio" switched on, and click Share.',
                'Use the play and 10-second skip buttons under the video on this page. If you hear nothing, look at the small video window '
                + 'and make sure the YouTube player is <b>not muted</b> and its volume slider is all the way up.'];
     } else {
+      // Opened as a file from a computer: YouTube will not play inside the page, so there is nothing to connect
       link.hidden = true;
-      steps = ['Open the YouTube video in <b>another tab</b> of this browser. It has to be open before you connect. '
-               + 'In the YouTube player, make sure the sound is <b>not muted</b> and its volume slider is all the way up.',
-               'Come back to this tab and click this button:',
-               share,
-               'Play, pause and skip in the YouTube tab. The picture and the changed sound show up here. '
-               + 'The YouTube tab itself goes quiet while it is connected. That is normal.'];
+      connectButton.hidden = true;
+      steps = [];
+      const offlineNote = document.createElement('p');
+      offlineNote.className = 'hint';
+      offlineNote.textContent = 'YouTube only works on the online version of this page. Opened as a file from a computer, use the built-in recordings, your own file or the microphone.';
+      youtubeSteps.before(offlineNote);
     }
     youtubeSteps.innerHTML = steps.map((step) => '<li>' + step + '</li>').join('');
 
     // Put the link box and the Connect button inside the steps they belong to
-    if (ON_THE_WEB) youtubeSteps.children[0].append(link);
-    youtubeSteps.children[1].append(connectButton);
+    // Online there are two buttons, because Chrome allows only one of "open a window" and "share a tab" per click
+    const openButton = document.createElement('button');
+    openButton.textContent = 'Open the video';
+    if (ON_THE_WEB) {
+      youtubeSteps.children[0].append(link);
+      youtubeSteps.children[1].append(openButton);
+      youtubeSteps.children[2].append(connectButton);
+    }
+
+    openButton.onclick = () => {
+      const videoId = youtubeIdFrom(link.value);
+      if (!videoId) { say('That does not look like a YouTube link. Copy it from the address bar and try again.'); return; }
+      stopYouTube();
+      videoPlaying = false;
+      videoWindow = window.open(location.pathname + '?youtube=' + encodeURIComponent(videoId), 'simulatorVideo', 'width=854,height=480');
+      if (!videoWindow) say('Chrome blocked the video window. Allow pop-ups for this page (the icon at the right end of the address bar), then click Open the video again.');
+      else say('The video is open in its own small window. Now come back to this page and click Connect YouTube.');
+    };
 
     // Pull the video's ID out of any kind of YouTube link
     function youtubeIdFrom(text) {
@@ -1375,14 +1393,10 @@
         return;
       }
 
-      const typed = link.value.trim();
-      const videoId = ON_THE_WEB ? youtubeIdFrom(typed) : null;
-      if (ON_THE_WEB && typed && !videoId) {
-        say('That does not look like a YouTube link. Copy it from the address bar and try again.');
-        return;
-      }
+      // The video has to be open in its own small window first, so that the buttons on this page can control it
+      if (!videoWindow || videoWindow.closed) { say('First paste a YouTube link and click Open the video. Then click Connect YouTube.'); return; }
 
-      stopYouTube();
+      stopYouTube(true);      // keep the video window that is open
       stopMicrophone();
       storyClip.pause();
       startAudio();
@@ -1405,16 +1419,7 @@
         request.controller = controller;
       }
 
-      // Ask for the share first, then open the video window, both inside this
-      // one click (Chrome only allows each of them straight after a click)
       const asking = navigator.mediaDevices.getDisplayMedia(request);
-
-      if (videoId) {
-        videoPlaying = false;
-        videoWindow = window.open(location.pathname + '?youtube=' + encodeURIComponent(videoId),
-                                  'simulatorVideo', 'width=854,height=480');
-        if (!videoWindow) say('Chrome blocked the video window. Allow pop-ups for this page, then click Connect YouTube again.');
-      }
 
       let stream;
       try {
@@ -1456,17 +1461,19 @@
       player.muted = true;
       player.play();
 
-      if (picture) picture.onended = stopYouTube;
+      if (picture) picture.onended = () => stopYouTube();
       if (controllingYouTube()) say('Connected. Use the Play and skip buttons under the video.');
       else say('Connected. Play, pause and skip in the YouTube tab. The choices below change what you hear.');
       showButtons();
     };
 
     // Disconnect YouTube (also runs when you click "Stop sharing" in Chrome)
-    function stopYouTube() {
-      if (videoWindow && !videoWindow.closed) videoWindow.close();
-      videoWindow = null;
-      videoPlaying = false;
+    function stopYouTube(keepWindow) {
+      if (!keepWindow) {
+        if (videoWindow && !videoWindow.closed) videoWindow.close();
+        videoWindow = null;
+        videoPlaying = false;
+      }
       if (!tabStream) return;
       tabStream.getTracks().forEach((track) => track.stop());
       tabSource.disconnect();
