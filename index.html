@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hearing Simulators</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+  <style>
+    /* The same colors, font and shapes as the two simulator pages */
+    body      { --page: #f3eff9; --card: #ffffff; --raised: #f7f4fc; --line: #ddd3ec; --ink: #2a2440; --quiet: #675f80;
+                --accent: #e6007e; --onAccent: #ffffff; --duct: #ece4fb; --ductEdge: #b9a8e0; --dot: #17b3a3;
+                --shadow: 0 1px 2px rgba(60, 40, 110, 0.08), 0 6px 18px rgba(60, 40, 110, 0.07);
+                font-family: 'Nunito', ui-rounded, 'Trebuchet MS', Arial, sans-serif; font-size: 17px; line-height: 1.5;
+                max-width: 1000px; margin: 18px auto; padding: 0 20px 40px 20px; background: var(--page); color: var(--ink); }
+    body.dark { --page: #1d1930; --card: #28223f; --raised: #362e55; --line: #453c6b; --ink: #f4effa; --quiet: #c3b9da;
+                --accent: #ff6fb1; --onAccent: #1d1930; --duct: #3d3560; --ductEdge: #7469a3; --dot: #2ec4b6; --shadow: none; }
+    body.contrast { --page: #000; --card: #000; --raised: #000; --line: #fff; --ink: #fff; --quiet: #fff;
+                --accent: #ffe600; --onAccent: #000; --duct: #000; --ductEdge: #fff; --dot: #00e0c6; --shadow: none; }
+    body.big  { zoom: 1.15; }
+    .pageTools { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 6px 16px; font-size: 14px; }
+    select    { font: inherit; font-size: 15px; padding: 7px 12px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--raised); color: var(--ink); }
+    .contrast select { border-width: 2px; }
+    select:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+    h1        { font-size: clamp(34px, 6vw, 52px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; margin: 36px 0 10px 0; text-align: center; text-wrap: balance; }
+    .welcome  { font-size: 20px; max-width: 34em; margin: 0 auto 30px auto; color: var(--quiet); text-align: center; }
+
+    /* The two big choices */
+    .choices  { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .choice   { display: flex; flex-direction: column; text-decoration: none; color: var(--ink); background: var(--card);
+                border: 2px solid var(--line); border-radius: 24px; padding: 22px 24px 24px 24px; box-shadow: var(--shadow);
+                transition: border-color 0.12s, transform 0.12s; }
+    .choice:hover, .choice:focus-visible { border-color: var(--accent); transform: translateY(-3px); }
+    @media (prefers-reduced-motion: reduce) { .choice { transition: none; } .choice:hover { transform: none; } }
+    .choice svg { width: 100%; height: 170px; display: block; border-radius: 16px; background: var(--raised); margin-bottom: 16px; }
+    .choice h2 { font-size: 26px; font-weight: 800; margin: 0 0 6px 0; }
+    .choice p  { margin: 0 0 16px 0; flex: 1; }
+    .choice ul { margin: 0 0 18px 0; padding-left: 20px; color: var(--quiet); font-size: 15px; }
+    .go       { align-self: flex-start; font-weight: 800; padding: 10px 20px; border-radius: 999px; background: var(--accent); color: var(--onAccent); }
+
+    .before   { margin-top: 28px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px 22px; box-shadow: var(--shadow); }
+    .contrast .before, .contrast .choice { border-width: 2px; }
+    .before h2 { font-size: 20px; font-weight: 800; margin: 0 0 6px 0; }
+    .before ul { margin: 0; padding-left: 20px; }
+    .before li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div class="pageTools">
+    <label>Colors:
+      <select id="themeChoice"><option value="dark">Dark</option><option value="light">Light</option><option value="contrast">High contrast</option></select>
+    </label>
+    <label>Text size:
+      <select id="textChoice"><option value="">Normal</option><option value="big">Large</option></select>
+    </label>
+  </div>
+
+  <h1>Welcome. What sound would you like to experience?</h1>
+  <p class="welcome">These two pages let you listen to the world the way someone with a hearing loss, or a cochlear implant, might hear it. Pick one to begin. You can switch to the other at any time.</p>
+
+  <div class="choices">
+    <a class="choice" href="hearing-loss-simulator.html">
+      <!-- a small audiogram: a grid with a sloping line of faders -->
+      <svg viewBox="0 0 320 170" aria-hidden="true">
+        <g stroke="var(--line)" stroke-width="1.5">
+          <path d="M40 30 H290 M40 60 H290 M40 90 H290 M40 120 H290 M40 150 H290"/>
+          <path d="M60 20 V155 M105 20 V155 M150 20 V155 M195 20 V155 M240 20 V155 M285 20 V155"/>
+        </g>
+        <path d="M60 42 L105 46 L150 58 L195 86 L240 116 L285 134" fill="none" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <g fill="var(--accent)" stroke="var(--card)" stroke-width="2.5">
+          <rect x="53" y="30" width="14" height="24" rx="4"/><rect x="98" y="34" width="14" height="24" rx="4"/><rect x="143" y="46" width="14" height="24" rx="4"/>
+          <rect x="188" y="74" width="14" height="24" rx="4"/><rect x="233" y="104" width="14" height="24" rx="4"/><rect x="278" y="122" width="14" height="24" rx="4"/>
+        </g>
+      </svg>
+      <h2>Hearing loss simulator</h2>
+      <p>Slide the faders on a real audiogram chart and hear what mild, moderate, severe and profound hearing loss do to speech and everyday sounds.</p>
+      <ul>
+        <li>Common types of hearing loss, one click each</li>
+        <li>A different loss in each ear, with headphones</li>
+        <li>A mystery game: guess the hidden hearing loss</li>
+      </ul>
+      <span class="go">Open the hearing loss simulator</span>
+    </a>
+
+    <a class="choice" href="cochlear-implant-simulator.html">
+      <!-- a small cochlea with a row of electrodes -->
+      <svg viewBox="0 0 320 170" aria-hidden="true" id="cochleaArt"></svg>
+      <h2>Cochlear implant simulator</h2>
+      <p>Hear what a cochlear implant can sound like, switch electrodes on and off, and learn how implants work and who they are for.</p>
+      <ul>
+        <li>Click each electrode to hear its pitch</li>
+        <li>How implants changed from 1 electrode to 22</li>
+        <li>Surgery, timing, mapping, and Deaf culture</li>
+      </ul>
+      <span class="go">Open the cochlear implant simulator</span>
+    </a>
+  </div>
+
+  <div class="before">
+    <h2>Before you start</h2>
+    <ul>
+      <li>Use Chrome or Edge on a computer or Chromebook.</li>
+      <li>Headphones give the best sound, and are needed for anything that treats each ear differently.</li>
+      <li>Each page has built-in recordings, so you can start listening right away. You can also connect a YouTube video, or upload your own audio or video files, to experience them the same way.</li>
+    </ul>
+  </div>
+
+  <script>
+    // Draw the little cochlea (the same spiral as on the cochlear implant page, without the numbers)
+    (function () {
+      const spot = (turns, out) => {
+        const angle = Math.PI * 0.5 + turns * 2 * Math.PI, radius = 68 - 25 * turns + (out || 0);
+        return [160 + radius * Math.cos(angle) * 1.3, 82 + radius * Math.sin(angle)];
+      };
+      const line = (from, to) => { let d = ''; for (let t = from; t <= to; t += 0.01) d += (d ? ' L' : 'M') + spot(t).map((v) => v.toFixed(1)).join(','); return d; };
+      let art = '<path d="' + line(-0.08, 2.3) + '" fill="none" stroke="var(--ductEdge)" stroke-width="17" stroke-linecap="round"/>'
+              + '<path d="' + line(-0.08, 2.3) + '" fill="none" stroke="var(--duct)" stroke-width="13.5" stroke-linecap="round"/>';
+      for (let i = 0; i < 22; i++) {
+        const [x, y] = spot(0.02 + 1.18 * i / 21);
+        art += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="3.6" fill="var(--dot)" stroke="var(--card)" stroke-width="1.2"/>';
+      }
+      document.getElementById('cochleaArt').innerHTML = art;
+    })();
+
+    // Colors and text size: remembered on this computer and shared with both simulator pages
+    const themeChoice = document.getElementById('themeChoice'), textChoice = document.getElementById('textChoice');
+    function remember(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* not allowed here */ } }
+    function recall(key)          { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    function showLook() {
+      document.body.classList.toggle('dark', themeChoice.value === 'dark');
+      document.body.classList.toggle('contrast', themeChoice.value === 'contrast');
+      document.body.classList.toggle('big', textChoice.value === 'big');
+    }
+    themeChoice.onchange = () => { remember('simulatorColors', themeChoice.value); showLook(); };
+    textChoice.onchange  = () => { remember('simulatorText', textChoice.value); showLook(); };
+    if (recall('simulatorColors')) themeChoice.value = recall('simulatorColors');
+    if (recall('simulatorText'))   textChoice.value  = recall('simulatorText');
+    if (!themeChoice.value) themeChoice.value = 'dark';
+    showLook();
+  </script>
+</body>
+</html>
