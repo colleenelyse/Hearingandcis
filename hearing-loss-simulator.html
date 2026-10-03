@@ -60,16 +60,16 @@
     .pageTools select, .pageTools button { font-size: 14px; padding: 4px 8px; }
     .pageTools button, .mysteryBox button { cursor: pointer; border: 1px solid #777; border-radius: 8px; background: #fff; }
     .mysteryBox { border: 2px dashed #5a2ca0; border-radius: 8px; padding: 6px 12px; margin: 8px 0; }
-    .mysteryBox P { margin: 6px 0; }
+    .mysteryBox p { margin: 6px 0; }
     .mysteryBox ol { margin: 6px 0; padding-left: 22px; }
     .mysteryBox li { margin-bottom: 6px; }
     .mysteryBox button.playing { background: #111; color: #fff; }
 
     /* The read-along script in the mystery game. The test lines stand out from the explanations. */
     .script       { border: 1px solid #999; border-radius: 8px; padding: 6px 14px; margin: 6px 0; max-width: 820px; line-height: 1.4; }
-    .script P     { margin: 5px 0; }
+    .script p     { margin: 5px 0; }
     .script .scriptTitle { font-weight: bold; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-    #scriptStory P:not(.scriptTitle) { font-size: 17px; margin: 8px 0; }
+    #scriptStory p:not(.scriptTitle) { font-size: 17px; margin: 8px 0; }
     .script .testLine { margin: 4px 0 4px 18px; padding: 4px 10px; border-left: 5px solid #5a2ca0; font-size: 18px; font-weight: bold; }
     .dark .script, .contrast .script { border-color: #fff; }
     .dark .script .testLine { border-left-color: #b79cff; }
@@ -96,7 +96,7 @@
                 --pink: #ff6fb1; --mint: #5fdcc2; --amber: #ffc94d;
                 background: var(--page); color: var(--ink); }
     .dark .hint { color: var(--quiet); }
-    .dark A     { color: #ff9ccb; }
+    .dark a     { color: #ff9ccb; }
 
     /* boxes become slightly lighter cards on the dark page */
     .dark .panel, .dark .earParts div, .dark .script, .dark .mysteryBox { background: var(--card); border-color: var(--line); }
@@ -178,7 +178,7 @@
     .contrast .switch span::after { background: #fff; top: 1px; }
     .contrast .switch input:checked + span::after { background: #000; }
     .contrast .conductive, .contrast .sensorineural, .contrast .lossBars div { color: #000; }
-    .contrast A { color: #ffe600; }
+    .contrast a { color: #ffe600; }
     .contrast #soundCanvas { background: #000; border: 2px solid #fff; }
     .hint     { color: #555; font-size: 13px; }
     ol.hint   { padding-left: 18px; margin: 6px 0; }
@@ -186,7 +186,7 @@
 
     /* ----- The sound setup note ----- */
     .setup        { background: #fff4c2; border: 2px solid #c79a00; border-radius: 8px; padding: 6px 12px; margin: 0 0 8px 0; line-height: 1.35; font-size: 15px; }
-    .setup P      { margin: 0; }
+    .setup p      { margin: 0; }
     .setup summary { cursor: pointer; font-weight: bold; margin-top: 4px; }
     .setup ul     { margin: 4px 0 2px 0; padding-left: 20px; }
     .setup button { padding: 4px 10px; font-size: 14px; font-weight: bold; margin: 0 4px; cursor: pointer; border: 2px solid #111; border-radius: 8px; background: #fff; }
@@ -196,7 +196,7 @@
     /* ----- The compact band across the top: sound source, video, loudness and ears ----- */
     .top      { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
     .panel    { flex: 1; min-width: 280px; border: 1px solid #ccc; border-radius: 8px; padding: 8px 10px; box-sizing: border-box; }
-    .panel P  { margin: 4px 0; }
+    .panel p  { margin: 4px 0; }
     .panelTitle { font-weight: bold; font-size: 14px; }
     .videoPanel { flex: 0 0 300px; min-width: 300px; text-align: center; }
     video     { width: 100%; height: 150px; background: black; display: block; }
@@ -264,7 +264,7 @@
     .earParts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
     .earParts div { flex: 1; min-width: 230px; border: 1px solid #bbb; border-radius: 8px; padding: 8px 12px; }
     .earParts h3 { font-size: 16px; margin: 0 0 4px 0; }
-    .earParts P  { margin: 4px 0; }
+    .earParts p  { margin: 4px 0; }
     .earParts .type { font-weight: bold; padding: 2px 8px; border-radius: 5px; display: inline-block; }
     .conductive { background: #ffd9a8; }
     .sensorineural { background: #c5d5ff; }
@@ -285,8 +285,8 @@
     /* The on/off switch */
     .switch       { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
     .switch input { position: absolute; opacity: 0; }
-    .switch span  { width: 46px; height: 24px; border-radius: 12px; background: #999; position: relative; transition: background .15S; }
-    .switch span::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15S; }
+    .switch span  { width: 46px; height: 24px; border-radius: 12px; background: #999; position: relative; transition: background .15s; }
+    .switch span::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left .15s; }
     .switch input:checked + span { background: #1565d8; }
     .switch input:checked + span::after { left: 25px; }
     .switch input:focus-visible + span { outline: 3px solid #ffbf00; }
@@ -366,7 +366,7 @@
     .modal[hidden] { display: none; }
     .modalBox     { background: #fff; border-radius: 12px; padding: 20px 24px; max-width: 460px; margin: 16px; box-shadow: 0 8px 30px rgba(0,0,0,.5); line-height: 1.45; }
     .modalBox h2  { margin: 0 0 8px 0; font-size: 21px; }
-    .modalBox P   { margin: 8px 0; }
+    .modalBox p   { margin: 8px 0; }
     .modalBox button { padding: 9px 14px; font-size: 15px; margin: 8px 8px 0 0; cursor: pointer; border-radius: 8px; border: 1px solid #777; background: #fff; }
     .modalBox button.main { background: #111; color: #fff; border-color: #111; }
 
@@ -444,6 +444,16 @@
     .soft .transport button:hover { color: var(--pink); }
     .soft .script .testLine { border-left-color: var(--pink); }
 
+    /* the card that holds the degree and shape buttons together with the chart they control */
+    .chartCard { border: 1px solid #ccc; border-radius: 18px; padding: 12px 18px 14px 18px; margin: 16px 0 12px 0; }
+    .soft .chartCard, .dark .chartCard { background: var(--card); border-color: var(--line); }
+    .soft .chartCard { box-shadow: 0 1px 2px rgba(60, 40, 110, 0.08), 0 6px 18px rgba(60, 40, 110, 0.07); }
+    .contrast .chartCard { border: 2px solid #fff; }
+    .dark .chartCard .presets button { background: var(--raised); }
+    .dark .chartCard .presets button.on { background: #4a2752; }
+    .chartCard .presetGroups { margin-top: 0; }
+    body.game .chartCard { padding-top: 14px; }
+
     /* the link to the other page */
     .pageLink { text-decoration: none; font-weight: 700; padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--line, #777); color: inherit; }
     .pageLink:hover { border-color: var(--pink, #e6007e); }
@@ -468,37 +478,37 @@
       <label>Text size:
         <select id="textChoice"><option value="">Normal</option><option value="big">Large</option></select>
       </label>
-      <A class="pageLink" href="index.html" title="Back to the welcome page">Home</A>
-      <A class="pageLink" href="cochlear-implant-simulator.html" title="Opens the other page: what a cochlear implant sounds like">Cochlear implant simulator</A>
+      <a class="pageLink" href="index.html" title="Back to the welcome page">Home</a>
+      <a class="pageLink" href="cochlear-implant-simulator.html" title="Opens the other page: what a cochlear implant sounds like">Cochlear implant simulator</a>
       <button id="mysteryButton" title="Opens a guessing game in a new tab: the page picks a hidden hearing loss for students to work out by listening">Mystery game</button>
     </div>
   </div>
 
   <div class="setup">
-    <P><B>Set up your sound first. Your computer's settings change what you hear.</B></P>
+    <p><b>Set up your sound first. Your computer's settings change what you hear.</b></p>
     <ul class="setupList">
-      <li><B>Set the volume.</B>
+      <li><b>Set the volume.</b>
           <button id="sampleButton">Play a sample conversation</button>
           <audio id="sampleClip" preload="auto"></audio>
           Set your computer's volume so it sounds like someone talking to you from across a table (about 60 dB).
           Then leave the volume alone. The sample skips the faders, so you can replay it at any time to reset your volume.</li>
-      <li><B>The video's own volume.</B> Turn the volume slider inside the video player all the way up, and make sure it is not muted.
+      <li><b>The video's own volume.</b> Turn the volume slider inside the video player all the way up, and make sure it is not muted.
           This goes for a YouTube video too: check the speaker button in the YouTube player before you connect it.</li>
-      <li><B>Headphones.</B> Use headphones if you want to experience different hearing levels in your left and right ears.</li>
+      <li><b>Headphones.</b> Use headphones if you want to experience different hearing levels in your left and right ears.</li>
     </ul>
     <details>
       <summary>Tell me more, and troubleshooting sound on your computer</summary>
       <ul>
-        <li><B>Which volume number?</B> There is no one right number, because every computer and pair of headphones is different.
+        <li><b>Which volume number?</b> There is no one right number, because every computer and pair of headphones is different.
             For most it is near the middle of the volume slider. Go by how loud the sample conversation sounds, not by the number.</li>
-        <li><B>No sound at all?</B> Check that the computer is not muted, that the volume is up, and that your headphones are plugged in or connected.
+        <li><b>No sound at all?</b> Check that the computer is not muted, that the volume is up, and that your headphones are plugged in or connected.
             If you right-clicked this tab and chose "Mute site", un-mute it.</li>
-        <li><B>Changing the volume later.</B> Turning the computer up partway through cancels out the hearing loss you are simulating. That is what a hearing aid does.</li>
-        <li><B>Speakers.</B> Laptop speakers are weak at very low and very high pitches, and both ears hear both sides. Headphones give the truest result.</li>
-        <li><B>Bluetooth.</B> Bluetooth headphones add a delay and often cannot play the highest pitches. Wired headphones are better.</li>
-        <li><B>Sound effects.</B> Turn off bass boost, equalizers, "loudness" or "enhance audio" settings, and spatial audio. They change which pitches are loud.</li>
-        <li><B>Mono audio and balance.</B> For separate ear settings, turn off "mono audio" in the computer's accessibility settings, and keep the left and right balance in the middle.</li>
-        <li><B>A teacher who wants to be exact:</B> with speakers, a sound level meter app held where the listener sits should read about 60 dB while the sample conversation plays.</li>
+        <li><b>Changing the volume later.</b> Turning the computer up partway through cancels out the hearing loss you are simulating. That is what a hearing aid does.</li>
+        <li><b>Speakers.</b> Laptop speakers are weak at very low and very high pitches, and both ears hear both sides. Headphones give the truest result.</li>
+        <li><b>Bluetooth.</b> Bluetooth headphones add a delay and often cannot play the highest pitches. Wired headphones are better.</li>
+        <li><b>Sound effects.</b> Turn off bass boost, equalizers, "loudness" or "enhance audio" settings, and spatial audio. They change which pitches are loud.</li>
+        <li><b>Mono audio and balance.</b> For separate ear settings, turn off "mono audio" in the computer's accessibility settings, and keep the left and right balance in the middle.</li>
+        <li><b>A teacher who wants to be exact:</b> with speakers, a sound level meter app held where the listener sits should read about 60 dB while the sample conversation plays.</li>
       </ul>
     </details>
   </div>
@@ -516,10 +526,10 @@
       </div>
 
       <div class="source" id="source-builtin">
-        <P><button id="builtStory">Play the story</button> <button id="builtGuided">Play the listening tutorial</button></P>
-        <P class="hint">Both recordings were written to include speech sounds at low, middle and high pitches, so you can hear what each hearing loss does to them.
-           <B>The story</B> (45 seconds) is the quickest way to hear the difference as you move the faders.
-           <B>The listening tutorial</B> (about 2 minutes) walks through low, middle and high speech sounds one group at a time.</P>
+        <p><button id="builtStory">Play the story</button> <button id="builtGuided">Play the listening tutorial</button></p>
+        <p class="hint">Both recordings were written to include speech sounds at low, middle and high pitches, so you can hear what each hearing loss does to them.
+           <b>The story</b> (45 seconds) is the quickest way to hear the difference as you move the faders.
+           <b>The listening tutorial</b> (about 2 minutes) walks through low, middle and high speech sounds one group at a time.</p>
       </div>
 
       <div class="source" id="source-file">
@@ -534,7 +544,7 @@
         <input type="text" id="link">
         <button id="connectButton">Connect YouTube</button>
         <ol class="hint" id="youtubeSteps"></ol>
-        <P class="hint">Works in Chrome or Edge on a computer or Chromebook. Not on phones, iPads, Safari or Firefox.</P>
+        <p class="hint">Works in Chrome or Edge on a computer or Chromebook. Not on phones, iPads, Safari or Firefox.</p>
       </div>
 
       <div class="source" id="source-mic" hidden>
@@ -542,15 +552,15 @@
         <label id="micChoiceRow" hidden>Microphone: <select id="micChoice"></select></label>
         <ol class="hint">
           <li>Put on headphones first. Without them the sound loops and squeals.</li>
-          <li>Click <B>Turn on microphone</B> and choose Allow.</li>
+          <li>Click <b>Turn on microphone</b> and choose Allow.</li>
           <li>Speak, or listen to the room. The faders change what you hear.</li>
         </ol>
-        <P class="hint">Wired headphones keep the sound lined up with the speaker's lips; Bluetooth adds a delay.
-           With Bluetooth headphones, choose a microphone other than the headphones' own.</P>
-        <P class="hint" id="micDelay"></P>
+        <p class="hint">Wired headphones keep the sound lined up with the speaker's lips; Bluetooth adds a delay.
+           With Bluetooth headphones, choose a microphone other than the headphones' own.</p>
+        <p class="hint" id="micDelay"></p>
       </div>
 
-      <P id="status"></P>
+      <p id="status"></p>
     </div>
 
     <!-- The video and its buttons -->
@@ -561,7 +571,7 @@
         <button id="playButton" aria-label="Play"></button>
         <button id="forwardButton" aria-label="Forward 10 seconds"></button>
       </div>
-      <P class="hint" id="transportNote"></P>
+      <p class="hint" id="transportNote"></p>
     </div>
 
     <!-- Ears -->
@@ -571,23 +581,23 @@
         <button data-ear="both">Both ears</button>
         <button data-ear="separate">Separate ears</button>
       </div>
-      <P class="hint"><B>Both ears:</B> one fader at each pitch, and it moves both ears together.</P>
-      <P class="hint"><B>Separate ears:</B> two marks at each pitch, drawn the way an audiogram draws them.
-         A <B style="color: #d81e1e;">red O is the right ear</B> and a <B style="color: #1565d8;">blue X is the left ear</B>.
-         Drag each one on its own. When they sit on the same spot, the X is on top: drag it away to reach the O.</P>
-      <P class="hint"><B>Separate ear settings are meant to be used with headphones.</B> Through speakers, both ears hear both sides.</P>
+      <p class="hint"><b>Both ears:</b> one fader at each pitch, and it moves both ears together.</p>
+      <p class="hint"><b>Separate ears:</b> two marks at each pitch, drawn the way an audiogram draws them.
+         A <b style="color: #d81e1e;">red O is the right ear</b> and a <b style="color: #1565d8;">blue X is the left ear</b>.
+         Drag each one on its own. When they sit on the same spot, the X is on top: drag it away to reach the O.</p>
+      <p class="hint"><b>Separate ear settings are meant to be used with headphones.</b> Through speakers, both ears hear both sides.</p>
     </div>
   </div>
 
   <!-- Mystery mode: appears in place of the preset buttons -->
   <div class="mysteryBox" id="mysteryBox" hidden>
-    <P><B>How to play.</B> A hidden hearing loss is switched on, in both ears. Most of the hearing is left normal.
-       One part of the pitch range has been taken away. Listen, and work out <B>which pitches are missing</B>.</P>
-    <P><B>The degree of loss does not change in this game.</B> You are not working out how much hearing is lost.
+    <p><b>How to play.</b> A hidden hearing loss is switched on, in both ears. Most of the hearing is left normal.
+       One part of the pitch range has been taken away. Listen, and work out <b>which pitches are missing</b>.</p>
+    <p><b>The degree of loss does not change in this game.</b> You are not working out how much hearing is lost.
        Each round only changes which pitches are affected, to show what different kinds of frequency loss sound like.
-       Every new mystery starts with no degree of loss added. To add one, slide the green <B>Sound level</B> tag up the chart, toward the softer sounds.
+       Every new mystery starts with no degree of loss added. To add one, slide the green <b>Sound level</b> tag up the chart, toward the softer sounds.
        Each 10 dB you slide it up makes everything 10 dB quieter, the same as adding 10 dB of hearing loss at every pitch.
-       Leave your computer's volume where it is.</P>
+       Leave your computer's volume where it is.</p>
     <ol>
       <li>Play a sound:
         <button id="guidedButton">Play the guided tests</button>
@@ -595,8 +605,8 @@
         or use your own file, YouTube or the microphone in the box above.
         <audio id="guidedClip" preload="auto"></audio>
         <audio id="storyClip" preload="auto"></audio>
-        <br><span class="hint"><B>Guided tests</B> (about 2 minutes): the voice names each kind of sound, plays it, and explains what it means if you missed it.
-        <B>Story</B> (about 45 seconds): the same range of sounds in a short story, with no hints. Click a button again to pause.</span>
+        <br><span class="hint"><b>Guided tests</b> (about 2 minutes): the voice names each kind of sound, plays it, and explains what it means if you missed it.
+        <b>Story</b> (about 45 seconds): the same range of sounds in a short story, with no hints. Click a button again to pause.</span>
       </li>
       <li>Listen for what is missing. Are the low, humming sounds gone? The middle? The high, hissing sounds? Or does it all sound normal?</li>
       <li>Choose your guess:
@@ -604,102 +614,68 @@
         <button id="checkGuess">Check my guess</button>
       </li>
     </ol>
-    <P><label class="switch">Show the script <input type="checkbox" id="scriptSwitch"><span></span></label>
-       <span class="hint">Read along to see exactly which words and sounds you are missing. It shows the script of whichever voice you played last.</span></P>
+    <p><label class="switch">Show the script <input type="checkbox" id="scriptSwitch"><span></span></label>
+       <span class="hint">Read along to see exactly which words and sounds you are missing. It shows the script of whichever voice you played last.</span></p>
     <div class="script" id="scriptStory" hidden>
-      <P class="scriptTitle">Script: the story</P>
-      <P>Last summer we stayed at my grandmother's farm. Every morning she'd hum along to the radio while the room warmed up, and nobody was allowed to move until the song was over.</P>
-      <P>After breakfast, my cousin Greg and I would grab a couple of crackers and go check on the chickens. Greg kept a jar of corn in the garage just for them.</P>
-      <P>One day we tipped the bucket by the back step, and a tiny kitten popped out. It took one look at us and bolted up the tree.</P>
-      <P>Greg thought it was a fox. I said, "That's a cat. Six weeks old at most. See the thin face and the soft fur?"</P>
-      <P>We named her Thistle. She still sits on the fence at sunrise, sniffing for fish.</P>
-      <P>My grandmother says it's the best thing we ever found. I think so too.</P>
+      <p class="scriptTitle">Script: the story</p>
+      <p>Last summer we stayed at my grandmother's farm. Every morning she'd hum along to the radio while the room warmed up, and nobody was allowed to move until the song was over.</p>
+      <p>After breakfast, my cousin Greg and I would grab a couple of crackers and go check on the chickens. Greg kept a jar of corn in the garage just for them.</p>
+      <p>One day we tipped the bucket by the back step, and a tiny kitten popped out. It took one look at us and bolted up the tree.</p>
+      <p>Greg thought it was a fox. I said, "That's a cat. Six weeks old at most. See the thin face and the soft fur?"</p>
+      <p>We named her Thistle. She still sits on the fence at sunrise, sniffing for fish.</p>
+      <p>My grandmother says it's the best thing we ever found. I think so too.</p>
     </div>
     <div class="script" id="scriptGuided" hidden>
-      <P class="scriptTitle">Script: the guided tests</P>
-      <P>These are six quick tests designed to show which speech sounds get harder to hear when pitches are missing or changed. Each test is a short example built around one group of speech sounds. For each one, I'll say what to focus on, play it, then tell you what it means.</P>
+      <p class="scriptTitle">Script: the guided tests</p>
+      <p>These are six quick tests designed to show which speech sounds get harder to hear when pitches are missing or changed. Each test is a short example built around one group of speech sounds. For each one, I'll say what to focus on, play it, then tell you what it means.</p>
 
-      <P><B>One.</B> Everyday speech. Listen.</P>
-      <P class="testLine">This morning the weather was warm, so we walked to the park and sat on a bench.</P>
+      <p><b>One.</b> Everyday speech. Listen.</p>
+      <p class="testLine">This morning the weather was warm, so we walked to the park and sat on a bench.</p>
 
-      <P><B>Two.</B> Low, humming sounds, like m, n, and oo. Listen.</P>
-      <P class="testLine">My uncle hums low and warm along the road, morning and noon.</P>
-      <P>If that was hard to hear, the trouble is in the low pitches.</P>
+      <p><b>Two.</b> Low, humming sounds, like m, n, and oo. Listen.</p>
+      <p class="testLine">My uncle hums low and warm along the road, morning and noon.</p>
+      <p>If that was hard to hear, the trouble is in the low pitches.</p>
 
-      <P><B>Three.</B> Middle sounds, like k, g, ch, and rr. Listen.</P>
-      <P class="testLine">Chuck gave Rachel a large cherry cake.</P>
-      <P>If that was hard to hear, the trouble is in the middle pitches.</P>
+      <p><b>Three.</b> Middle sounds, like k, g, ch, and rr. Listen.</p>
+      <p class="testLine">Chuck gave Rachel a large cherry cake.</p>
+      <p>If that was hard to hear, the trouble is in the middle pitches.</p>
 
-      <P><B>Four.</B> High, hissing sounds, like s, f, and th. Listen.</P>
-      <P class="testLine">Sue sits by the sea, sifting through thistles.</P>
-      <P>If that was hard to hear, the trouble is in the high pitches.</P>
+      <p><b>Four.</b> High, hissing sounds, like s, f, and th. Listen.</p>
+      <p class="testLine">Sue sits by the sea, sifting through thistles.</p>
+      <p>If that was hard to hear, the trouble is in the high pitches.</p>
 
-      <P><B>Five.</B> Crispness. Sharp sounds, like p, t, and k, mark where words start and stop. Listen.</P>
-      <P class="testLine">Pick up the cup. Tap the top. Kick the bucket back.</P>
-      <P>If the words ran together, you're missing the middle and high pitches.</P>
+      <p><b>Five.</b> Crispness. Sharp sounds, like p, t, and k, mark where words start and stop. Listen.</p>
+      <p class="testLine">Pick up the cup. Tap the top. Kick the bucket back.</p>
+      <p>If the words ran together, you're missing the middle and high pitches.</p>
 
-      <P><B>Six.</B> Look-alike words. Each pair differs by one soft, high sound, like th and f. Listen.</P>
-      <P class="testLine">Thin, fin. Sip, ship. Sick, thick.</P>
-      <P>If the pairs sounded the same, the trouble is in the high pitches.</P>
+      <p><b>Six.</b> Look-alike words. Each pair differs by one soft, high sound, like th and f. Listen.</p>
+      <p class="testLine">Thin, fin. Sip, ship. Sick, thick.</p>
+      <p>If the pairs sounded the same, the trouble is in the high pitches.</p>
 
     </div>
-    <P id="mysteryResult"></P>
-    <P>
+    <p id="mysteryResult"></p>
+    <p>
       <button id="revealMystery">Reveal the answer</button>
       <button id="newMystery">New mystery</button>
       <button id="leaveMystery">Close the game</button>
-    </P>
+    </p>
   </div>
 
+  <!-- One card: the buttons that set the faders, and the chart they set -->
+  <div class="chartCard">
   <div class="presetGroups" id="presetGroups">
     <div>
-      <P class="presetTitle">Degree of hearing loss <span class="hint">Click one to turn it on. Click it again to go back to Normal.</span></P>
+      <p class="presetTitle">Degree of hearing loss <span class="hint">Click one to turn it on. Click it again to go back to Normal.</span></p>
       <div class="presets" id="flatPresets"></div>
     </div>
     <div>
-      <P class="presetTitle">Different in each ear <span class="hint">Use headphones. A red O is the right ear, a blue X is the left. Drag either one to adjust.</span></P>
+      <p class="presetTitle">Different in each ear <span class="hint">Use headphones. A red O is the right ear, a blue X is the left. Drag either one to adjust.</span></p>
       <div class="presets" id="twoEarPresets"></div>
     </div>
     <div>
-      <P class="presetTitle">Shape of hearing loss <span class="hint">Which pitches are hit hardest. Clicking one also lights the degree it usually comes with. Click a different degree to slide the shape to that level.</span></P>
+      <p class="presetTitle">Shape of hearing loss <span class="hint">Which pitches are hit hardest. Clicking one also lights the degree it usually comes with. Click a different degree to slide the shape to that level.</span></p>
       <div class="presets" id="shapePresets"></div>
     </div>
-  </div>
-
-  <!-- Extra effects that make the simulation closer to real life -->
-  <div class="realism">
-    <span class="presetTitle">More true to life</span>
-    <label>Background noise:
-      <select id="noiseChoice">
-        <option value="off">Off</option><option value="low">A little</option><option value="medium">Medium</option><option value="high">A lot</option>
-      </select>
-    </label>
-    <label>Ringing in the ears (tinnitus):
-      <select id="tinnitusChoice">
-        <option value="0">Off</option><option value="4000">4000 Hz</option><option value="6000">6000 Hz</option><option value="8000">8000 Hz</option>
-      </select>
-    </label>
-    <label>Unclear speech:
-      <select id="blurChoice">
-        <option value="0">Off</option><option value="2">Some</option><option value="5">A lot</option>
-      </select>
-    </label>
-    <label class="switch">Hearing aid <input type="checkbox" id="aidSwitch"><span></span></label>
-    <details class="hint">
-      <summary>What do these do?</summary>
-      <B>Background noise</B> adds the steady hum of a busy room to whatever is playing. <B>Ringing</B> is heard on top of everything; the faders cannot remove it.
-      <B>Unclear speech</B> smears neighboring pitches together, the way a damaged inner ear does, so speech stays muddy even when it is loud enough.
-      <B>Hearing aid</B> adds back about half of the loss at each pitch, a long-used rule of thumb for fitting one. Its result is drawn on the chart as a dashed line marked A.
-      It makes sounds louder but does not clear up unclear speech.
-    </details>
-  </div>
-
-  <!-- The current sound level, kept right above the chart so it can be read while the green tag is dragged -->
-  <div class="levelNote">
-    <span class="levelTitle">How loud is the sound in real life?</span>
-    <B id="loudnessLabel"></B>
-    <span class="hint">Set this with the green <B>Sound level</B> tag on the left edge of the chart. The sound you play stands in for a real-life sound
-      that loud. Slide the tag down to hear how much of a louder sound, such as shouting, still gets through. It never plays louder than the original.</span>
   </div>
 
   <div class="options">
@@ -723,7 +699,7 @@
   <div class="chart shape-block" id="chart">
     <img id="chartImage" alt="Audiogram of Familiar Sounds" draggable="false">
     <svg viewBox="0 0 1920 1080" preserveAspectRatio="none">
-      <G id="earLines"></G>
+      <g id="earLines"></g>
     </svg>
     <div class="guide" id="guide"></div>
     <div class="bubble" id="bubble"></div>
@@ -733,8 +709,46 @@
   <!-- The sound picture: lines up with the chart's pitch scale above it -->
   <div class="soundPicture">
     <canvas id="soundCanvas"></canvas>
-    <P class="hint"><B>Sound picture.</B> Each bar is one pitch, lined up with the chart above. <span class="keyGray">Gray</span> is the sound being played.
-       <span class="keyPink">Pink</span> is what gets through the hearing loss. Where you see gray with no pink, that part of the sound is lost.</P>
+    <p class="hint"><b>Sound picture.</b> Each bar is one pitch, lined up with the chart above. <span class="keyGray">Gray</span> is the sound being played.
+       <span class="keyPink">Pink</span> is what gets through the hearing loss. Where you see gray with no pink, that part of the sound is lost.</p>
+  </div>
+
+  </div>   <!-- end of the card -->
+
+  <!-- The current sound level, kept right under the chart -->
+  <div class="levelNote">
+    <span class="levelTitle">How loud is the sound in real life?</span>
+    <b id="loudnessLabel"></b>
+    <span class="hint">Set this with the green <b>Sound level</b> tag on the left edge of the chart. The sound you play stands in for a real-life sound
+      that loud. Slide the tag down to hear how much of a louder sound, such as shouting, still gets through. It never plays louder than the original.</span>
+  </div>
+
+  <!-- Extra effects that make the simulation closer to real life -->
+  <div class="realism">
+    <span class="presetTitle">More true to life</span>
+    <label>Background noise:
+      <select id="noiseChoice">
+        <option value="off">Off</option><option value="low">A little</option><option value="medium">Medium</option><option value="high">A lot</option>
+      </select>
+    </label>
+    <label>Ringing in the ears (tinnitus):
+      <select id="tinnitusChoice">
+        <option value="0">Off</option><option value="4000">4000 Hz</option><option value="6000">6000 Hz</option><option value="8000">8000 Hz</option>
+      </select>
+    </label>
+    <label>Unclear speech:
+      <select id="blurChoice">
+        <option value="0">Off</option><option value="2">Some</option><option value="5">A lot</option>
+      </select>
+    </label>
+    <label class="switch">Hearing aid <input type="checkbox" id="aidSwitch"><span></span></label>
+    <details class="hint">
+      <summary>What do these do?</summary>
+      <b>Background noise</b> adds the steady hum of a busy room to whatever is playing. <b>Ringing</b> is heard on top of everything; the faders cannot remove it.
+      <b>Unclear speech</b> smears neighboring pitches together, the way a damaged inner ear does, so speech stays muddy even when it is loud enough.
+      <b>Hearing aid</b> adds back about half of the loss at each pitch, a long-used rule of thumb for fitting one. Its result is drawn on the chart as a dashed line marked A.
+      It makes sounds louder but does not clear up unclear speech.
+    </details>
   </div>
 
   <!-- The sound check window: appears the first time a pitch button is pressed -->
@@ -742,17 +756,17 @@
     <div class="modalBox" role="dialog" aria-modal="true" aria-labelledby="checkTitle">
       <div id="checkQuestion">
         <h2 id="checkTitle">Quick sound check</h2>
-        <P>Not everyone can hear the high pitches, so first let's make sure any sound is coming out at all.</P>
-        <P>A plain beep is playing now. Everyone should be able to hear this one.</P>
+        <p>Not everyone can hear the high pitches, so first let's make sure any sound is coming out at all.</p>
+        <p>A plain beep is playing now. Everyone should be able to hear this one.</p>
         <button class="main" id="heardButton">I heard the beep</button>
         <button id="silentButton">I heard nothing</button>
         <button id="againButton">Play the beep again</button>
       </div>
       <div id="checkSilent" hidden>
         <h2>Good news and bad news</h2>
-        <P><B>Good news:</B> your ears are probably working just fine.</P>
-        <P><B>Bad news:</B> your computer is giving you the silent treatment.</P>
-        <P>Check that the sound is not muted, turn the volume up, and make sure your headphones are plugged in or connected.</P>
+        <p><b>Good news:</b> your ears are probably working just fine.</p>
+        <p><b>Bad news:</b> your computer is giving you the silent treatment.</p>
+        <p>Check that the sound is not muted, turn the volume up, and make sure your headphones are plugged in or connected.</p>
         <button class="main" id="retryButton">Try the beep again</button>
         <button id="closeButton">Close</button>
       </div>
@@ -763,36 +777,36 @@
     <section>
       <h2>How to use the simulator</h2>
       <ol>
-        <li><B>Start a sound.</B> At the top, choose a file, YouTube, or the microphone, and get it playing.</li>
-        <li><B>Choose a hearing loss.</B> Click a degree, a shape, or one of each. Clicking a shape shows its typical form and lights the
+        <li><b>Start a sound.</b> At the top, choose a file, YouTube, or the microphone, and get it playing.</li>
+        <li><b>Choose a hearing loss.</b> Click a degree, a shape, or one of each. Clicking a shape shows its typical form and lights the
             degree it usually comes with. Click a different degree and the shape keeps its outline but slides up or down the chart to that level.
             Click a lit shape to turn it off. Click a lit degree to go back to Normal.</li>
-        <li><B>Fine-tune with the faders.</B> Drag a fader down for more loss at that pitch. The line across the middle of the fader
+        <li><b>Fine-tune with the faders.</b> Drag a fader down for more loss at that pitch. The line across the middle of the fader
             marks its exact value, and a label shows the pitch and the number while you point at it or move it. For small steps, click a fader and press the
             arrow keys: 5 dB a press, or 1 dB with Shift held down.</li>
-        <li><B>Try louder sounds.</B> The green <B>Sound level</B> tag on the left edge of the chart, with its green line across the chart,
+        <li><b>Try louder sounds.</b> The green <b>Sound level</b> tag on the left edge of the chart, with its green line across the chart,
             is not a hearing-loss fader. It sets how loud the sound you are playing is meant to be in real life. Drag it down the dB scale
             to hear what still gets through when the same sound is a shout or a siren. Wherever a fader sits below the green line,
             that pitch cannot be heard.</li>
-        <li><B>Make the ears different.</B> Choose <B>Separate ears</B> next to "Faders set", or click a "Different in each ear" button.
+        <li><b>Make the ears different.</b> Choose <b>Separate ears</b> next to "Faders set", or click a "Different in each ear" button.
             Each pitch then has a red O for the right ear and a blue X for the left ear, and each one moves only its own ear.
             Separate ear settings are meant to be used with headphones; through speakers, both ears hear both sides.</li>
-        <li><B>Set the volume first.</B> Follow the yellow box at the top of the page: play the sample conversation and set the volume so it sounds like people talking across a table.</li>
-        <li><B>Test your own high-pitch hearing.</B> On the right side of the chart, the row of buttons marked 9K to 20K each play a pure tone at that pitch
+        <li><b>Set the volume first.</b> Follow the yellow box at the top of the page: play the sample conversation and set the volume so it sounds like people talking across a table.</li>
+        <li><b>Test your own high-pitch hearing.</b> On the right side of the chart, the row of buttons marked 9K to 20K each play a pure tone at that pitch
             (9K means 9,000 Hz) for a few seconds. The first time, a sound check asks whether you can hear a plain beep, to make sure the computer's sound is on.
             The tones do not go through the faders. Whether you hear one depends on your ears and also on your speakers or
             headphones: many laptop speakers and Bluetooth headphones cannot play the highest pitches. Keep the volume where it is; turning it up
             to hear a tone can hurt your ears even when the tone seems silent.</li>
       </ol>
       <h2>What this cannot show</h2>
-      <P>The faders only make sounds quieter. Real hearing loss often also makes speech unclear even when it is loud enough.
+      <p>The faders only make sounds quieter. Real hearing loss often also makes speech unclear even when it is loud enough.
          The "Unclear speech" setting above the chart gives a rough idea of that. One thing the simulator leaves out:
-         with a real hearing loss, very loud sounds can feel just as loud as they do to anyone else.</P>
+         with a real hearing loss, very loud sounds can feel just as loud as they do to anyone else.</p>
     </section>
 
     <section>
       <h2>Parts of the ear and types of hearing loss</h2>
-      <P>The type of hearing loss depends on which part of the ear is not working.</P>
+      <p>The type of hearing loss depends on which part of the ear is not working.</p>
       <div class="earDiagram">
         <img id="earImage" alt="Cross-section of the ear, divided into the outer ear, middle ear and inner ear">
         <!-- These two bars line up with the dividing line between the middle ear and the inner ear in the picture -->
@@ -801,56 +815,56 @@
           <div class="sensorineural" style="flex: 1;">Sensorineural hearing loss<span>inner ear and hearing nerve</span></div>
         </div>
       </div>
-      <P class="hint">Ear picture source: (add the credit for this picture here)</P>
+      <p class="hint">Ear picture source: (add the credit for this picture here)</p>
       <div class="earParts">
         <div>
           <h3>Outer ear</h3>
-          <P>Pinna and ear canal. They collect sound and carry it to the eardrum.</P>
-          <P><span class="type conductive">Conductive hearing loss</span></P>
-          <P>Sound is blocked on the way in. Causes include earwax, an ear canal infection, an object in the canal,
-             or an ear canal that did not form fully.</P>
+          <p>Pinna and ear canal. They collect sound and carry it to the eardrum.</p>
+          <p><span class="type conductive">Conductive hearing loss</span></p>
+          <p>Sound is blocked on the way in. Causes include earwax, an ear canal infection, an object in the canal,
+             or an ear canal that did not form fully.</p>
         </div>
         <div>
           <h3>Middle ear</h3>
-          <P>Eardrum, three tiny bones (malleus, incus, stapes), the air space behind the eardrum, and the Eustachian tube.
-             They pass the sound's vibrations on to the inner ear.</P>
-          <P><span class="type conductive">Conductive hearing loss</span></P>
-          <P>The vibrations do not get through well. Causes include fluid from an ear infection, a hole in the eardrum,
-             or bones that are stiff or damaged.</P>
+          <p>Eardrum, three tiny bones (malleus, incus, stapes), the air space behind the eardrum, and the Eustachian tube.
+             They pass the sound's vibrations on to the inner ear.</p>
+          <p><span class="type conductive">Conductive hearing loss</span></p>
+          <p>The vibrations do not get through well. Causes include fluid from an ear infection, a hole in the eardrum,
+             or bones that are stiff or damaged.</p>
         </div>
         <div>
           <h3>Inner ear and hearing nerve</h3>
-          <P>Cochlea, balance canals, and the nerve to the brain. The cochlea turns vibrations into nerve signals.</P>
-          <P><span class="type sensorineural">Sensorineural hearing loss</span></P>
-          <P>The cochlea or the nerve is damaged. Causes include aging, loud noise, genetics, some illnesses and some medicines.
-             It is usually permanent.</P>
+          <p>Cochlea, balance canals, and the nerve to the brain. The cochlea turns vibrations into nerve signals.</p>
+          <p><span class="type sensorineural">Sensorineural hearing loss</span></p>
+          <p>The cochlea or the nerve is damaged. Causes include aging, loud noise, genetics, some illnesses and some medicines.
+             It is usually permanent.</p>
         </div>
       </div>
-      <P><B>Mixed hearing loss</B> is a conductive loss and a sensorineural loss in the same ear.</P>
-      <P>Conductive loss mostly makes sounds quieter, which is what this simulator does. Sensorineural loss also makes sounds
-         less clear. Turn on "Unclear speech" above the chart for a rough idea of that.</P>
+      <p><b>Mixed hearing loss</b> is a conductive loss and a sensorineural loss in the same ear.</p>
+      <p>Conductive loss mostly makes sounds quieter, which is what this simulator does. Sensorineural loss also makes sounds
+         less clear. Turn on "Unclear speech" above the chart for a rough idea of that.</p>
     </section>
 
     <section>
       <h2>What a hearing test looks like</h2>
-      <P>This video shows the kind of test that produces an audiogram.</P>
+      <p>This video shows the kind of test that produces an audiogram.</p>
       <div class="videoFrame" id="testVideo"></div>
     </section>
 
     <section class="teacherBox">
       <h2>For teachers: share a setup with your class</h2>
-      <P>You can hand students a link that opens this page already set to a hearing loss you chose.</P>
+      <p>You can hand students a link that opens this page already set to a hearing loss you chose.</p>
       <ol>
         <li>Set the page up the way you want students to hear it: the faders, both ears or separate ears, the green Sound level tag,
             and anything under "More true to life".</li>
         <li>Click <button id="linkButton">Copy a link to this setup</button></li>
         <li>Paste the link into your class page, an email or a slide.</li>
       </ol>
-      <P id="linkNote" hidden></P>
-      <P>Some ways to use it: one link for each hearing loss you want the class to compare; a link per station in a rotation;
-         or a link to a real audiogram you have entered fader by fader, so everyone hears the same thing.</P>
-      <P class="hint">The link saves the settings, not the sound. Students still choose their own file, YouTube video or microphone,
-         and should set their volume with the yellow box at the top first.</P>
+      <p id="linkNote" hidden></p>
+      <p>Some ways to use it: one link for each hearing loss you want the class to compare; a link per station in a rotation;
+         or a link to a real audiogram you have entered fader by fader, so everyone hears the same thing.</p>
+      <p class="hint">The link saves the settings, not the sound. Students still choose their own file, YouTube video or microphone,
+         and should set their volume with the yellow box at the top first.</p>
     </section>
 
     <!-- WORDS TO KNOW: keep this as the last section on the page. Add any new sections above it. -->
@@ -912,7 +926,7 @@
     // Hearing aid: it adds back this share of the loss at each pitch, up to a
     // most of AID_MAX_GAIN dB, and only half as much above AID_TOP_PITCH Hz
     // (hearing aids are weakest at the highest pitches). It does nothing for
-    // losses under AID_STARTS_AT DB.
+    // losses under AID_STARTS_AT dB.
     const AID_SHARE     = 0.5;
     const AID_MAX_GAIN  = 60;
     const AID_TOP_PITCH = 6000;
@@ -1035,13 +1049,14 @@
     // The "play this pitch" buttons: each one's pitch in Hz, and how far from
     // the left edge its grid line is in the picture, in pixels.
     const TONES = [
-      { freq: 9000,  X: 898  }, { freq: 10000, X: 976  }, { freq: 11000, X: 1053 },
-      { freq: 12000, X: 1129 }, { freq: 13000, X: 1206 }, { freq: 14000, X: 1282 }, { freq: 15000, X: 1360 },
-      { freq: 16000, X: 1434 }, { freq: 17000, X: 1510 }, { freq: 18000, X: 1585 }, { freq: 19000, X: 1662 },
-      { freq: 20000, X: 1721 }
+      { freq: 9000,  x: 898  }, { freq: 10000, x: 976  }, { freq: 11000, x: 1053 },
+      { freq: 12000, x: 1129 }, { freq: 13000, x: 1206 }, { freq: 14000, x: 1282 }, { freq: 15000, x: 1360 },
+      { freq: 16000, x: 1434 }, { freq: 17000, x: 1510 }, { freq: 18000, x: 1585 }, { freq: 19000, x: 1662 },
+      { freq: 20000, x: 1721 }
     ];
     const TONE_Y       = 600;    // how far down the picture the row of buttons sits, in pixels
     const TONE_CAPTION = 'Press a button to hear a sample of that pitch (9K = 9,000 Hz)';
+    const GLIDE_MS = 320;         // how long the faders take to slide to a new preset, in thousandths of a second
     const TONE_SECONDS = 3;      // how long a tone plays
     const TONE_VOLUME  = 0.2;    // 0 = silent, 1 = as loud as the computer can go. Keep this low.
     const CHECK_BEEP   = 1000;   // the pitch of the "can you hear this?" beep, in Hz
@@ -1054,21 +1069,21 @@
 
     // Pixels from the top of the picture for a given loss
     function yForLoss(loss) {
-      const I = Math.min(Math.floor(loss / 10), LOSS_Y.length - 2);
-      return LOSS_Y[I] + (loss / 10 - I) * (LOSS_Y[I + 1] - LOSS_Y[I]);
+      const i = Math.min(Math.floor(loss / 10), LOSS_Y.length - 2);
+      return LOSS_Y[i] + (loss / 10 - i) * (LOSS_Y[i + 1] - LOSS_Y[i]);
     }
 
     // The loss for a given number of pixels from the top of the picture
-    function lossForY(Y) {
-      if (Y <= LOSS_Y[0]) return 0;
-      for (let I = 0; I < LOSS_Y.length - 1; I++) {
-        if (Y <= LOSS_Y[I + 1]) return 10 * (I + (Y - LOSS_Y[I]) / (LOSS_Y[I + 1] - LOSS_Y[I]));
+    function lossForY(y) {
+      if (y <= LOSS_Y[0]) return 0;
+      for (let i = 0; i < LOSS_Y.length - 1; i++) {
+        if (y <= LOSS_Y[i + 1]) return 10 * (i + (y - LOSS_Y[i]) / (LOSS_Y[i + 1] - LOSS_Y[i]));
       }
       return MAX_LOSS;
     }
 
-    const percentX = (X) => (100 * X / PICTURE_WIDTH)  + '%';
-    const percentY = (Y) => (100 * Y / PICTURE_HEIGHT) + '%';
+    const percentX = (x) => (100 * x / PICTURE_WIDTH)  + '%';
+    const percentY = (y) => (100 * y / PICTURE_HEIGHT) + '%';
 
     // ---------- BUILD THE FADERS ON THE CHART ----------
 
@@ -1083,7 +1098,7 @@
     // What the faders are setting: 'both' ears together, or 'separate' ears
     let ear = 'both';
 
-    function sameInBothEars() { return losses.left.every((loss, I) => loss === losses.right[I]); }
+    function sameInBothEars() { return losses.left.every((loss, i) => loss === losses.right[i]); }
 
     // There are two ways the faders can look:
     //   split = false   one fader per pitch, in the color from the Fader color
@@ -1099,7 +1114,7 @@
     guide.style.left  = percentX(GRID_LEFT);
     guide.style.width = percentX(GRID_RIGHT - GRID_LEFT);
 
-    FREQS.forEach((freq, I) => {
+    FREQS.forEach((freq, i) => {
       // The slot the faders slide in
       const slot = document.createElement('div');
       slot.className = 'slot';
@@ -1112,24 +1127,24 @@
       let drag = null;                   // the fader being dragged at this pitch, if any
       const startDrag = (event, name, fromCap) => {
         event.preventDefault();
-        const cap = caps[name][I];
+        const cap = caps[name][i];
         drag = {
           cap: cap,
           name: name,
           target: split ? name : 'both',  // which ear(s) this drag changes
-          grabOffset: fromCap ? pictureY(event) - yForLoss(losses[name][I]) : 0
+          grabOffset: fromCap ? pictureY(event) - yForLoss(losses[name][i]) : 0
         };
         dragActive = true;
         cap.setPointerCapture(event.pointerId);
         cap.classList.add('active');
         cap.focus();
         if (!fromCap) moveTo(event);
-        showGuide(I, name);
+        showGuide(i, name);
       };
       const moveTo = (event) => {
         const exact = lossForY(pictureY(event) - drag.grabOffset);
-        setLoss(I, Math.round(exact / STEP) * STEP, drag.target);
-        showGuide(I, drag.name);
+        setLoss(i, Math.round(exact / STEP) * STEP, drag.target);
+        showGuide(i, drag.name);
       };
       const endDrag = () => {
         if (!drag) return;
@@ -1144,9 +1159,9 @@
       slot.onpointerdown = (event) => {
         let name = 'right';
         if (split) {
-          const Y = pictureY(event);
-          const toLeft  = Math.abs(Y - yForLoss(losses.left[I]));
-          const toRight = Math.abs(Y - yForLoss(losses.right[I]));
+          const y = pictureY(event);
+          const toLeft  = Math.abs(y - yForLoss(losses.left[i]));
+          const toRight = Math.abs(y - yForLoss(losses.right[i]));
           name = toLeft < toRight ? 'left' : 'right';
         }
         startDrag(event, name, false);
@@ -1171,17 +1186,17 @@
         cap.onkeydown = (event) => {
           const size = event.shiftKey ? 1 : STEP;
           const target = split ? name : 'both';
-          if (event.key === 'ArrowDown') setLoss(I, losses[name][I] + size, target);
-          else if (event.key === 'ArrowUp') setLoss(I, losses[name][I] - size, target);
+          if (event.key === 'ArrowDown') setLoss(i, losses[name][i] + size, target);
+          else if (event.key === 'ArrowUp') setLoss(i, losses[name][i] - size, target);
           else return;
           event.preventDefault();
-          showGuide(I, name);
+          showGuide(i, name);
         };
 
         // Show the guide line and label when pointing at or selecting a fader
-        cap.onpointerenter = () => showGuide(I, name);
+        cap.onpointerenter = () => showGuide(i, name);
         cap.onpointerleave = () => { if (!cap.classList.contains('active') && document.activeElement !== cap) hideGuide(); };
-        cap.onfocus = () => showGuide(I, name);
+        cap.onfocus = () => showGuide(i, name);
         cap.onblur  = hideGuide;
 
         chart.append(cap);
@@ -1196,15 +1211,15 @@
       return (event.clientY - box.top) / box.height * PICTURE_HEIGHT;
     }
 
-    function showGuide(I, name) {
-      const loss = losses[name][I];
-      const Y = percentY(yForLoss(loss));
+    function showGuide(i, name) {
+      const loss = losses[name][i];
+      const y = percentY(yForLoss(loss));
       const who = !split ? '' : name === 'left' ? 'Left ear, ' : 'Right ear, ';
-      guide.style.top = Y;
+      guide.style.top = y;
       guide.style.display = 'block';
-      bubble.style.left = percentX(FREQ_X[FREQS[I]]);
-      bubble.style.top  = Y;
-      bubble.textContent = who + FREQS[I] + ' Hz: ' + loss + ' dB';
+      bubble.style.left = percentX(FREQ_X[FREQS[i]]);
+      bubble.style.top  = y;
+      bubble.textContent = who + FREQS[i] + ' Hz: ' + loss + ' dB';
       bubble.style.display = 'block';
     }
 
@@ -1214,33 +1229,59 @@
     }
 
     // Change one fader. "target" says which ear it changes: 'left', 'right' or 'both'.
-    function setLoss(I, loss, target) {
+    function setLoss(i, loss, target) {
       const value = Math.max(0, Math.min(MAX_LOSS, loss));
-      if (target !== 'right') losses.left[I]  = value;
-      if (target !== 'left')  losses.right[I] = value;
+      glideFrom = null;                                    // dragging a fader moves it at once
+      if (target !== 'right') losses.left[i]  = value;
+      if (target !== 'left')  losses.right[i] = value;
       clearChosen();
       fadersChanged();
     }
 
     // Give one ear a whole set of values
     function setEarValues(name, values) {
-      values.forEach((loss, I) => { losses[name][I] = loss; });
+      values.forEach((loss, i) => { losses[name][i] = loss; });
+      startGlide();
+    }
+
+    // ----- Gliding: when a button sets the faders, they slide to their new places instead of jumping -----
+    const drawn = { left: [], right: [] };   // where each fader is drawn right now (during a glide this is on its way to the real value)
+    let glideFrom = null, glideStart = 0;
+    const CALM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;   // some people ask for no motion
+    function startGlide() {
+      if (CALM || drawn.right.length === 0) return;
+      if (!glideFrom) requestAnimationFrame(glideStep);
+      glideFrom = { left: drawn.left.slice(), right: drawn.right.slice() };
+      glideStart = performance.now();
+    }
+    function glideStep(now) {
+      if (!glideFrom) return;                               // a fader was dragged meanwhile
+      const t = Math.min(1, Math.max(0, (now - glideStart) / (typeof GLIDE_MS === 'number' ? GLIDE_MS : 320)));
+      const eased = 1 - Math.pow(1 - t, 3);                 // quick at first, settling gently
+      ['left', 'right'].forEach((name) => {
+        losses[name].forEach((loss, i) => { drawn[name][i] = glideFrom[name][i] + (loss - glideFrom[name][i]) * eased; });
+      });
+      const from = glideFrom;
+      if (t >= 1) glideFrom = null;
+      drawFaders();
+      if (t < 1) { glideFrom = from; requestAnimationFrame(glideStep); }
     }
 
     // Redraw everything on the chart to match the fader values
     function drawFaders() {
       // Are the faders split into a red O and a blue X?
       split = ear === 'separate';
+      if (!glideFrom) ['left', 'right'].forEach((name) => { drawn[name] = losses[name].slice(); });   // not gliding: draw the real values
 
-      FREQS.forEach((freq, I) => {
+      FREQS.forEach((freq, i) => {
         ['left', 'right'].forEach((name) => {
-          const cap = caps[name][I];
-          cap.style.top = percentY(yForLoss(losses[name][I]));
-          cap.setAttribute('aria-valuenow', losses[name][I]);
+          const cap = caps[name][i];
+          cap.style.top = percentY(yForLoss(drawn[name][i]));
+          cap.setAttribute('aria-valuenow', losses[name][i]);
           cap.setAttribute('aria-label', freq + ' Hz hearing loss' + (split ? ', ' + name + ' ear' : ''));
           cap.style.zIndex = name === 'left' ? 3 : 2;    // the blue X sits on top of the red O
         });
-        caps.left[I].style.display = split ? '' : 'none';
+        caps.left[i].style.display = split ? '' : 'none';
       });
 
       // One black line for both ears together. With separate ears, a red line
@@ -1262,12 +1303,12 @@
     // The line (and its circles or X's) for one ear
     function earLine(name, color, mark, strength) {
       let points = '', marks = '';
-      FREQS.forEach((freq, I) => {
-        const X = FREQ_X[freq], Y = yForLoss(losses[name][I]);
-        points += X + ',' + Y + ' ';
-        if (mark === 'circle') marks += '<circle cx="' + X + '" cy="' + Y + '" r="13"/>';
-        if (mark === 'cross')  marks += '<path d="M' + (X - 11) + ',' + (Y - 11) + ' L' + (X + 11) + ',' + (Y + 11)
-                                      + ' M' + (X - 11) + ',' + (Y + 11) + ' L' + (X + 11) + ',' + (Y - 11) + '"/>';
+      FREQS.forEach((freq, i) => {
+        const x = FREQ_X[freq], y = yForLoss(drawn[name][i]);
+        points += x + ',' + y + ' ';
+        if (mark === 'circle') marks += '<circle cx="' + x + '" cy="' + y + '" r="13"/>';
+        if (mark === 'cross')  marks += '<path d="M' + (x - 11) + ',' + (y - 11) + ' L' + (x + 11) + ',' + (y + 11)
+                                      + ' M' + (x - 11) + ',' + (y + 11) + ' L' + (x + 11) + ',' + (y - 11) + '"/>';
       });
       const shapes = '<polyline points="' + points + '"/>' + marks;
       return '<g opacity="' + strength + '" fill="none" stroke-linejoin="round" stroke-linecap="round">'
@@ -1288,10 +1329,10 @@
     // The dashed "with hearing aid" line for one ear
     function aidedLine(name) {
       let points = '', letters = '';
-      FREQS.forEach((freq, I) => {
-        const X = FREQ_X[freq], Y = yForLoss(losses[name][I] - aidGain(losses[name][I], freq));
-        points += X + ',' + Y + ' ';
-        letters += '<text x="' + (X + 16) + '" y="' + (Y + 9) + '">A</text>';
+      FREQS.forEach((freq, i) => {
+        const x = FREQ_X[freq], y = yForLoss(drawn[name][i] - aidGain(drawn[name][i], freq));
+        points += x + ',' + y + ' ';
+        letters += '<text x="' + (x + 16) + '" y="' + (y + 9) + '">A</text>';
       });
       return '<g fill="none" stroke-linejoin="round">'
            + '<polyline points="' + points + '" stroke="#fff" stroke-width="8"/>'
@@ -1329,12 +1370,12 @@
       // A light gray grid behind the curves
       let grid = '';
       for (let column = 0; column <= 6; column++) {
-        const X = 1 + column * (width - 2) / 6;
-        grid += 'M' + X + ',1 V' + (height - 1) + ' ';
+        const x = 1 + column * (width - 2) / 6;
+        grid += 'M' + x + ',1 V' + (height - 1) + ' ';
       }
       for (let row = 0; row <= 4; row++) {
-        const Y = 1 + row * (height - 2) / 4;
-        grid += 'M1,' + Y + ' H' + (width - 1) + ' ';
+        const y = 1 + row * (height - 2) / 4;
+        grid += 'M1,' + y + ' H' + (width - 1) + ' ';
       }
       let picture = '';
       if (band) {
@@ -1344,16 +1385,16 @@
       picture += '<path d="' + grid + '" fill="none" stroke="#d0d0d0" stroke-width="1"/>';
 
       curves.forEach((curve) => {
-        const points = curve.values.map((loss, I) => [
-          edge + I * (width - 2 * edge) / (curve.values.length - 1),
+        const points = curve.values.map((loss, i) => [
+          edge + i * (width - 2 * edge) / (curve.values.length - 1),
           edge + loss / MAX_LOSS * (height - 2 * edge)
         ]);
 
         // Join the points with a smooth curve
         let path = 'M' + points[0][0] + ',' + points[0][1];
-        for (let I = 0; I < points.length - 1; I++) {
-          const before = points[Math.max(I - 1, 0)], from = points[I];
-          const to = points[I + 1], after = points[Math.min(I + 2, points.length - 1)];
+        for (let i = 0; i < points.length - 1; i++) {
+          const before = points[Math.max(i - 1, 0)], from = points[i];
+          const to = points[i + 1], after = points[Math.min(i + 2, points.length - 1)];
           path += ' C' + (from[0] + (to[0] - before[0]) / 6) + ',' + (from[1] + (to[1] - before[1]) / 6)
                 + ' '  + (to[0] - (after[0] - from[0]) / 6)  + ',' + (to[1] - (after[1] - from[1]) / 6)
                 + ' '  + to[0] + ',' + to[1];
@@ -1365,7 +1406,7 @@
     }
 
     // Turn a preset (one number, or a list) into one value per fader
-    const spread = (preset) => FREQS.map((freq, I) => Array.isArray(preset) ? preset[I] : preset);
+    const spread = (preset) => FREQS.map((freq, i) => Array.isArray(preset) ? preset[i] : preset);
 
     function addPresetButton(rowId, presetName, curves, whenClicked, band) {
       const button = document.createElement('button');
@@ -1499,10 +1540,10 @@
                       + (mysteryHidden ? ' mystery' : '');
 
       const color = FADER_COLORS[faderColor.value];
-      FREQS.forEach((freq, I) => {
-        caps.right[I].style.setProperty('--color',
-          split ? EAR_COLORS.right : color === 'rainbow' ? RAINBOW[I % RAINBOW.length] : color);
-        caps.left[I].style.setProperty('--color', EAR_COLORS.left);
+      FREQS.forEach((freq, i) => {
+        caps.right[i].style.setProperty('--color',
+          split ? EAR_COLORS.right : color === 'rainbow' ? RAINBOW[i % RAINBOW.length] : color);
+        caps.left[i].style.setProperty('--color', EAR_COLORS.left);
       });
       faderShape.disabled = split;
       faderColor.disabled = split;
@@ -1567,9 +1608,9 @@
       Object.keys(LOUDNESS_NAMES).forEach((level) => {
         if (soundLevel >= Number(level)) name = LOUDNESS_NAMES[level];
       });
-      const Y = percentY(yForLoss(soundLevel));
-      levelLine.style.top = Y;
-      levelTag.style.top  = Y;
+      const y = percentY(yForLoss(soundLevel));
+      levelLine.style.top = y;
+      levelTag.style.top  = y;
       levelTag.innerHTML  = '<small>SOUND LEVEL</small>' + soundLevel + ' dB<small>(' + name + ')</small>';
       levelTag.title      = 'Sound level: ' + soundLevel + ' dB (' + name + '). Drag up or down.';
       levelTag.setAttribute('aria-valuenow', soundLevel);
@@ -1589,10 +1630,10 @@
       const last = FREQS.length - 1;
       if (freq <= FREQS[0])    return values[0];
       if (freq >= FREQS[last]) return values[last];
-      for (let I = 0; I < last; I++) {
-        if (freq <= FREQS[I + 1]) {
-          const T = Math.log(freq / FREQS[I]) / Math.log(FREQS[I + 1] / FREQS[I]);
-          return values[I] + T * (values[I + 1] - values[I]);
+      for (let i = 0; i < last; i++) {
+        if (freq <= FREQS[i + 1]) {
+          const t = Math.log(freq / FREQS[i]) / Math.log(FREQS[i + 1] / FREQS[i]);
+          return values[i] + t * (values[i + 1] - values[i]);
         }
       }
     }
@@ -1600,33 +1641,33 @@
     // A standard math tool (the "fast Fourier transform") that converts
     // between a sound's shape over time and its mix of frequencies
     function transform(re, im, backwards) {
-      const N = re.length;
-      for (let I = 1, J = 0; I < N; I++) {
-        let bit = N >> 1;
-        for (; J & bit; bit >>= 1) J ^= bit;
-        J ^= bit;
-        if (I < J) {
-          let T = re[I]; re[I] = re[J]; re[J] = T;
-          T = im[I]; im[I] = im[J]; im[J] = T;
+      const n = re.length;
+      for (let i = 1, j = 0; i < n; i++) {
+        let bit = n >> 1;
+        for (; j & bit; bit >>= 1) j ^= bit;
+        j ^= bit;
+        if (i < j) {
+          let t = re[i]; re[i] = re[j]; re[j] = t;
+          t = im[i]; im[i] = im[j]; im[j] = t;
         }
       }
-      for (let size = 2; size <= N; size *= 2) {
+      for (let size = 2; size <= n; size *= 2) {
         const angle = (backwards ? 2 : -2) * Math.PI / size;
         const stepRe = Math.cos(angle), stepIm = Math.sin(angle);
-        for (let start = 0; start < N; start += size) {
+        for (let start = 0; start < n; start += size) {
           let wRe = 1, wIm = 0;
-          for (let K = 0; K < size / 2; K++) {
-            const A = start + K, B = A + size / 2;
-            const xRe = re[B] * wRe - im[B] * wIm, xIm = re[B] * wIm + im[B] * wRe;
-            re[B] = re[A] - xRe; im[B] = im[A] - xIm;
-            re[A] += xRe;        im[A] += xIm;
+          for (let k = 0; k < size / 2; k++) {
+            const a = start + k, b = a + size / 2;
+            const xRe = re[b] * wRe - im[b] * wIm, xIm = re[b] * wIm + im[b] * wRe;
+            re[b] = re[a] - xRe; im[b] = im[a] - xIm;
+            re[a] += xRe;        im[a] += xIm;
             const next = wRe * stepRe - wIm * stepIm;
             wIm = wRe * stepIm + wIm * stepRe;
             wRe = next;
           }
         }
       }
-      if (backwards) for (let I = 0; I < N; I++) { re[I] /= N; im[I] /= N; }
+      if (backwards) for (let i = 0; i < n; i++) { re[i] /= n; im[i] /= n; }
     }
 
     // Turn the curve into the list of numbers the browser needs.
@@ -1638,32 +1679,32 @@
       const re = new Float64Array(N), im = new Float64Array(N);
 
       // 1. The volume wanted at each frequency, written as a logarithm
-      for (let K = 0; K <= half; K++) {
-        re[K] = -lossAt(K * sampleRate / N, values) / 20 * Math.LN10;
-        if (K > 0 && K < half) re[N - K] = re[K];
+      for (let k = 0; k <= half; k++) {
+        re[k] = -lossAt(k * sampleRate / N, values) / 20 * Math.LN10;
+        if (k > 0 && k < half) re[N - k] = re[k];
       }
 
       // 2. Rearrange it so that all of the filter's energy arrives as early as possible
       transform(re, im, true);
-      for (let I = 1; I < half; I++) { re[I] *= 2; im[I] = 0; }
-      for (let I = half + 1; I < N; I++) { re[I] = 0; im[I] = 0; }
+      for (let i = 1; i < half; i++) { re[i] *= 2; im[i] = 0; }
+      for (let i = half + 1; i < N; i++) { re[i] = 0; im[i] = 0; }
       im[0] = 0; im[half] = 0;
       transform(re, im, false);
-      for (let K = 0; K < N; K++) {
-        const size = Math.exp(re[K]), turn = im[K];
-        re[K] = size * Math.cos(turn);
-        im[K] = size * Math.sin(turn);
+      for (let k = 0; k < N; k++) {
+        const size = Math.exp(re[k]), turn = im[k];
+        re[k] = size * Math.cos(turn);
+        im[k] = size * Math.sin(turn);
       }
       transform(re, im, true);
 
       // 3. Keep the first part, easing the tail down to zero
-      const H = new Float32Array(TAPS);
+      const h = new Float32Array(TAPS);
       const easeFrom = TAPS * 3 / 4;
-      for (let I = 0; I < TAPS; I++) {
-        const ease = I < easeFrom ? 1 : 0.5 * (1 + Math.cos(Math.PI * (I - easeFrom) / (TAPS - easeFrom)));
-        H[I] = re[I] * ease;
+      for (let i = 0; i < TAPS; i++) {
+        const ease = i < easeFrom ? 1 : 0.5 * (1 + Math.cos(Math.PI * (i - easeFrom) / (TAPS - easeFrom)));
+        h[i] = re[i] * ease;
       }
-      return H;
+      return h;
     }
 
     // ---------- THE AUDIO CHAIN ----------
@@ -1771,28 +1812,46 @@
       link.placeholder = 'Paste a YouTube link';
       steps = ['Paste a YouTube link here:',
                'Click this button. The video opens in a small window called "YouTube video for the simulator".',
-               share,
-               'Use the play and skip buttons under the video on this page. If you hear nothing, look at the small video window '
+               'Come back to this page and click this button. In the box Chrome shows, click the tab named <b>YouTube video for the simulator</b>, '
+               + 'keep "Also share tab audio" switched on, and click Share.',
+               'Use the play and 10-second skip buttons under the video on this page. If you hear nothing, look at the small video window '
                + 'and make sure the YouTube player is <b>not muted</b> and its volume slider is all the way up.'];
     } else {
+      // Opened as a file from a computer: YouTube will not play inside the page, so there is nothing to connect
       link.hidden = true;
-      steps = ['Open the YouTube video in <b>another tab</b> of this browser. It has to be open before you connect. '
-               + 'In the YouTube player, make sure the sound is <b>not muted</b> and its volume slider is all the way up.',
-               'Come back to this tab and click this button:',
-               share,
-               'Play, pause and skip in the YouTube tab. The picture and the changed sound show up here. '
-               + 'The YouTube tab itself goes quiet while it is connected. That is normal.'];
+      connectButton.hidden = true;
+      steps = [];
+      const offlineNote = document.createElement('p');
+      offlineNote.className = 'hint';
+      offlineNote.textContent = 'YouTube only works on the online version of this page. Opened as a file from a computer, use the built-in recordings, your own file or the microphone.';
+      youtubeSteps.before(offlineNote);
     }
     youtubeSteps.innerHTML = steps.map((step) => '<li>' + step + '</li>').join('');
 
     // Put the link box and the Connect button inside the steps they belong to
-    if (ON_THE_WEB) youtubeSteps.children[0].append(link);
-    youtubeSteps.children[1].append(connectButton);
+    // Online there are two buttons, because Chrome allows only one of "open a window" and "share a tab" per click
+    const openButton = document.createElement('button');
+    openButton.textContent = 'Open the video';
+    if (ON_THE_WEB) {
+      youtubeSteps.children[0].append(link);
+      youtubeSteps.children[1].append(openButton);
+      youtubeSteps.children[2].append(connectButton);
+    }
+
+    openButton.onclick = () => {
+      const videoId = youtubeIdFrom(link.value);
+      if (!videoId) { say('That does not look like a YouTube link. Copy it from the address bar and try again.'); return; }
+      stopYouTube();
+      videoPlaying = false;
+      videoWindow = window.open(location.pathname + '?youtube=' + encodeURIComponent(videoId), 'simulatorVideo', 'width=854,height=480');
+      if (!videoWindow) say('Chrome blocked the video window. Allow pop-ups for this page (the icon at the right end of the address bar), then click Open the video again.');
+      else say('The video is open in its own small window. Now come back to this page and click Connect YouTube.');
+    };
 
     // Pull the video's ID out of any kind of YouTube link
     function youtubeIdFrom(text) {
       let address;
-      try { address = new URL(text.trim()); } catch (E) { return null; }
+      try { address = new URL(text.trim()); } catch (e) { return null; }
       const host = address.hostname.replace(/^(www|m|music)\./, '');
       let id = null;
       if (host === 'youtu.be') id = address.pathname.split('/')[1];
@@ -1889,14 +1948,10 @@
         return;
       }
 
-      const typed = link.value.trim();
-      const videoId = ON_THE_WEB ? youtubeIdFrom(typed) : null;
-      if (ON_THE_WEB && typed && !videoId) {
-        say('That does not look like a YouTube link. Copy it from the address bar and try again.');
-        return;
-      }
+      // The video has to be open in its own small window first, so that the buttons on this page can control it
+      if (!videoWindow || videoWindow.closed) { say('First paste a YouTube link and click Open the video. Then click Connect YouTube.'); return; }
 
-      stopYouTube();
+      stopYouTube(true);      // keep the video window that is open
       stopMicrophone();
       startAudio();
 
@@ -1918,28 +1973,19 @@
         request.controller = controller;
       }
 
-      // Ask for the share first, then open the video window, both inside this
-      // one click (Chrome only allows each of them straight after a click)
       const asking = navigator.mediaDevices.getDisplayMedia(request);
-
-      if (videoId) {
-        videoPlaying = false;
-        videoWindow = window.open(location.pathname + '?youtube=' + encodeURIComponent(videoId),
-                                  'simulatorVideo', 'width=854,height=480');
-        if (!videoWindow) say('Chrome blocked the video window. Allow pop-ups for this page, then click Connect YouTube again.');
-      }
 
       let stream;
       try {
         stream = await asking;
-      } catch (E) {
+      } catch (e) {
         if (videoWindow) say('The video window is open but nothing was shared. Click Connect YouTube again and pick it.');
         else say('Sharing was cancelled.');
         return;
       }
 
       if (controller) {
-        try { controller.setFocusBehavior('no-focus-change'); } catch (E) { /* not a tab */ }
+        try { controller.setFocusBehavior('no-focus-change'); } catch (e) { /* not a tab */ }
       }
 
       const picture = stream.getVideoTracks()[0];
@@ -1969,17 +2015,19 @@
       player.muted = true;
       player.play();
 
-      if (picture) picture.onended = stopYouTube;
+      if (picture) picture.onended = () => stopYouTube();
       if (controllingYouTube()) say('Connected. Use the Play and skip buttons under the video.');
       else say('Connected. Play, pause and skip in the YouTube tab. The faders here change what you hear.');
       showButtons();
     };
 
     // Disconnect YouTube (also runs when you click "Stop sharing" in Chrome)
-    function stopYouTube() {
-      if (videoWindow && !videoWindow.closed) videoWindow.close();
-      videoWindow = null;
-      videoPlaying = false;
+    function stopYouTube(keepWindow) {
+      if (!keepWindow) {
+        if (videoWindow && !videoWindow.closed) videoWindow.close();
+        videoWindow = null;
+        videoPlaying = false;
+      }
       if (!tabStream) return;
       tabStream.getTracks().forEach((track) => track.stop());
       tabSource.disconnect();
@@ -2018,7 +2066,7 @@
       let stream;
       try {
         stream = await navigator.mediaDevices.getUserMedia({ audio: wanted });
-      } catch (E) {
+      } catch (e) {
         say('The microphone could not be turned on. Click the icon at the left end of the address bar to allow it, then try again.');
         return;
       }
@@ -2093,10 +2141,10 @@
       const extra  = soundLevel - CONVERSATION;
       // The hearing aid, if it is on, adds some of the loss back first.
       const design = (name) => designFilter(
-        losses[name].map((loss, I) => Math.max(0, loss - aidGain(loss, FREQS[I]) - extra)), ctx.sampleRate);
+        losses[name].map((loss, i) => Math.max(0, loss - aidGain(loss, FREQS[i]) - extra)), ctx.sampleRate);
 
       // One filter for each ear (the same one twice when the ears match)
-      const earsMatch = losses.left.every((loss, I) => loss === losses.right[I]);
+      const earsMatch = losses.left.every((loss, i) => loss === losses.right[i]);
       const left  = design('left');
       const right = earsMatch ? left : design('right');
 
@@ -2146,27 +2194,27 @@
       const low    = 1 - Math.exp(-2 * Math.PI * 500 / ctx.sampleRate);    // gently softens everything above about 500 Hz
       const high   = 1 - Math.exp(-2 * Math.PI * 4000 / ctx.sampleRate);   // softens further above about 4000 Hz
       const rumble = 1 - Math.exp(-2 * Math.PI * 120 / ctx.sampleRate);    // removes rumble below about 120 Hz
-      let A = 0, B = 0, C = 0;
-      for (let N = 0; N < length; N++) {
+      let a = 0, b = 0, c = 0;
+      for (let n = 0; n < length; n++) {
         const hiss = Math.random() * 2 - 1;
-        A += low * (hiss - A);
-        B += high * (A - B);
-        C += rumble * (B - C);
-        samples[N] = B - C;
+        a += low * (hiss - a);
+        b += high * (a - b);
+        c += rumble * (b - c);
+        samples[n] = b - c;
       }
 
       // Blend the end into the start so the loop repeats without a click
       const blend = Math.floor(ctx.sampleRate * 0.1);
-      for (let N = 0; N < blend; N++) {
-        const T = N / blend;
-        samples[N] = samples[N] * T + samples[length - blend + N] * (1 - T);
+      for (let n = 0; n < blend; n++) {
+        const t = n / blend;
+        samples[n] = samples[n] * t + samples[length - blend + n] * (1 - t);
       }
 
       // Set its strength to that of a typical voice (0.1)
       let energy = 0;
-      for (let N = 0; N < length - blend; N++) energy += samples[N] * samples[N];
+      for (let n = 0; n < length - blend; n++) energy += samples[n] * samples[n];
       const scale = 0.1 / Math.sqrt(energy / (length - blend));
-      for (let N = 0; N < length; N++) samples[N] *= scale;
+      for (let n = 0; n < length; n++) samples[n] *= scale;
 
       const source = ctx.createBufferSource();
       source.buffer = buffer;
@@ -2263,7 +2311,7 @@
         // The fast Fourier transform: time <-> pitch
         transform(re, im, backwards) {
           const n = re.length;
-          for (let I = 1, j = 0; I < n; i++) {
+          for (let i = 1, j = 0; i < n; i++) {
             let bit = n >> 1;
             for (; j & bit; bit >>= 1) j ^= bit;
             j ^= bit;
@@ -2282,12 +2330,12 @@
               }
             }
           }
-          if (backwards) for (let I = 0; I < n; i++) { re[i] /= n; im[i] /= n; }
+          if (backwards) for (let i = 0; i < n; i++) { re[i] /= n; im[i] /= n; }
         }
 
         smearSlice(inBuf, outBuf) {
           const N = this.N, half = N / 2, re = this.re, im = this.im, power = this.power;
-          for (let I = 0; I < N; i++) { re[i] = inBuf[i] * this.win[i]; im[i] = 0; }
+          for (let i = 0; i < N; i++) { re[i] = inBuf[i] * this.win[i]; im[i] = 0; }
           this.transform(re, im, false);
           for (let k = 0; k <= half; k++) power[k] = re[k] * re[k] + im[k] * im[k];
           for (let k = 0; k <= half; k++) {
@@ -2320,7 +2368,7 @@
           // (averaged over about half a second) and turn the result back up to match.
           let energyIn = 0, energyOut = 0;
           const first = input[0];
-          for (let I = 0; I < size; i++) {
+          for (let i = 0; i < size; i++) {
             if (first) energyIn += first[i] * first[i];
             energyOut += output[0][i] * output[0][i];
           }
@@ -2352,7 +2400,7 @@
         }
         try {
           await blurLoading;
-        } catch (E) {
+        } catch (e) {
           say('The unclear speech effect could not start in this browser.');
           blurChoice.value = '0';
           blurLoading = null;
@@ -2369,10 +2417,10 @@
 
       // Off: the sound goes straight from "input" to "pre". On: it goes through the effect.
       const wanted = Number(blurChoice.value);
-      try { input.disconnect(pre); } catch (E) { /* was not connected */ }
+      try { input.disconnect(pre); } catch (e) { /* was not connected */ }
       if (blurNode) {
-        try { input.disconnect(blurNode); } catch (E) { /* was not connected */ }
-        try { blurNode.disconnect(); } catch (E) { /* was not connected */ }
+        try { input.disconnect(blurNode); } catch (e) { /* was not connected */ }
+        try { blurNode.disconnect(); } catch (e) { /* was not connected */ }
       }
       if (wanted > 0 && blurNode) {
         blurNode.port.postMessage({ amount: wanted });
@@ -2398,9 +2446,9 @@
 
     // How far across the picture a pitch is, as a share of its width (0 to 1)
     function shareAcross(freq) {
-      const I = Math.min(Math.floor(freq / 500), GRID_X.length - 2);
-      const X = GRID_X[I] + (freq / 500 - I) * (GRID_X[I + 1] - GRID_X[I]);
-      return X / PICTURE_WIDTH;
+      const i = Math.min(Math.floor(freq / 500), GRID_X.length - 2);
+      const x = GRID_X[i] + (freq / 500 - i) * (GRID_X[i + 1] - GRID_X[i]);
+      return x / PICTURE_WIDTH;
     }
 
     function startSoundPicture() {
@@ -2494,7 +2542,7 @@
       if (!toneBuffers[freq]) {
         const buffer = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
         const samples = buffer.getChannelData(0);
-        for (let N = 0; N < samples.length; N++) samples[N] = Math.sin(2 * Math.PI * freq * N / ctx.sampleRate);
+        for (let n = 0; n < samples.length; n++) samples[n] = Math.sin(2 * Math.PI * freq * n / ctx.sampleRate);
         toneBuffers[freq] = buffer;
       }
       return toneBuffers[freq];
@@ -2582,10 +2630,10 @@
       playBeep();
     }
 
-    TONES.forEach((item, I) => {
+    TONES.forEach((item, i) => {
       const button = document.createElement('button');
       button.className = 'tone';
-      button.style.left = percentX(item.X);
+      button.style.left = percentX(item.x);
       button.style.top  = percentY(TONE_Y);
       button.textContent = (item.freq / 1000) + 'K';
       button.title = 'Play ' + item.freq.toLocaleString() + ' Hz';
@@ -2597,14 +2645,14 @@
     // The bracket over the row of buttons, with its caption
     const bracket = document.createElement('div');
     bracket.className = 'toneBracket';
-    bracket.style.left  = percentX(TONES[0].X - 18);
-    bracket.style.width = percentX(TONES[TONES.length - 1].X - TONES[0].X + 42);
+    bracket.style.left  = percentX(TONES[0].x - 18);
+    bracket.style.width = percentX(TONES[TONES.length - 1].x - TONES[0].x + 42);
     bracket.style.top   = percentY(TONE_Y - 40);
 
     const caption = document.createElement('div');
     caption.className = 'toneCaption';
     caption.textContent = TONE_CAPTION;
-    caption.style.left = percentX((TONES[0].X + TONES[TONES.length - 1].X) / 2);
+    caption.style.left = percentX((TONES[0].x + TONES[TONES.length - 1].x) / 2);
     caption.style.top  = percentY(TONE_Y - 46);
     chart.append(bracket, caption);
 
@@ -2629,8 +2677,8 @@
     const themeChoice = document.getElementById('themeChoice');
     const textChoice  = document.getElementById('textChoice');
 
-    function remember(key, value) { try { localStorage.setItem(key, value); } catch (E) { /* not allowed here */ } }
-    function recall(key)          { try { return localStorage.getItem(key); } catch (E) { return null; } }
+    function remember(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* not allowed here */ } }
+    function recall(key)          { try { return localStorage.getItem(key); } catch (e) { return null; } }
 
     function showLook() {
       document.body.classList.toggle('dark', themeChoice.value === 'dark');
@@ -2671,7 +2719,7 @@
     linkButton.onclick = async () => {
       const address = setupLink();
       let copied = false;
-      try { await navigator.clipboard.writeText(address); copied = true; } catch (E) { /* copying was not allowed */ }
+      try { await navigator.clipboard.writeText(address); copied = true; } catch (e) { /* copying was not allowed */ }
       linkNote.hidden = false;
       linkNote.textContent = (copied ? 'Link copied. ' : 'Copy this link: ' + address + ' ')
         + (ON_THE_WEB ? 'Anyone who opens it gets this hearing loss and these settings.'
