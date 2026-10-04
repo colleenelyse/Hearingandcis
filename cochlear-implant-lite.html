@@ -141,8 +141,8 @@
     body.lite { max-width: 1000px; }
     body.lite .jump, body.lite #sourceTabs, body.lite #source-file, body.lite #source-youtube, body.lite #source-mic, body.lite #source-story .hint,
     body.lite #player, body.lite .arrayNotes, body.lite #eraNote, body.lite .backUp, body.lite #status,
-    body.lite .panel:has(#eras) ~ .panel, body.lite #arrayPicture text[id^="label"] { display: none !important; }
-    body.lite #arrayPicture circle { pointer-events: none; }                /* the electrodes are for watching, not clicking */
+    body.lite .panel:has(#eras) ~ .panel { display: none !important; }
+    .liteInfo { text-align: center; font-weight: 700; min-height: 24px; margin: 6px auto 0 auto; }
     body.lite .top { align-items: center; }
     body.lite .top .panel { border: none; background: none; box-shadow: none; padding: 0; }
     body.lite [id^="source-"] { margin-top: 0; border: none; background: none; padding: 0; }
@@ -1787,8 +1787,17 @@
       const legend = document.createElement('p');
       legend.className = 'hint';
       legend.style.cssText = 'text-align: center; margin: 8px auto 0 auto;';
-      legend.textContent = 'Teal electrodes are switched on, and glow yellow while their pitches sound. Dashed ones are switched off.';
-      arrayPanel.append(legend);
+      legend.textContent = 'Click an electrode to hear its pitch. The numbers are in Hz (1.2k = 1,200). Teal electrodes are switched on, and glow yellow while their pitches sound. Dashed ones are switched off.';
+      // one short line saying what was just clicked
+      const liteInfo = document.createElement('p');
+      liteInfo.className = 'liteInfo';
+      arrayPanel.append(liteInfo, legend);
+      const plainBeep = beep;
+      beep = function (i) {
+        plainBeep(i);
+        const band = bandOf(i);
+        liteInfo.textContent = band ? 'Electrode ' + (i + 1) + ' plays about ' + longHz(Math.sqrt(band[0] * band[1])) + '.' : 'Electrode ' + (i + 1) + ' is switched off.';
+      };
 
       // a way on to the full version
       const deeper = document.createElement('p');
