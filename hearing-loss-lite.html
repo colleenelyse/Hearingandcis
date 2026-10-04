@@ -686,10 +686,10 @@
       </div>
 
       <div class="source" id="source-builtin">
-        <p><button id="builtStory">Play the story</button> <button id="builtGuided">Play the listening tutorial</button></p>
+        <p><button id="builtStory">Play the story</button> <button id="builtGuided">Play the speech sounds sampler</button></p>
         <p class="hint">Both recordings were written to include speech sounds at low, middle and high pitches, so you can hear what each hearing loss does to them.
            <b>The story</b> (45 seconds) is the quickest way to hear the difference as you move the faders.
-           <b>The listening tutorial</b> (about 2 minutes) walks through low, middle and high speech sounds one group at a time.</p>
+           <b>The speech sounds sampler</b> (about 2 minutes) walks through low, middle and high speech sounds one group at a time.</p>
       </div>
 
       <div class="source" id="source-file">
@@ -796,14 +796,13 @@
        Each 10 dB you slide it up makes everything 10 dB quieter, the same as adding 10 dB of hearing loss at every pitch.
        Leave your computer's volume where it is.</p>
     <ol>
-      <li>Play a sound:
-        <button id="guidedButton">Play the guided tests</button>
-        <button id="storyButton">Play the story (harder)</button>
-        or use your own file, YouTube or the microphone in the box above.
+      <li>Play a sound from the <b>Sound from</b> box above: a built-in recording, your own file, YouTube or the microphone.
+        <button id="guidedButton" hidden>Play the speech sounds sampler</button>
+        <button id="storyButton" hidden>Play the story (harder)</button>
         <audio id="guidedClip" preload="auto"></audio>
         <audio id="storyClip" preload="auto"></audio>
-        <br><span class="hint"><b>Guided tests</b> (about 2 minutes): the voice names each kind of sound, plays it, and explains what it means if you missed it.
-        <b>Story</b> (about 45 seconds): the same range of sounds in a short story, with no hints. Click a button again to pause.</span>
+        <br><span class="hint"><b>The speech sounds sampler</b> (about 2 minutes) names each kind of sound, plays it, and explains what it means if you missed it.
+        <b>The story</b> (about 45 seconds) has the same range of sounds with no hints, so it is harder.</span>
       </li>
       <li>Listen for what is missing. Are the low, humming sounds gone? The middle? The high, hissing sounds? Or does it all sound normal?</li>
       <li>Choose your guess:
@@ -823,7 +822,7 @@
       <p>My grandmother says it's the best thing we ever found. I think so too.</p>
     </div>
     <div class="script" id="scriptGuided" hidden>
-      <p class="scriptTitle">Script: the guided tests</p>
+      <p class="scriptTitle">Script: the speech sounds sampler</p>
       <p>These are six quick tests designed to show which speech sounds get harder to hear when pitches are missing or changed. Each test is a short example built around one group of speech sounds. For each one, I'll say what to focus on, play it, then tell you what it means.</p>
 
       <p><b>One.</b> Everyday speech. Listen.</p>
@@ -3167,8 +3166,8 @@
     //   guided = a voice that names each kind of sound, plays it and explains it
     //   story  = a short story with the same range of sounds and no hints
     const voices = {
-      guided: { clip: document.getElementById('guidedClip'), button: document.getElementById('guidedButton'), extra: document.getElementById('builtGuided'), plain: 'the listening tutorial',
-                script: document.getElementById('scriptGuided'), name: 'the guided tests', source: null },
+      guided: { clip: document.getElementById('guidedClip'), button: document.getElementById('guidedButton'), extra: document.getElementById('builtGuided'), plain: 'the speech sounds sampler',
+                script: document.getElementById('scriptGuided'), name: 'the speech sounds sampler', source: null },
       story:  { clip: document.getElementById('storyClip'),  button: document.getElementById('storyButton'), extra: document.getElementById('builtStory'), plain: 'the story',
                 script: document.getElementById('scriptStory'),  name: 'the story (harder)', source: null }
     };
@@ -3566,7 +3565,7 @@
       document.getElementById('source-builtin').before(stepOne);
       const lengths = document.createElement('p');
       lengths.className = 'hint liteNote';
-      lengths.textContent = 'The story is 45 seconds. The listening tutorial is about 2 minutes and walks through low, middle and high speech sounds.';
+      lengths.textContent = 'The story is 45 seconds. The speech sounds sampler is about 2 minutes and walks through low, middle and high speech sounds.';
       document.getElementById('source-builtin').after(lengths);
       const stepTwo = document.createElement('h2');
       stepTwo.className = 'liteStep';

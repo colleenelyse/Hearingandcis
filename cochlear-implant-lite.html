@@ -313,11 +313,11 @@
 
       <div id="source-story">
         <p><button class="clipButton" data-clip="story" data-name="the story">Play the story</button>
-           <button class="clipButton" data-clip="guided" data-name="the listening tutorial">Play the listening tutorial</button>
+           <button class="clipButton" data-clip="guided" data-name="the speech sounds sampler">Play the speech sounds sampler</button>
            <audio id="storyClip" preload="auto"></audio></p>
         <p class="hint">Both recordings were written to include speech sounds at low, middle and high pitches, so you can hear what each setting does to them.
            <b>The story</b> (45 seconds) is the quickest way to hear the difference between the settings below.
-           <b>The listening tutorial</b> (about 2 minutes) walks through low, middle and high speech sounds one group at a time.</p>
+           <b>The speech sounds sampler</b> (about 2 minutes) walks through low, middle and high speech sounds one group at a time.</p>
       </div>
       <div id="source-file" hidden>
         <p><input type="file" id="file" accept="video/*,audio/*"></p>
@@ -1899,7 +1899,7 @@
       document.getElementById('source-story').before(stepOne);
       const lengths = document.createElement('p');
       lengths.className = 'hint liteNote';
-      lengths.textContent = 'The story is 45 seconds. The listening tutorial is about 2 minutes and walks through low, middle and high speech sounds.';
+      lengths.textContent = 'The story is 45 seconds. The speech sounds sampler is about 2 minutes and walks through low, middle and high speech sounds.';
       document.getElementById('source-story').after(lengths);
       document.querySelector('#modeButtons b').outerHTML = '<h2 class="liteStep" style="flex-basis: 100%;">2. Choose how to hear it</h2>';
 
