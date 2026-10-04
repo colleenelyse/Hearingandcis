@@ -124,6 +124,13 @@
     #transportNote { font-size: 12.5px; line-height: 1.3; }
     /* the Home arrow and the link to the other simulator, stacked at the top left */
     .titleSide { display: flex; align-items: center; gap: 20px; }
+    /* The one link at the top of every page: a square Home button */
+    a.homeButton { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; width: 66px; height: 66px; flex: none; box-sizing: border-box;
+                  border-radius: 14px; border: 1.5px solid var(--line); background: var(--raised); color: var(--ink); font-weight: 800; font-size: 14px; line-height: 1.1; text-decoration: none; }
+    .homeButton:hover { border-color: var(--accent, #e6007e); }
+    .homeButton:focus-visible { outline: 3px solid var(--accent, #e6007e); outline-offset: 2px; }
+    .contrast .homeButton { border: 2px solid #fff; color: #fff; }
+    body.game .homeButton { display: none; }
     .pageNav  { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
     .pageNav .pageLink { font-size: 14px; padding: 5px 12px; white-space: nowrap; }
     body.game .pageNav { display: none; }
@@ -221,11 +228,10 @@
 
   <div class="pageBar" id="top">
     <div class="titleSide">
-      <nav class="pageNav" aria-label="Other pages">
-        <a class="pageLink" href="index.html" title="Back to the welcome page">&larr; Home</a>
-        <a class="pageLink" href="hearing-loss-simulator.html" title="Opens the other page: what different hearing losses sound like">Hearing loss simulator</a>
-        <a class="pageLink" href="parts-of-the-ear.html" title="Opens a picture of the ear with labels you can switch on and off">Parts of the ear</a>
-      </nav>
+      <a class="homeButton" href="index.html" title="Back to the welcome page">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 3 L21 11"/><path d="M5 9.5 V20 H10 V14 H14 V20 H19 V9.5"/></svg>
+        Home
+      </a>
       <h1>Cochlear Implant Simulator</h1>
     </div>
     <div class="pageTools">
@@ -407,8 +413,8 @@
     <p>Not everyone with hearing loss can. It depends on the ear itself and on the person's situation.</p>
     <p><b>The ear and body (anatomy)</b></p>
     <ul>
-      <li><b>There has to be an auditory nerve.</b> The auditory nerve connects the cochlea to the brain. The implant's electrodes sit inside the cochlea, where the ends of this nerve are. Their tiny electric pulses skip the damaged parts of the cochlea and set off the nerve directly, and the nerve carries the signal to the brain. If the nerve is missing, the signal has no way to get there, so an implant cannot help.</li>
-      <li><b>There has to be a cochlea the wire can fit into.</b> Some people are born with a cochlea that formed differently before birth (a congenital difference). Doctors look for these on a CT scan or an MRI before surgery. A CT scan shows the bone and the shape of the cochlea, and an MRI shows the auditory nerve:
+      <li><b>There has to be a working vestibulocochlear nerve</b> (often called the auditory nerve). The hearing part of this nerve connects the cochlea to the brain. The implant's electrodes sit inside the cochlea, where the ends of this nerve are. Their tiny electric pulses skip the damaged parts of the cochlea and set off the nerve directly, and the nerve carries the signal to the brain. If the nerve is missing, the signal has no way to get there, so an implant cannot help.</li>
+      <li><b>There has to be a cochlea the wire can fit into.</b> Some people are born with a cochlea that formed differently before birth (a congenital difference). Doctors look for these on a CT scan or an MRI before surgery. A CT scan shows the bone and the shape of the cochlea, and an MRI shows the vestibulocochlear nerve:
         <ul>
           <li><b>No cochlea at all.</b> The inner ear never formed. An implant is not possible, because there is nowhere to put the wire.</li>
           <li><b>One open space instead of a spiral</b> (called a common cavity). The cochlea and the balance organ formed as a single pocket. An implant is sometimes possible with a specially shaped wire.</li>
@@ -434,7 +440,7 @@
         </ul>
         <b>Why the difference matters:</b> the first two move sound over to the good ear, so the person still hears with one ear. They help with sound coming from the deaf side, but not with telling where a sound is coming from.
         In a trial that compared all three, only the implant improved locating sounds and eased ringing in the ear (tinnitus).<br>
-        <b>Why someone might still choose a CROS aid or a Baha:</b> the deaf ear may have no working auditory nerve or cochlea; the ear may have been deaf so long that the brain would struggle to use it; they work right away, with no months of learning;
+        <b>Why someone might still choose a CROS aid or a Baha:</b> the deaf ear may have no working vestibulocochlear nerve or cochlea; the ear may have been deaf so long that the brain would struggle to use it; they work right away, with no months of learning;
         they can be tried out before deciding; and the surgery is smaller or not needed at all.</li>
       <li><b>Access.</b> Insurance, cost, distance from a clinic, and whether a doctor ever suggests it all matter. Fewer than 1 in 10 people in the United States who could benefit have an implant.</li>
       <li><b>Choice.</b> An implant is a choice, not a requirement. Many Deaf people and families choose sign language and do not want one. The box "Do deaf people need to be fixed?" below says more.</li>
@@ -480,7 +486,7 @@
         </ul>
         Sound is then fitted into the space between those two levels.</li>
       <li><b>The person says what they hear.</b> An adult points to a loudness chart ("too soft", "comfortable", "too loud"). A young child plays a listening game, such as dropping a block in a bucket each time they hear a beep.</li>
-      <li><b>For babies, the implant can measure the nerve itself.</b> It sends a pulse and records how the auditory nerve responds, so the audiologist has a starting point even when the child is too young to take part or give feedback.</li>
+      <li><b>For babies, the implant can measure the nerve itself.</b> It sends a pulse and records how the vestibulocochlear nerve responds, so the audiologist has a starting point even when the child is too young to take part or give feedback.</li>
       <li><b>The map is saved to the processor</b>, and the person goes out and listens with it.</li>
     </ol>
     <p><b>What the audiologist can adjust</b></p>
@@ -554,7 +560,7 @@
     </div>
     <p><b>The biggest differences:</b></p>
     <ul>
-      <li><b>Microphone or sensor.</b> A microphone under the skin hears through a layer of tissue, which changes the sound and took years to get right. A middle-ear sensor skips that problem by letting the outer ear and eardrum do their usual job, but it depends on those parts of the ear working.</li>
+      <li><b>Microphone or sensor.</b> A microphone under the skin hears through a layer of tissue, which changes the sound and took years to get right. A middle-ear sensor skips that problem by letting the outer ear and tympanic membrane (eardrum) do their usual job, but it depends on those parts of the ear working.</li>
       <li><b>Head or chest.</b> A battery in the head keeps everything in one place. A battery in the chest can be bigger and last longer between charges, but it means a second site for surgery and a wire under the skin.</li>
       <li><b>Proven or not yet.</b> Only one of the three has been approved anywhere. The battery lifespans are the makers' own estimates, because none of these has been in anyone's head for that long.</li>
     </ul>
@@ -620,10 +626,10 @@
     <h2 id="words" style="margin-top: 0;">Words to know</h2>
     <dl>
       <dt>Cochlea</dt><dd>The snail-shaped inner ear, where sound is turned into nerve signals.</dd>
-      <dt>Auditory nerve</dt><dd>The nerve that connects the ear to the brain. It carries sound signals from the cochlea to the brain. It is also called the hearing nerve.</dd>
+      <dt>Vestibulocochlear nerve</dt><dd>The nerve that connects the inner ear to the brain. Its hearing part carries sound signals from the cochlea to the brain, and is often called the auditory nerve.</dd>
       <dt>Residual hearing</dt><dd>The hearing a person still has in an ear with hearing loss. It is also called leftover hearing.</dd>
       <dt>Mapping</dt><dd>Tuning an implant for the person wearing it, done by an audiologist. The saved settings are called a map.</dd>
-      <dt>Electrode</dt><dd>A tiny metal contact inside the cochlea. It gives off a small electric pulse that sets off the nearby ends of the auditory nerve.</dd>
+      <dt>Electrode</dt><dd>A tiny metal contact inside the cochlea. It gives off a small electric pulse that sets off the nearby ends of the vestibulocochlear nerve.</dd>
       <dt>Electrode array</dt><dd>The row of electrodes on the thin wire that sits inside the cochlea.</dd>
       <dt>Channel</dt><dd>One band of pitches that the implant handles separately. Some implants use two contacts for each channel.</dd>
       <dt>Vocoder</dt><dd>A way of rebuilding a sound from a small number of pitch bands, keeping only how loud each band is from moment to moment.</dd>
@@ -1776,9 +1782,6 @@
     if (document.body.classList.contains('lite')) {
       document.title = 'Cochlear Implant Simulator: Lite';
       document.querySelector('h1').innerHTML = 'Cochlear Implant Simulator <span class="liteTag">Lite</span>';
-      const other = document.querySelectorAll('.pageNav a')[1];
-      other.href = 'hearing-loss-lite.html';
-      other.textContent = 'Hearing loss simulator: Lite';
 
       // Numbered headings, so it is clear where to start
       const stepOne = document.createElement('h2');

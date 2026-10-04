@@ -21,6 +21,13 @@
     .hint     { color: var(--quiet); font-size: 14px; margin: 6px 0; }
     .pageBar  { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 20px; margin-bottom: 14px; }
     .titleSide { display: flex; align-items: center; gap: 20px; }
+    /* The one link at the top of every page: a square Home button */
+    a.homeButton { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; width: 66px; height: 66px; flex: none; box-sizing: border-box;
+                  border-radius: 14px; border: 1.5px solid var(--line); background: var(--raised); color: var(--ink); font-weight: 800; font-size: 14px; line-height: 1.1; text-decoration: none; }
+    .homeButton:hover { border-color: var(--accent, #e6007e); }
+    .homeButton:focus-visible { outline: 3px solid var(--accent, #e6007e); outline-offset: 2px; }
+    .contrast .homeButton { border: 2px solid #fff; color: #fff; }
+    body.game .homeButton { display: none; }
     .pageNav  { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
     .pageLink { text-decoration: none; font-weight: 700; font-size: 14px; padding: 5px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--raised); color: var(--ink); white-space: nowrap; }
     .pageLink:hover { border-color: var(--accent); }
@@ -80,12 +87,10 @@
 <body>
   <div class="pageBar">
     <div class="titleSide">
-      <nav class="pageNav" aria-label="Other pages">
-        <a class="pageLink" href="index.html" title="Back to the welcome page">&larr; Home</a>
-        <a class="pageLink" href="hearing-loss-simulator.html" title="Opens the page that plays what different hearing losses sound like">Hearing loss simulator</a>
-        <a class="pageLink" href="cochlear-implant-simulator.html" title="Opens the page that plays what a cochlear implant sounds like">Cochlear implant simulator</a>
-        <a class="pageLink" href="ear-quiz.html" title="Opens the quiz: label the ear and answer questions">Ear quiz</a>
-      </nav>
+      <a class="homeButton" href="index.html" title="Back to the welcome page">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 3 L21 11"/><path d="M5 9.5 V20 H10 V14 H14 V20 H19 V9.5"/></svg>
+        Home
+      </a>
       <h1>Parts of the Ear</h1>
     </div>
     <div class="pageTools">
@@ -183,7 +188,7 @@
           <dt>Auricle / Pinna</dt>
           <dd>The part of the ear on the outside of the head. Sound waves enter here.</dd>
           <dt>Ear canal</dt>
-          <dd>The tube that carries sound waves to the eardrum.</dd>
+          <dd>The tube that carries sound waves to the tympanic membrane (eardrum).</dd>
           <dt>Tympanic membrane (eardrum)</dt>
           <dd>Divides the outer ear from the middle ear. It vibrates when sound waves hit it and passes the vibrations to the ossicles.</dd>
           <dt>Skull</dt>
@@ -195,7 +200,7 @@
         <dl>
           <dt>Ossicles</dt>
           <dd>Three small connected bones: the malleus (hammer), the incus (anvil) and the stapes (stirrup).
-              They amplify the vibrations from the eardrum and send them to the cochlea.</dd>
+              They amplify the vibrations from the tympanic membrane (eardrum) and send them to the cochlea.</dd>
           <dt>Eustachian tube</dt>
           <dd>Links the middle ear with the back of the nose. It helps equalize the pressure in the middle ear.</dd>
         </dl>
@@ -210,7 +215,7 @@
           <dt>Vestibular apparatus</dt>
           <dd>Holds the receptors for balance.</dd>
           <dt>Vestibulocochlear nerve (cranial nerve VIII)</dt>
-          <dd>Carries the electrical signals from the inner ear to the brain. The hearing part of it is often called the auditory nerve.</dd>
+          <dd>Carries the electrical signals from the inner ear to the brain.</dd>
         </dl>
       </div>
     </div>

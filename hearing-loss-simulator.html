@@ -488,6 +488,13 @@
 
     /* the Home arrow and the link to the other simulator, stacked at the top left */
     .titleSide { display: flex; align-items: center; gap: 20px; }
+    /* The one link at the top of every page: a square Home button */
+    a.homeButton { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; width: 66px; height: 66px; flex: none; box-sizing: border-box;
+                  border-radius: 14px; border: 1.5px solid var(--line); background: var(--raised); color: var(--ink); font-weight: 800; font-size: 14px; line-height: 1.1; text-decoration: none; }
+    .homeButton:hover { border-color: var(--accent, #e6007e); }
+    .homeButton:focus-visible { outline: 3px solid var(--accent, #e6007e); outline-offset: 2px; }
+    .contrast .homeButton { border: 2px solid #fff; color: #fff; }
+    body.game .homeButton { display: none; }
     .pageNav  { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
     .pageNav .pageLink { font-size: 14px; padding: 5px 12px; white-space: nowrap; }
     body.game .pageNav { display: none; }
@@ -543,11 +550,10 @@
 <body>
   <div class="pageBar">
     <div class="titleSide">
-      <nav class="pageNav" aria-label="Other pages">
-        <a class="pageLink" href="index.html" title="Back to the welcome page">&larr; Home</a>
-        <a class="pageLink" href="cochlear-implant-simulator.html" title="Opens the other page: what a cochlear implant sounds like">Cochlear implant simulator</a>
-        <a class="pageLink" href="parts-of-the-ear.html" title="Opens a picture of the ear with labels you can switch on and off">Parts of the ear</a>
-      </nav>
+      <a class="homeButton" href="index.html" title="Back to the welcome page">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 3 L21 11"/><path d="M5 9.5 V20 H10 V14 H14 V20 H19 V9.5"/></svg>
+        Home
+      </a>
       <h1 id="pageTitle">Hearing Loss Simulator</h1>
     </div>
     <div class="pageTools">
@@ -895,24 +901,24 @@
       <div class="earParts">
         <div>
           <h3>Outer ear</h3>
-          <p>Pinna and ear canal. They collect sound and carry it to the eardrum.</p>
+          <p>Auricle (pinna), ear canal and tympanic membrane (eardrum). The auricle and ear canal collect sound and carry it to the tympanic membrane (eardrum).</p>
           <p><span class="type conductive">Conductive hearing loss</span></p>
           <p>Sound is blocked on the way in. Causes include earwax, an ear canal infection, an object in the canal,
-             or an ear canal that did not form fully.</p>
+             a hole in the tympanic membrane (eardrum), or an ear canal that did not form fully.</p>
         </div>
         <div>
           <h3>Middle ear</h3>
-          <p>Eardrum, three tiny bones (malleus, incus, stapes), the air space behind the eardrum, and the Eustachian tube.
+          <p>Three tiny bones called the ossicles (malleus, incus, stapes), the air space around them, and the Eustachian tube.
              They pass the sound's vibrations on to the inner ear.</p>
           <p><span class="type conductive">Conductive hearing loss</span></p>
-          <p>The vibrations do not get through well. Causes include fluid from an ear infection, a hole in the eardrum,
+          <p>The vibrations do not get through well. Causes include fluid from an ear infection,
              or bones that are stiff or damaged.</p>
         </div>
         <div>
-          <h3>Inner ear and hearing nerve</h3>
-          <p>Cochlea, balance canals, and the nerve to the brain. The cochlea turns vibrations into nerve signals.</p>
+          <h3>Inner ear</h3>
+          <p>Cochlea, vestibular apparatus (balance), and the vestibulocochlear nerve, which carries signals to the brain. The cochlea turns vibrations into nerve signals.</p>
           <p><span class="type sensorineural">Sensorineural hearing loss</span></p>
-          <p>The cochlea or the nerve is damaged. Causes include aging, loud noise, genetics, some illnesses and some medicines.
+          <p>The cochlea or the vestibulocochlear nerve is damaged. Causes include aging, loud noise, genetics, some illnesses and some medicines.
              It is usually permanent.</p>
         </div>
       </div>
@@ -3120,9 +3126,6 @@
     if (document.body.classList.contains('lite')) {
       document.title = 'Hearing Loss Simulator: Lite';
       document.getElementById('pageTitle').innerHTML = 'Hearing Loss Simulator <span class="liteTag">Lite</span>';
-      const other = document.querySelectorAll('.pageNav a')[1];
-      other.href = 'cochlear-implant-lite.html';
-      other.textContent = 'Cochlear implant simulator: Lite';
 
       // Numbered headings, so it is clear where to start
       const stepOne = document.createElement('h2');
