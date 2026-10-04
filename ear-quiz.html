@@ -113,12 +113,14 @@
     .reportTable tr.total td { font-weight: 800; border-top: 2px solid #111; border-bottom: 0; }
     .reportNote { font-size: 13px; color: #444; margin: 12px 0 0 0; }
     .reportCard button { background: #eee; color: #111; border-color: #999; }
+    .reportHelp { font-size: 14px; margin: 12px 0 0 0; }
+    .reportHelp a { color: #0b57d0; font-weight: 700; }
     .reportCard button.main { background: #111; color: #fff; border-color: #111; }
     @media print {
       body > *:not(#report) { display: none !important; }
       body { background: #fff !important; margin: 0; padding: 0; zoom: 1 !important; }
       #report { position: static; background: none; padding: 0; display: block; }
-      .reportButtons { display: none !important; }
+      .reportButtons, .reportHelp { display: none !important; }
     }
 
     /* QUESTIONS */
@@ -292,6 +294,7 @@
       </table>
       <p class="reportNote">Every answer since the score was last reset is counted: each question answered and each label checked.</p>
       <div class="quick reportButtons"><button class="main" id="printReport">Print</button><button id="closeReport">Close</button></div>
+      <p class="reportHelp"><a href="save-as-pdf.html" target="_blank" rel="noopener">How to save this report as a PDF and turn it in</a> (opens in a new tab)</p>
     </div>
   </div>
 

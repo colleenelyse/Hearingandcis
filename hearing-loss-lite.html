@@ -611,13 +611,15 @@
     #gameReport .reportTable tr.total td { font-weight: 800; border-top: 2px solid #111; border-bottom: 0; }
     #gameReport .reportNote { font-size: 13px; color: #444; margin: 12px 0 0 0; }
     #gameReport .reportButtons { margin-top: 14px; }
+    #gameReport .reportHelp { font-size: 14px; margin: 12px 0 0 0; }
+    #gameReport .reportHelp a { color: #0b57d0; font-weight: 700; }
     #gameReport button { font: inherit; font-size: 15px; font-weight: 700; padding: 7px 16px; border-radius: 999px !important; cursor: pointer; background: #eee !important; color: #111 !important; border: 1.5px solid #999 !important; }
     #gameReport button.main { background: #111 !important; color: #fff !important; border-color: #111 !important; }
     @media print {
       body > *:not(#gameReport) { display: none !important; }
       body { background: #fff !important; margin: 0; padding: 0; zoom: 1 !important; }
       #gameReport { position: static; background: none; padding: 0; display: block; }
-      #gameReport .reportButtons { display: none !important; }
+      #gameReport .reportButtons, #gameReport .reportHelp { display: none !important; }
     }
     /* On a wide screen the question sits beside the chart, so both can be seen without scrolling */
     @media (min-width: 1100px) {
@@ -816,6 +818,7 @@
       </table>
       <p class="reportNote">Every answer since the score was last reset is counted. Listen and guess and Build it count only the first try at each one. Using "Reveal the answer" or "Show me the answer" first counts as not correct.</p>
       <div class="reportButtons"><button class="main" id="gamePrint">Print</button> <button id="gameReportClose">Close</button></div>
+      <p class="reportHelp"><a href="save-as-pdf.html" target="_blank" rel="noopener">How to save this report as a PDF and turn it in</a> (opens in a new tab)</p>
     </div>
   </div>
 
