@@ -214,11 +214,11 @@
         </dl>
       </div>
     </div>
-    <P class="hint" style="margin: 12px 0 0 0;">Sources:
-      <A href="https://www.nidcd.nih.gov/health/how-do-we-hear" target="_blank" rel="noopener">How Do We Hear? (NIDCD)</A>,
-      <A href="https://www.stanfordchildrens.org/en/topic/default?id=anatomy-and-physiology-of-the-ear-90-P02025" target="_blank" rel="noopener">Anatomy and Physiology of the Ear (Stanford Medicine Children's Health)</A>,
-      <A href="https://my.clevelandclinic.org/health/body/24048-ear" target="_blank" rel="noopener">Ear (Cleveland Clinic)</A>.
-      Ready to test yourself? <A href="ear-quiz.html">Open the Ear Quiz</A>.</P>
+    <p class="hint" style="margin: 12px 0 0 0;">Sources:
+      <a href="https://www.nidcd.nih.gov/health/how-do-we-hear" target="_blank" rel="noopener">How Do We Hear? (NIDCD)</a>,
+      <a href="https://www.stanfordchildrens.org/en/topic/default?id=anatomy-and-physiology-of-the-ear-90-P02025" target="_blank" rel="noopener">Anatomy and Physiology of the Ear (Stanford Medicine Children's Health)</a>,
+      <a href="https://my.clevelandclinic.org/health/body/24048-ear" target="_blank" rel="noopener">Ear (Cleveland Clinic)</a>.
+      Ready to test yourself? <a href="ear-quiz.html">Open the Ear Quiz</a>.</p>
   </div>
 
   <script>
@@ -250,7 +250,7 @@
 
     function show() {
       const parts = view === 'parts';
-      document.querySelectorAll('#viewTiles button').forEach((B) => B.classList.toggle('on', B.dataset.view === view));
+      document.querySelectorAll('#viewTiles button').forEach((btn) => btn.classList.toggle('on', btn.dataset.view === view));
       box('view-parts').hidden = !parts;
       box('view-loss').hidden = parts;
 
@@ -281,25 +281,25 @@
     box('hideAll').onclick = () => setAll(false, false);
 
     // One at a time: show only this part. Its names show too if any names were showing before.
-    document.querySelectorAll('[data-only]').forEach((B) => {
-      B.onclick = () => {
+    document.querySelectorAll('[data-only]').forEach((btn) => {
+      btn.onclick = () => {
         const names = PARTS.some((part) => box(part + '-names').checked);
         PARTS.forEach((part) => {
-          box(part + '-boxes').checked = part === B.dataset.only;
-          box(part + '-names').checked = part === B.dataset.only && names;
+          box(part + '-boxes').checked = part === btn.dataset.only;
+          box(part + '-names').checked = part === btn.dataset.only && names;
         });
         show();
       };
     });
 
     ['loss-areas', 'loss-titles', 'loss-notes'].forEach((id) => { box(id).onchange = show; });
-    document.querySelectorAll('#viewTiles button').forEach((B) => { B.onclick = () => { view = B.dataset.view; show(); }; });
+    document.querySelectorAll('#viewTiles button').forEach((btn) => { btn.onclick = () => { view = btn.dataset.view; show(); }; });
     box('lossChoice').onchange = () => { loss = box('lossChoice').value; show(); };
 
     // ---------- COLORS AND TEXT SIZE (shared with the other pages) ----------
     const themeChoice = box('themeChoice'), textChoice = box('textChoice');
-    function remember(key, value) { try { localStorage.setItem(key, value); } catch (E) { /* not allowed here */ } }
-    function recall(key)          { try { return localStorage.getItem(key); } catch (E) { return null; } }
+    function remember(key, value) { try { localStorage.setItem(key, value); } catch (evt) { /* not allowed here */ } }
+    function recall(key)          { try { return localStorage.getItem(key); } catch (evt) { return null; } }
     function showLook() {
       document.body.classList.toggle('dark', themeChoice.value === 'dark');
       document.body.classList.toggle('contrast', themeChoice.value === 'contrast');
