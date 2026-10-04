@@ -2338,6 +2338,24 @@
 
       micButton.textContent = 'Turn off microphone';
       say('Microphone on. Wear headphones, or the sound will loop and squeal.');
+
+      // Listen to the microphone for a few seconds. If nothing at all arrives, say so: the microphone may be the wrong one, muted, or blocked by the computer's settings.
+      const micCheck = ctx.createAnalyser(), checkedStream = stream;
+      micCheck.fftSize = 8192;        // long enough that nothing is missed between looks
+      micSource.connect(micCheck);
+      let loudest = 0, looks = 0;
+      const micCheckTimer = setInterval(() => {
+        const wave = new Float32Array(micCheck.fftSize);
+        micCheck.getFloatTimeDomainData(wave);
+        wave.forEach((value) => { loudest = Math.max(loudest, Math.abs(value)); });
+        looks++;
+        if (micStream !== checkedStream || loudest > 0.002 || looks >= 40) clearInterval(micCheckTimer);
+        if (micStream === checkedStream && looks >= 40 && loudest <= 0.002) {
+          say('The microphone is on, but no sound is coming from it. Try another microphone, check that it is not muted, and check that your computer lets this browser use the microphone.');
+        } else if (micStream === checkedStream && loudest > 0.002) {
+          say('Microphone on and picking up sound. Wear headphones, or the sound will loop and squeal.');
+        }
+      }, 100);
       showDelay();
       delayTimer = setInterval(showDelay, 2000);
       listMicrophones();
