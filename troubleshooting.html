@@ -11,7 +11,7 @@
     body      { --page: #f3eff9; --card: #ffffff; --raised: #f7f4fc; --line: #ddd3ec; --ink: #2a2440; --quiet: #675f80;
                 --accent: #e6007e; --onAccent: #ffffff; --shadow: 0 1px 2px rgba(60, 40, 110, 0.08), 0 6px 18px rgba(60, 40, 110, 0.07);
                 font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 17px; line-height: 1.5;
-                max-width: 900px; margin: 18px auto; padding: 0 20px 40px 20px; background: var(--page); color: var(--ink); }
+                max-width: 1000px; margin: 18px auto; padding: 0 20px 40px 20px; background: var(--page); color: var(--ink); }
     body.dark { --page: #1d1930; --card: #28223f; --raised: #362e55; --line: #453c6b; --ink: #f4effa; --quiet: #c3b9da;
                 --accent: #ff6fb1; --onAccent: #1d1930; --shadow: none; }
     body.contrast { --page: #000; --card: #000; --raised: #000; --line: #fff; --ink: #fff; --quiet: #fff; --accent: #ffe600; --onAccent: #000; --shadow: none; }
@@ -30,14 +30,24 @@
     .homeButton:hover { border-color: var(--accent); }
     .contrast .homeButton { border: 2px solid #fff; color: #fff; }
 
-    /* Each problem is a box that opens when clicked */
-    details   { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 0 18px; margin: 8px 0; box-shadow: var(--shadow); }
-    summary   { cursor: pointer; font-weight: 800; padding: 13px 0; }
-    details[open] summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
-    details ol, details ul { margin: 8px 0 14px 0; padding-left: 24px; }
-    details li { margin-bottom: 6px; }
-    details p { margin: 8px 0 12px 0; }
-    .contrast details { border-width: 2px; }
+    /* Laid out like the troubleshooting section of a manual: the problem on the left, the steps on the right */
+    .jumps    { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px 0; }
+    .jumps a  { text-decoration: none; font-weight: 700; font-size: 15px; padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--raised); color: var(--ink); }
+    .jumps a:hover { border-color: var(--accent); }
+    table.fixes { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+    .fixes th, .fixes td { text-align: left; vertical-align: top; padding: 12px 16px; border-top: 1px solid var(--line); }
+    .fixes thead th { border-top: 0; background: var(--raised); font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--quiet); }
+    .fixes tbody th { width: 34%; font-weight: 800; }
+    .fixes ol { margin: 0; padding-left: 22px; }
+    .fixes li { margin-bottom: 6px; }
+    .fixes li:last-child { margin-bottom: 0; }
+    .contrast table.fixes, .contrast .jumps a { border-width: 2px; }
+    @media (max-width: 640px) {
+      .fixes thead { display: none; }
+      .fixes tr, .fixes tbody th, .fixes td { display: block; width: auto; }
+      .fixes td { border-top: 0; padding-top: 0; }
+    }
+    @media print { body { background: #fff; color: #000; } .pageTools, .jumps, .homeButton { display: none !important; } }
       /* THE FONT MENU: each choice is written in its own font */
     @font-face { font-family: 'OpenDyslexic'; font-weight: 400; font-display: swap;
                  src: url('OpenDyslexic-Regular.woff2') format('woff2'), url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff2') format('woff2'); }
@@ -85,90 +95,100 @@
       </div>
     </div>
   </div>
-  <p class="hint">Click a problem to see what to try. Start with the first thing in each list.</p>
+  <p class="hint">Find your problem in the left column. Try the steps on the right in order.</p>
+  <nav class="jumps" aria-label="Sections"><a href="#help-no-sound">No sound</a><a href="#help-microphone">Microphone</a><a href="#help-youtube">YouTube</a><a href="#help-the-page-itself">The page itself</a></nav>
 
-  <h2>No sound</h2>
-  <details>
-    <summary>I pressed play and hear nothing</summary>
-    <ol>
-      <li>Check that the computer's volume is up and not muted, and that your headphones are plugged in or connected.</li>
-      <li>On the Hearing Loss Simulator, press "Play a sample conversation" in the yellow box at the top. It does not go through the faders, so if you hear it, your sound is working.</li>
-      <li>Check the faders or the hearing loss you chose. A severe or profound loss is meant to make most sounds disappear. Choose no hearing loss and try again.</li>
-      <li>Under "Sound from", make sure the box you want is chosen and that something in it has been started.</li>
-    </ol>
-  </details>
-  <details>
-    <summary>The built-in recordings are silent, but everything else works</summary>
-    <p>This happens when the website version of a page is opened as a file on the computer, not from the web address. The page shows a yellow note when this is the case. Open the site from its web address, or use the single-file version that was made for opening from a folder.</p>
-  </details>
+  <h2 id="help-no-sound">No sound</h2>
+  <table class="fixes">
+    <thead><tr><th>Problem</th><th>What to try</th></tr></thead>
+    <tbody>
+      <tr>
+        <th scope="row">I pressed play and hear nothing.</th>
+        <td><ol><li>Check that the computer's volume is up and not muted, and that your headphones are plugged in or connected.</li><li>On the Hearing Loss Simulator, press "Play a sample conversation" in the yellow box at the top. It does not go through the faders, so if you hear it, your sound is working.</li><li>Check the faders or the hearing loss you chose. A severe or profound loss is meant to make most sounds disappear. Choose no hearing loss and try again.</li><li>Under "Sound from", make sure the box you want is chosen and that something in it has been started.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">The built-in recordings are silent, but everything else works.</th>
+        <td><ol><li>This happens when the website version of a page is opened as a file on the computer. The page shows a yellow note when this is the case.</li><li>Open the site from its web address, or use the single-file version made for opening from a folder.</li></ol></td>
+      </tr>
+    </tbody>
+  </table>
 
-  <h2>Microphone</h2>
-  <details>
-    <summary>The microphone is on, but I hear nothing</summary>
-    <ol>
-      <li><b>Choose the right microphone.</b> After you turn the microphone on, a "Which microphone" menu appears under the button. Pick your computer's built-in microphone, or the one you want. This is the most common fix.</li>
-      <li>Read the message under the buttons. "Picking up sound" means the microphone works. "No sound is coming from it" means the wrong microphone is chosen, or it is muted.</li>
-      <li>Check the faders. If a hearing loss is set, your own voice comes through quiet or not at all.</li>
-      <li>On a Mac, open System Settings, then Privacy &amp; Security, then Microphone, and check that your browser is switched on.</li>
-    </ol>
-  </details>
-  <details>
-    <summary>The page says the microphone could not be turned on</summary>
-    <p>The browser has not been allowed to use the microphone on this site. Click the icon at the left end of the address bar, allow the microphone, and press the button again.</p>
-  </details>
-  <details>
-    <summary>There is a loud squeal or echo</summary>
-    <p>The microphone is hearing the speakers. Wear headphones, or turn the microphone off.</p>
-  </details>
-  <details>
-    <summary>The sound changed or went muffled when I turned the microphone on</summary>
-    <p>Many wireless (Bluetooth) headphones switch to a lower-quality "phone call" mode when their own microphone is used. In the "Which microphone" menu, choose the computer's built-in microphone instead of the headphones' microphone.</p>
-  </details>
+  <h2 id="help-microphone">Microphone</h2>
+  <table class="fixes">
+    <thead><tr><th>Problem</th><th>What to try</th></tr></thead>
+    <tbody>
+      <tr>
+        <th scope="row">The microphone is on, but I hear nothing.</th>
+        <td><ol><li><b>Choose the right microphone.</b> After you turn the microphone on, a "Which microphone" menu appears under the button. Pick your computer's built-in microphone, or the one you want. This is the most common fix.</li><li>Read the message under the buttons. "Picking up sound" means the microphone works. "No sound is coming from it" means the wrong microphone is chosen, or it is muted.</li><li>Check the faders. If a hearing loss is set, your own voice comes through quiet or not at all.</li><li>On a Mac, open System Settings, then Privacy &amp; Security, then Microphone, and check that your browser is switched on.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">With the microphone on, I can still hear the real sound.</th>
+        <td><ol><li><b>Move the listener away.</b> Keep the sound source and the microphone together, and move the listener as far from them as you can. The listener should only hear the sound through the headphones.</li><li>Turn off transparency mode on the headphones, and turn noise cancelling on if they have it.</li><li>Keep the sound source quiet. The microphone only needs to pick it up.</li><li>In the "Which microphone" menu, choose the microphone that is next to the sound source, not one on the listener's headphones.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">The page says the microphone could not be turned on.</th>
+        <td><ol><li>Click the icon at the left end of the address bar and allow the microphone for this site.</li><li>Press Turn on microphone again.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">There is a loud squeal or echo.</th>
+        <td><ol><li>The microphone is hearing the speakers. Put on headphones.</li><li>If it continues, turn the microphone off.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">The sound went muffled when I turned the microphone on.</th>
+        <td><ol><li>Many wireless (Bluetooth) headphones switch to a lower-quality "phone call" mode when their own microphone is used.</li><li>In the "Which microphone" menu, choose the computer's built-in microphone, not the headphones' microphone.</li></ol></td>
+      </tr>
+    </tbody>
+  </table>
 
-  <h2>YouTube</h2>
-  <details>
-    <summary>How do I connect a YouTube video?</summary>
-    <ol>
-      <li>YouTube only works in Chrome or Edge on a computer or Chromebook, on the website. It does not work in Safari, or when the page is opened as a file.</li>
-      <li>On a Full simulator page, choose YouTube under "Sound from", paste the video's link, and press <b>Open the video</b>. A small video window opens.</li>
-      <li>Press <b>Connect the sound</b>. The browser asks what to share.</li>
-      <li>Choose the tab named <b>CHOOSE THIS TO CONNECT SOUND</b>, keep "Also share tab audio" switched on, and press Share.</li>
-    </ol>
-  </details>
-  <details>
-    <summary>The page says "Wrong tab. Nothing was connected"</summary>
-    <p>A different tab or window was shared. Press Connect the sound again and choose the tab named CHOOSE THIS TO CONNECT SOUND. It has a pink strip along the bottom.</p>
-  </details>
-  <details>
-    <summary>The video plays, but the sound is not changed by the simulator</summary>
-    <p>The sound was not connected, so you are hearing the video directly. Press Connect the sound and share the small video window's tab, with "Also share tab audio" switched on.</p>
-  </details>
-  <details>
-    <summary>The play and skip buttons do nothing</summary>
-    <p>During an ad, the buttons and the bar wait until the ad is over. To skip the ad, use the small video window.</p>
-  </details>
-  <details>
-    <summary>The small video window never opens</summary>
-    <p>The browser may have blocked the pop-up window. Look for a blocked pop-up icon at the right end of the address bar and allow pop-ups for this site. On a school computer, the school's settings may block it.</p>
-  </details>
+  <h2 id="help-youtube">YouTube</h2>
+  <table class="fixes">
+    <thead><tr><th>Problem</th><th>What to try</th></tr></thead>
+    <tbody>
+      <tr>
+        <th scope="row">How do I connect a YouTube video?</th>
+        <td><ol><li>Use Chrome or Edge on a computer or Chromebook, on the website. YouTube does not work in Safari, or when the page is opened as a file.</li><li>On a Full simulator page, choose YouTube under "Sound from", paste the video's link, and press <b>Open the video</b>. A small video window opens.</li><li>Press <b>Connect the sound</b>. The browser asks what to share.</li><li>Choose the tab named <b>CHOOSE THIS TO CONNECT SOUND</b>, keep "Also share tab audio" switched on, and press Share.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">The page says "Wrong tab. Nothing was connected."</th>
+        <td><ol><li>A different tab or window was shared. Press Connect the sound again.</li><li>Choose the tab named CHOOSE THIS TO CONNECT SOUND. It has a pink strip along the bottom.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">The video plays, but the simulator does not change its sound.</th>
+        <td><ol><li>The sound was not connected, so you are hearing the video directly.</li><li>Press Connect the sound and share the small video window's tab, with "Also share tab audio" switched on.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">The play and skip buttons do nothing.</th>
+        <td><ol><li>During an ad, the buttons and the bar wait until the ad is over.</li><li>To skip the ad, use the small video window.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">The small video window never opens.</th>
+        <td><ol><li>The browser may have blocked the pop-up window. Click the blocked pop-up icon at the right end of the address bar and allow pop-ups for this site.</li><li>On a school computer, the school's settings may block it. Ask your teacher.</li></ol></td>
+      </tr>
+    </tbody>
+  </table>
 
-  <h2>The page itself</h2>
-  <details>
-    <summary>The page looks old, or a change is missing</summary>
-    <p>The browser is showing a saved copy. Hold Shift and press the refresh button.</p>
-  </details>
-  <details>
-    <summary>The font does not change when I choose one</summary>
-    <p>Most of the fonts are downloaded from the internet when you pick them. Without a connection, the page uses your computer's own font.</p>
-  </details>
-  <details>
-    <summary>I cannot hear the high-pitch test tones</summary>
-    <p>Whether you hear them depends on your ears and also on your speakers or headphones. Many laptop speakers and wireless headphones cannot play the highest pitches. Keep the volume where it is; turning it up can hurt your ears even when a tone seems silent.</p>
-  </details>
-  <details>
-    <summary>My quiz score disappeared</summary>
-    <p>The score is kept only while the page is open. Reloading or closing the page starts it again. Open the score report and print it or take a picture before you leave the page.</p>
-  </details>
+  <h2 id="help-the-page-itself">The page itself</h2>
+  <table class="fixes">
+    <thead><tr><th>Problem</th><th>What to try</th></tr></thead>
+    <tbody>
+      <tr>
+        <th scope="row">The page looks old, or a change is missing.</th>
+        <td><ol><li>The browser is showing a saved copy. Hold Shift and press the refresh button.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">The font does not change when I choose one.</th>
+        <td><ol><li>Most of the fonts are downloaded from the internet when you pick them. Check your connection.</li><li>Without a connection, the page uses your computer's own font.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">I cannot hear the high-pitch test tones.</th>
+        <td><ol><li>Whether you hear them depends on your ears and also on your speakers or headphones. Many laptop speakers and wireless headphones cannot play the highest pitches.</li><li>Keep the volume where it is. Turning it up can hurt your ears even when a tone seems silent.</li></ol></td>
+      </tr>
+      <tr>
+        <th scope="row">My quiz score disappeared.</th>
+        <td><ol><li>The score is kept only while the page is open. Reloading or closing the page starts it again.</li><li>Open the score report and print it, or take a picture of it, before you leave the page.</li></ol></td>
+      </tr>
+    </tbody>
+  </table>
 
   <script>
     // ---------- COLORS AND TEXT SIZE (shared with the other pages) ----------

@@ -165,6 +165,13 @@
     .contrast #fontMenu { background: #000; color: #fff; border: 2px solid #fff; }
     .contrast #fontMenu button:hover, .contrast #fontMenu button:focus-visible { background: #333; }
     body.game .fontPick { display: none; }
+      /* The Troubleshooting button, on every page */
+    a.helpButton { display: inline-flex; align-items: center; gap: 6px; height: 36px; box-sizing: border-box; padding: 0 14px; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap;
+                   border-radius: 999px; border: 1.5px solid var(--line, #999); background: var(--raised, #fff); color: var(--ink, #111); }
+    a.helpButton:hover { border-color: var(--accent, #e6007e); }
+    a.helpButton:focus-visible { outline: 3px solid var(--accent, #e6007e); outline-offset: 2px; }
+    .contrast a.helpButton { border: 2px solid #fff; color: #fff; }
+    body.game a.helpButton { display: none; }
   </style>
 </head>
 <body class="labeling">
@@ -188,6 +195,7 @@
         <button type="button" id="fontButton" aria-haspopup="listbox" aria-expanded="false"></button>
         <div id="fontMenu" role="listbox" aria-labelledby="fontLabel" hidden></div>
       </div>
+      <a class="helpButton" href="troubleshooting.html" title="Opens the troubleshooting page: what to try when something does not work"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>Troubleshooting</a>
     </div>
   </div>
 

@@ -20,7 +20,7 @@
     .pageTools { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 6px 16px; font-size: 14px; }
     select    { font: inherit; font-size: 15px; padding: 7px 12px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--raised); color: var(--ink); }
     .contrast select { border-width: 2px; }
-    select:focus-visible, A:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    select:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
     h1        { font-size: clamp(26px, 3.6vw, 38px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; margin: 10px 0 6px 0; text-align: center; text-wrap: balance; }
     .welcome  { font-size: 17px; margin: 0 auto 4px auto; color: var(--quiet); text-align: center; text-wrap: balance; }
@@ -28,7 +28,7 @@
     /* The four choices: two rows of two, short enough that all four show without scrolling */
     .rowLabel { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin: 16px 0 8px 0; }
     .rowLabel h2 { font-size: 22px; font-weight: 800; margin: 0; }
-    .rowLabel P { margin: 0; color: var(--quiet); font-size: 15px; }
+    .rowLabel p { margin: 0; color: var(--quiet); font-size: 15px; }
     .choices  { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     @media (max-width: 640px) { .choices { grid-template-columns: 1fr; } }
     .choice   { display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--ink); background: var(--card);
@@ -48,6 +48,7 @@
     .before h2 { font-size: 20px; font-weight: 800; margin: 0 0 6px 0; }
     .before ul { margin: 0; padding-left: 20px; }
     .before li { margin-bottom: 4px; }
+    .before a { color: var(--accent); font-weight: 700; }
       /* THE FONT MENU: each choice is written in its own font */
     @font-face { font-family: 'OpenDyslexic'; font-weight: 400; font-display: swap;
                  src: url('OpenDyslexic-Regular.otf') format('opentype'), url('OpenDyslexic-Regular.woff2') format('woff2'), url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff2') format('woff2'); }
@@ -70,6 +71,13 @@
     .contrast #fontMenu { background: #000; color: #fff; border: 2px solid #fff; }
     .contrast #fontMenu button:hover, .contrast #fontMenu button:focus-visible { background: #333; }
     body.game .fontPick { display: none; }
+      /* The Troubleshooting button, on every page */
+    a.helpButton { display: inline-flex; align-items: center; gap: 6px; height: 36px; box-sizing: border-box; padding: 0 14px; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap;
+                   border-radius: 999px; border: 1.5px solid var(--line, #999); background: var(--raised, #fff); color: var(--ink, #111); }
+    a.helpButton:hover { border-color: var(--accent, #e6007e); }
+    a.helpButton:focus-visible { outline: 3px solid var(--accent, #e6007e); outline-offset: 2px; }
+    .contrast a.helpButton { border: 2px solid #fff; color: #fff; }
+    body.game a.helpButton { display: none; }
   </style>
 </head>
 <body>
@@ -85,61 +93,62 @@
         <button type="button" id="fontButton" aria-haspopup="listbox" aria-expanded="false"></button>
         <div id="fontMenu" role="listbox" aria-labelledby="fontLabel" hidden></div>
       </div>
+      <a class="helpButton" href="troubleshooting.html" title="Opens the troubleshooting page: what to try when something does not work"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>Troubleshooting</a>
   </div>
 
   <h1>Welcome! What would you like to explore?</h1>
-  <P class="welcome">Hear what hearing loss or cochlear implants sound like, then learn the parts of the ear, what they do, and quiz yourself.</P>
+  <p class="welcome">Hear what hearing loss or cochlear implants sound like, then learn the parts of the ear, what they do, and quiz yourself.</p>
 
   <!-- All four choices fit on one screen: Lite on the top row, Full on the bottom row;
        hearing loss on the left, cochlear implant on the right. -->
-  <div class="rowLabel"><h2>Sound Simulator Lite</h2><P>Press play and try the buttons. Nothing to set up, very little reading.</P></div>
+  <div class="rowLabel"><h2>Sound Simulator Lite</h2><p>Press play and try the buttons. Nothing to set up, very little reading.</p></div>
   <div class="choices">
-    <A class="choice" href="hearing-loss-lite.html">
+    <a class="choice" href="hearing-loss-lite.html">
       <svg viewBox="40 15 265 145" aria-hidden="true">
-        <G stroke="var(--line)" stroke-width="2"><path D="M40 30 H290 M40 60 H290 M40 90 H290 M40 120 H290 M40 150 H290"/><path D="M60 20 V155 M105 20 V155 M150 20 V155 M195 20 V155 M240 20 V155 M285 20 V155"/></G>
-        <path D="M60 42 L105 46 L150 58 L195 86 L240 116 L285 134" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-        <G fill="var(--accent)" stroke="var(--card)" stroke-width="3"><rect X="51" Y="28" width="18" height="28" rx="5"/><rect X="141" Y="44" width="18" height="28" rx="5"/><rect X="231" Y="102" width="18" height="28" rx="5"/></G>
+        <g stroke="var(--line)" stroke-width="2"><path d="M40 30 H290 M40 60 H290 M40 90 H290 M40 120 H290 M40 150 H290"/><path d="M60 20 V155 M105 20 V155 M150 20 V155 M195 20 V155 M240 20 V155 M285 20 V155"/></g>
+        <path d="M60 42 L105 46 L150 58 L195 86 L240 116 L285 134" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <g fill="var(--accent)" stroke="var(--card)" stroke-width="3"><rect x="51" y="28" width="18" height="28" rx="5"/><rect x="141" y="44" width="18" height="28" rx="5"/><rect x="231" y="102" width="18" height="28" rx="5"/></g>
       </svg>
       <span class="words"><span class="name">Hearing loss <span class="tag">Lite</span></span><span class="line">Hear a story with mild to profound hearing loss, on an audiogram.</span></span>
-    </A>
-    <A class="choice" href="cochlear-implant-lite.html">
+    </a>
+    <a class="choice" href="cochlear-implant-lite.html">
       <svg viewBox="62 2 196 162" aria-hidden="true" class="cochleaArt"></svg>
       <span class="words"><span class="name">Cochlear implant <span class="tag">Lite</span></span><span class="line">Hear an implant, and how it changes from 1 electrode to 22.</span></span>
-    </A>
+    </a>
   </div>
-  <div class="rowLabel"><h2>Sound Simulator Full</h2><P>Everything in Lite, plus your own files, YouTube, the microphone, every control and the background reading.</P></div>
+  <div class="rowLabel"><h2>Sound Simulator Full</h2><p>Everything in Lite, plus your own files, YouTube, the microphone, every control and the background reading.</p></div>
   <div class="choices">
-    <A class="choice" href="hearing-loss-simulator.html">
+    <a class="choice" href="hearing-loss-simulator.html">
       <svg viewBox="40 15 265 145" aria-hidden="true">
-        <G stroke="var(--line)" stroke-width="2"><path D="M40 30 H290 M40 60 H290 M40 90 H290 M40 120 H290 M40 150 H290"/><path D="M60 20 V155 M105 20 V155 M150 20 V155 M195 20 V155 M240 20 V155 M285 20 V155"/></G>
-        <path D="M60 42 L105 46 L150 58 L195 86 L240 116 L285 134" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-        <G fill="var(--accent)" stroke="var(--card)" stroke-width="3"><rect X="51" Y="28" width="18" height="28" rx="5"/><rect X="141" Y="44" width="18" height="28" rx="5"/><rect X="231" Y="102" width="18" height="28" rx="5"/></G>
+        <g stroke="var(--line)" stroke-width="2"><path d="M40 30 H290 M40 60 H290 M40 90 H290 M40 120 H290 M40 150 H290"/><path d="M60 20 V155 M105 20 V155 M150 20 V155 M195 20 V155 M240 20 V155 M285 20 V155"/></g>
+        <path d="M60 42 L105 46 L150 58 L195 86 L240 116 L285 134" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <g fill="var(--accent)" stroke="var(--card)" stroke-width="3"><rect x="51" y="28" width="18" height="28" rx="5"/><rect x="141" y="44" width="18" height="28" rx="5"/><rect x="231" y="102" width="18" height="28" rx="5"/></g>
       </svg>
       <span class="words"><span class="name">Hearing loss <span class="tag full">Full</span></span><span class="line">Each ear, noise, tinnitus, a hearing aid, and a mystery game.</span></span>
-    </A>
-    <A class="choice" href="cochlear-implant-simulator.html">
+    </a>
+    <a class="choice" href="cochlear-implant-simulator.html">
       <svg viewBox="62 2 196 162" aria-hidden="true" class="cochleaArt"></svg>
       <span class="words"><span class="name">Cochlear implant <span class="tag full">Full</span></span><span class="line">How implants work, surgery, timing, mapping, and Deaf culture.</span></span>
-    </A>
+    </a>
   </div>
 
-  <div class="rowLabel"><h2>Learn</h2><P>A picture to explore and a quiz. No sound.</P></div>
+  <div class="rowLabel"><h2>Learn</h2><p>A picture to explore and a quiz. No sound.</p></div>
   <div class="choices">
-    <A class="choice" href="parts-of-the-ear.html">
+    <a class="choice" href="parts-of-the-ear.html">
       <svg viewBox="0 0 104 78" aria-hidden="true">
-        <path D="M40 38c0-13 8-22 18-22s17 7 17 17c0 9-6 13-10 17s-4 9-7 13c-3 4-10 4-13-2" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/>
-        <path D="M50 38c0-6 4-10 8-10s7 3 7 7-4 6-6 9" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M40 38c0-13 8-22 18-22s17 7 17 17c0 9-6 13-10 17s-4 9-7 13c-3 4-10 4-13-2" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round"/>
+        <path d="M50 38c0-6 4-10 8-10s7 3 7 7-4 6-6 9" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>
       </svg>
       <span class="words"><span class="name">Parts of the ear</span><span class="line">Turn the labels on and off. See where each type of hearing loss happens.</span></span>
-    </A>
-    <A class="choice" href="ear-quiz.html">
+    </a>
+    <a class="choice" href="ear-quiz.html">
       <svg viewBox="0 0 104 78" aria-hidden="true">
-        <rect X="14" Y="16" width="34" height="16" rx="4" fill="none" stroke="var(--accent)" stroke-width="4"/>
-        <rect X="14" Y="46" width="34" height="16" rx="4" fill="none" stroke="var(--accent)" stroke-width="4" stroke-dasharray="6 5"/>
-        <path D="M62 40l9 9 18-21" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="14" y="16" width="34" height="16" rx="4" fill="none" stroke="var(--accent)" stroke-width="4"/>
+        <rect x="14" y="46" width="34" height="16" rx="4" fill="none" stroke="var(--accent)" stroke-width="4" stroke-dasharray="6 5"/>
+        <path d="M62 40l9 9 18-21" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <span class="words"><span class="name">Ear quiz</span><span class="line">Drag the names onto the ear, then try multiple choice and true or false.</span></span>
-    </A>
+    </a>
   </div>
 
   <div class="before">
@@ -148,6 +157,7 @@
       <li>On a computer or Chromebook, use Chrome, Edge, or Safari (cannot connect to YouTube).</li>
       <li>Headphones give the best sound, and are needed for anything that treats each ear differently.</li>
       <li>Every page has built-in recordings, so you can start listening right away. The Full pages also let you connect a YouTube video, upload your own audio or video files, or use the microphone.</li>
+      <li>Something not working? Open the <a href="troubleshooting.html">Troubleshooting</a> page.</li>
     </ul>
   </div>
 

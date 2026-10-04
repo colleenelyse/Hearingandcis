@@ -572,6 +572,19 @@
     .contrast #fontMenu { background: #000; color: #fff; border: 2px solid #fff; }
     .contrast #fontMenu button:hover, .contrast #fontMenu button:focus-visible { background: #333; }
     body.game .fontPick { display: none; }
+      /* The mystery game button stands out from the menus beside it */
+    #mysteryButton { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 18px 0 14px; font-size: 16px; font-weight: 800; cursor: pointer;
+                     background: var(--accent, #e6007e); color: var(--onAccent, #fff); border: 2px solid var(--accent, #e6007e); border-radius: 999px !important;
+                     box-shadow: 0 0 0 3px rgba(230, 0, 126, 0.25); }
+    #mysteryButton:hover { filter: brightness(1.08); box-shadow: 0 0 0 5px rgba(230, 0, 126, 0.3); }
+    .contrast #mysteryButton { background: #ffe600; color: #000; border-color: #ffe600; box-shadow: none; }
+      /* The Troubleshooting button, on every page */
+    a.helpButton { display: inline-flex; align-items: center; gap: 6px; height: 36px; box-sizing: border-box; padding: 0 14px; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap;
+                   border-radius: 999px; border: 1.5px solid var(--line, #999); background: var(--raised, #fff); color: var(--ink, #111); }
+    a.helpButton:hover { border-color: var(--accent, #e6007e); }
+    a.helpButton:focus-visible { outline: 3px solid var(--accent, #e6007e); outline-offset: 2px; }
+    .contrast a.helpButton { border: 2px solid #fff; color: #fff; }
+    body.game a.helpButton { display: none; }
   </style>
 </head>
 <body class="lite">
@@ -597,7 +610,8 @@
         <button type="button" id="fontButton" aria-haspopup="listbox" aria-expanded="false"></button>
         <div id="fontMenu" role="listbox" aria-labelledby="fontLabel" hidden></div>
       </div>
-      <button id="mysteryButton" title="Opens a guessing game in a new tab: the page picks a hidden hearing loss for students to work out by listening">Mystery game</button>
+      <a class="helpButton" href="troubleshooting.html" title="Opens the troubleshooting page: what to try when something does not work"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>Troubleshooting</a>
+      <button id="mysteryButton" title="Opens a guessing game in a new tab: the page picks a hidden hearing loss for students to work out by listening"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a2.9 2.9 0 1 1 4.2 2.6c-.9.5-1.4 1.1-1.4 2.1"/><path d="M12 17.3v.1"/></svg>Play the mystery game</button>
     </div>
   </div>
 
@@ -672,6 +686,7 @@
           <li>Click <b>Turn on microphone</b> and choose Allow.</li>
           <li>Speak, or listen to the room. The faders change what you hear.</li>
         </ol>
+        <p class="hint micTip"><b>For the microphone to work well:</b> keep the sound source and the microphone together, and move the listener as far from them as you can. The listener should only hear the sound through the headphones. If the listener can also hear the real sound in the room, the simulation will not sound right. Turning off transparency mode and keeping the source quiet also help.</p>
         <p class="hint">Wired headphones keep the sound lined up with the speaker's lips; Bluetooth adds a delay.
            With Bluetooth headphones, choose a microphone other than the headphones' own.</p>
         <p class="hint" id="micDelay"></p>
