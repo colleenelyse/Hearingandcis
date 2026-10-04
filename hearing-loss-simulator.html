@@ -15,7 +15,8 @@
 
     if (YOUTUBE_ID) {
       document.title = 'YouTube video for the simulator';
-      document.write('<body style="margin:0; background:#000; overflow:hidden"><div id="ytplayer" style="width:100vw; height:100vh"></div>');
+      // The pink strip along the bottom edge is how the simulator page recognizes this window when it is shared
+      document.write('<body style="margin:0; background:#e6007e; overflow:hidden"><div style="width:100vw; height:calc(100vh - 12px); background:#000"><div id="ytplayer" style="width:100%; height:100%"></div></div>');
 
       let ytPlayer = null;
       const tell = (state) => { if (window.opener) window.opener.postMessage({ simulatorVideo: state }, '*'); };
@@ -1951,12 +1952,16 @@
     // What the play and skip buttons under the video control right now: 'youtube', 'file', 'builtin', or nothing (null).
     // They only run a built-in recording once someone has chosen "Built-in recordings" and picked one.
     function transportTarget() {
-      if (controllingYouTube()) return 'youtube';
-      if (tabStream) return null;
+      const video = controllingYouTube();
+      if (tabStream && !video) return null;
       const inGame = document.body.classList.contains('game');
+      // first, whatever belongs to the chosen "Sound from" tile
+      if (sourceShown === 'youtube' && video) return 'youtube';
       if ((sourceShown === 'builtin' || inGame) && builtInChosen) return 'builtin';
       if (sourceShown === 'file' && player.src) return 'file';
-      if (player.src && !player.paused) return 'file';       // something is already playing: keep control of it
+      // otherwise, keep control of whatever is playing right now
+      if (video && videoPlaying) return 'youtube';
+      if (player.src && !player.paused) return 'file';
       if (!builtInClip().paused) return 'builtin';
       return null;
     }
@@ -2076,6 +2081,15 @@
         return;
       }
 
+      // Was it the small video window that was shared? If another tab was picked, the video would play straight
+      // to the speakers, around the simulator, and nothing on this page would change its sound.
+      say('Connecting…');
+      if (await sharedTheVideoWindow(stream) === false) {
+        stream.getTracks().forEach((track) => track.stop());
+        say('That was a different tab, so the video would not go through the simulator. Click Connect the sound again and choose the tab named "YouTube video for the simulator".');
+        return;
+      }
+
       if (stream.getAudioTracks().length === 0) {
         stream.getTracks().forEach((track) => track.stop());
         say('No sound came through. Click Connect YouTube again and leave "Also share tab audio" turned on.');
@@ -2083,6 +2097,8 @@
       }
 
       tabStream = stream;
+      // Ask again for the video window itself to go quiet, so that only the simulated sound is heard
+      stream.getAudioTracks().forEach((track) => { try { track.applyConstraints({ suppressLocalAudioPlayback: true }).catch(() => {}); } catch (e) { /* not supported */ } });
 
       // Sound goes through the faders
       tabSource = ctx.createMediaStreamSource(new MediaStream(stream.getAudioTracks()));
@@ -2101,6 +2117,35 @@
       else say('Connected. Play, pause and skip in the YouTube tab. The faders here change what you hear.');
       showButtons();
     };
+
+    // Look at the shared picture for the pink strip along the bottom edge of the small video window.
+    // Gives true (it is the video window), false (it is some other tab) or null (could not tell).
+    async function sharedTheVideoWindow(stream) {
+      try {
+        const look = document.createElement('video');
+        look.muted = true;
+        look.srcObject = new MediaStream(stream.getVideoTracks());
+        look.play().catch(() => {});      // not waited for: if no picture arrives, give up after 2.5 seconds and carry on
+        for (let tries = 0; tries < 25 && look.videoWidth === 0; tries++) await new Promise((done) => setTimeout(done, 100));
+        if (!look.videoWidth) return null;
+        await new Promise((done) => setTimeout(done, 200));
+        const canvas = document.createElement('canvas');
+        canvas.width = look.videoWidth; canvas.height = look.videoHeight;
+        const pen = canvas.getContext('2d');
+        pen.drawImage(look, 0, 0);
+        const row = pen.getImageData(0, canvas.height - 3, canvas.width, 1).data;
+        let pink = 0, checked = 0;
+        for (let x = Math.floor(canvas.width * 0.1); x < canvas.width * 0.9; x += 4) {
+          const i = x * 4;
+          checked++;
+          if (Math.abs(row[i] - 230) < 50 && row[i + 1] < 70 && Math.abs(row[i + 2] - 126) < 50) pink++;
+        }
+        look.srcObject = null;
+        return pink / checked > 0.8;
+      } catch (e) {
+        return null;
+      }
+    }
 
     // Disconnect YouTube (also runs when you click "Stop sharing" in Chrome)
     function stopYouTube(keepWindow) {
