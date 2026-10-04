@@ -508,8 +508,7 @@
     body.lite .setup, body.lite .earsPanel, body.lite #sourceTabs, body.lite #source-file, body.lite #source-youtube, body.lite #source-mic,
     body.lite #source-builtin .hint, body.lite #player, body.lite #mysteryButton, body.lite .presetGroups > div:has(#twoEarPresets),
     body.lite .presetTitle .hint, body.lite .options, body.lite .realism, body.lite .levelNote, body.lite .soundPicture, body.lite .directions,
-    body.lite .tone, body.lite .toneBracket, body.lite .toneCaption, body.lite .levelTag, body.lite .levelLine, body.lite #status { display: none !important; }
-    body.lite .cap, body.lite .slot { pointer-events: none; }               /* the faders show the loss but are not dragged */
+    body.lite .levelTag, body.lite .levelLine, body.lite #status { display: none !important; }
     body.lite .top { align-items: center; }
     body.lite .top .panel { border: none; background: none !important; box-shadow: none !important; padding: 0; }
     body.lite .source { margin-top: 0; border: none; background: none !important; padding: 0; }
@@ -3118,7 +3117,8 @@
 
   <script>
     // ---------- LITE ----------
-    // The Lite page is this same file opened with <body class="lite">: built-in recordings, degree and shape buttons, and the chart.
+    // The Lite page is this same file opened with <body class="lite">: built-in recordings, degree and shape buttons, and the chart
+    // (its faders can be dragged and its pitch buttons pressed, just as on the full page).
     if (document.body.classList.contains('lite')) {
       document.title = 'Hearing Loss Simulator: Lite';
       document.getElementById('pageTitle').innerHTML = 'Hearing Loss Simulator <span class="liteTag">Lite</span>';
@@ -3149,19 +3149,18 @@
       document.getElementById('presetGroups').after(liteLine);
       function showLiteLine() {
         liteLine.textContent = chosenShape !== null && SHAPE_LINES[chosenShape] ? chosenShape + ': ' + SHAPE_LINES[chosenShape].charAt(0).toLowerCase() + SHAPE_LINES[chosenShape].slice(1)
-                             : DEGREE_LINES[chosenDegree] || '';
+                             : DEGREE_LINES[chosenDegree] || 'Your own hearing loss. Drag any fader down to lose more of that pitch.';
       }
       const plainShowChosen = showChosen;
       showChosen = function () { plainShowChosen(); showLiteLine(); };
       showLiteLine();
+      const plainClearChosen = clearChosen;                 // dragging a fader clears the buttons, so update the sentence then too
+      clearChosen = function () { plainClearChosen(); showLiteLine(); };
 
       // shorter headings for the two rows of buttons
       const titles = document.querySelectorAll('#presetGroups .presetTitle');
       titles[0].firstChild.textContent = 'How much hearing is lost ';
       titles[2].firstChild.textContent = 'Which pitches are lost ';
-
-      // the faders are for looking at, so they are taken out of the keyboard's path
-      document.querySelectorAll('.cap').forEach((cap) => { cap.tabIndex = -1; });
 
       // a way on to the full version
       const deeper = document.createElement('p');
