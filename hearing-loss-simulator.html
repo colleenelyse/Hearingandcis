@@ -140,7 +140,7 @@
     .dark .modalBox { background: var(--card); color: var(--ink); }
     .dark .levelNote { border-color: #2f9c88; background: var(--card); }
     .dark #loudnessLabel { color: var(--mint); }
-    .dark #soundCanvas { background: var(--card); border-color: var(--line); }
+    .dark #soundCanvas { color: var(--quiet); background: var(--card); border-color: var(--line); }
     .dark .conductive, .dark .sensorineural, .dark .lossBars div { color: #111; }
 
     /* the chart and the ear picture stay bright, framed like a lit screen */
@@ -188,7 +188,7 @@
     .contrast .switch input:checked + span::after { background: #000; }
     .contrast .conductive, .contrast .sensorineural, .contrast .lossBars div { color: #000; }
     .contrast a { color: #ffe600; }
-    .contrast #soundCanvas { background: #000; border: 2px solid #fff; }
+    .contrast #soundCanvas { color: #fff; background: #000; border: 2px solid #fff; }
     .hint     { color: #555; font-size: 13px; }
     ol.hint   { padding-left: 18px; margin: 6px 0; }
     ol.hint li { margin-bottom: 2px; }
@@ -254,9 +254,14 @@
     .realism details { flex-basis: 100%; margin: 0; }
     .realism summary { cursor: pointer; font-weight: bold; }
     .soundPicture { margin-top: 4px; }
-    #soundCanvas  { width: 100%; height: 110px; display: block; background: #fff; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; }
+    .soundBox     { position: relative; }
+    #soundEmpty   { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #666; pointer-events: none; }
+    .dark #soundEmpty { color: var(--quiet); }
+    .contrast #soundEmpty { color: #fff; }
+    #soundCanvas  { width: 100%; height: 110px; display: block; color: #666; background: #fff; border: 1px solid #bbb; border-radius: 6px; box-sizing: border-box; }
     .keyGray      { background: #b9b9b9; color: #111; padding: 0 5px; border-radius: 3px; font-weight: bold; }
-    .keyPink      { background: #e6007e; color: #fff; padding: 0 5px; border-radius: 3px; font-weight: bold; }
+    .keyThrough   { background: #7c5cff; color: #fff; padding: 0 5px; border-radius: 3px; font-weight: bold; }
+    .dark .keyThrough, .contrast .keyThrough { background: #a48bff; color: #111; }
 
     .options  { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; margin: 8px 0; }
     .options select { padding: 4px; font-size: 15px; }
@@ -798,9 +803,9 @@
 
   <!-- The sound picture: lines up with the chart's pitch scale above it -->
   <div class="soundPicture">
-    <canvas id="soundCanvas"></canvas>
-    <p class="hint"><b>Sound picture.</b> Each bar is one pitch, lined up with the chart above. <span class="keyGray">Gray</span> is the sound being played.
-       <span class="keyPink">Pink</span> is what gets through the hearing loss. Where you see gray with no pink, that part of the sound is lost.</p>
+    <div class="soundBox"><canvas id="soundCanvas"></canvas><p id="soundEmpty">Play a sound to see its pitches here</p></div>
+    <p class="hint"><b>Sound bars.</b> Each bar is one pitch, lined up with the chart above. <span class="keyGray">Gray</span> is the sound being played.
+       <span class="keyThrough">Purple</span> is what gets through the hearing loss. Where you see gray with no purple, that part of the sound is lost.</p>
   </div>
 
   </div>   <!-- end of the card -->
@@ -2666,6 +2671,10 @@
     // left-to-right pitch positions as the chart above it.
 
     const soundCanvas = document.getElementById('soundCanvas');
+    const soundEmpty = document.getElementById('soundEmpty');
+    let lastSoundAt = -10000;
+    // The color of the "what gets through" bars: purple, a little lighter on the dark backgrounds so it stands out
+    const heardColor = () => (document.body.classList.contains('dark') || document.body.classList.contains('contrast')) ? '#a48bff' : '#7c5cff';
     let playedMeter = null, heardMeter = null;
 
     // How far across the picture a pitch is, as a share of its width (0 to 1)
@@ -2712,15 +2721,21 @@
         return Math.max(0, Math.min(1, (loudest + 100) / 75)) * height;   // -100 dB = empty, -25 dB = full
       };
 
+      let anySound = false;
       for (let hz = 0; hz < 20000; hz += BAR_HZ) {
         const left = shareAcross(hz) * width, right = shareAcross(hz + BAR_HZ) * width;
-        const gray = barHeight(played, hz, hz + BAR_HZ), pink = barHeight(heard, hz, hz + BAR_HZ);
+        const gray = barHeight(played, hz, hz + BAR_HZ), through = barHeight(heard, hz, hz + BAR_HZ);
+        if (gray > 0) anySound = true;
         draw.fillStyle = '#b9b9b9';
         draw.fillRect(left + 1, height - gray, right - left - 2, gray);
-        if (mysteryHidden) continue;    // the pink bars would give the mystery away
-        draw.fillStyle = '#e6007e';
-        draw.fillRect(left + 1, height - pink, right - left - 2, pink);
+        if (mysteryHidden) continue;    // the "what gets through" bars would give the mystery away
+        draw.fillStyle = heardColor();
+        draw.fillRect(left + 1, height - through, right - left - 2, through);
       }
+
+      // Nothing playing: say so, instead of leaving an empty box. (Wait a moment first, so it does not flash up in the gaps between words.)
+      if (anySound) lastSoundAt = performance.now();
+      soundEmpty.hidden = performance.now() - lastSoundAt < 1500;
     }
 
     // ---------- THE SAMPLE CONVERSATION ----------
