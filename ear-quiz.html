@@ -82,7 +82,7 @@
     .choices button.right::after { content: '  \2713  Correct answer'; color: var(--right); }
     .choices button.wrong::after { content: '  \2715  Your answer'; color: var(--wrong); }
     .why      { margin: 12px 0 0 0; min-height: 24px; }
-    .why b.good { color: var(--right); } .why b.bad { color: var(--wrong); }
+    .why .good { color: var(--right); } .why .bad { color: var(--wrong); }
     .missed   { margin: 10px 0 0 0; padding-left: 20px; font-size: 15px; }
     .missed li { margin-bottom: 6px; }
     .ring     { position: absolute; box-sizing: border-box; border: 6px solid #e6007e; border-radius: 8px; background: #ffe600; pointer-events: none;
@@ -211,17 +211,17 @@
       { id: 'nerve',     part: 'inner',  name: 'Vestibulocochlear Nerve', also: '(Cranial Nerve VIII)', at: [1393, 421, 499, 88] },
       { id: 'cochlea',   part: 'inner',  name: 'Cochlea',                 also: '',                    at: [1436, 647, 382, 65] }
     ];
-    const labelFor = (id) => LABELS.find((l) => l.id === id);
-    const fullName = (l) => l.name + (l.also ? ' ' + l.also : '');
+    const labelFor = (id) => LABELS.find((lbl) => lbl.id === id);
+    const fullName = (lbl) => lbl.name + (lbl.also ? ' ' + lbl.also : '');
     function shuffled(list) {
-      const a = list.slice();
-      for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
-      return a;
+      const arr = list.slice();
+      for (let idx = arr.length - 1; idx > 0; idx--) { const jdx = Math.floor(Math.random() * (idx + 1)); [arr[idx], arr[jdx]] = [arr[jdx], arr[idx]]; }
+      return arr;
     }
     function placeAt(el, at, grow) {          // put something over a label's box, measured in percent so it scales with the picture
-      const g = grow || 0;
-      el.style.left = ((at[0] - g) / 19.2) + '%';  el.style.top = ((at[1] - g) / 10.8) + '%';
-      el.style.width = ((at[2] + 2 * g) / 19.2) + '%'; el.style.height = ((at[3] + 2 * g) / 10.8) + '%';
+      const pad = grow || 0;
+      el.style.left = ((at[0] - pad) / 19.2) + '%';  el.style.top = ((at[1] - pad) / 10.8) + '%';
+      el.style.width = ((at[2] + 2 * pad) / 19.2) + '%'; el.style.height = ((at[3] + 2 * pad) / 10.8) + '%';
     }
 
     // ================= QUIZ 1: LABEL THE EAR =================
@@ -234,8 +234,8 @@
 
     function startLabeling() {
       const part = box('partChoice').value;
-      active = LABELS.filter((l) => part === 'all' || l.part === part);
-      order = shuffled(active.map((l) => l.id));
+      active = LABELS.filter((lbl) => part === 'all' || lbl.part === part);
+      order = shuffled(active.map((lbl) => lbl.id));
       placed = {}; marks = {}; held = null;
       box('labelResult').textContent = '';
       drawLabeling();
@@ -247,35 +247,35 @@
       bank.innerHTML = '';
       const used = Object.values(placed);
       order.filter((id) => !used.includes(id)).forEach((id) => {
-        const b = document.createElement('button');
-        b.className = 'term' + (held === id ? ' held' : '');
-        b.textContent = fullName(labelFor(id));
-        b.dataset.term = id;
-        b.onclick = () => { if (justDragged) { justDragged = false; return; } held = held === id ? null : id; drawLabeling(); };
-        b.onpointerdown = (e) => startDrag(e, id, b);
-        bank.appendChild(b);
+        const btn = document.createElement('button');
+        btn.className = 'term' + (held === id ? ' held' : '');
+        btn.textContent = fullName(labelFor(id));
+        btn.dataset.term = id;
+        btn.onclick = () => { if (justDragged) { justDragged = false; return; } held = held === id ? null : id; drawLabeling(); };
+        btn.onpointerdown = (evt) => startDrag(evt, id, btn);
+        bank.appendChild(btn);
       });
       if (!bank.children.length) bank.innerHTML = '<span class="hint">All terms are placed.</span>';
 
       // the blank labels on the picture
       const holder = box('targets');
       holder.innerHTML = '';
-      active.forEach((l) => {
-        const t = document.createElement('button');
-        t.className = 'target' + (marks[l.id] ? ' ' + marks[l.id] : '');
-        t.dataset.label = l.id;
-        placeAt(t, l.at, 4);
-        const term = placed[l.id] && labelFor(placed[l.id]);
+      active.forEach((lbl) => {
+        const tgt = document.createElement('button');
+        tgt.className = 'target' + (marks[lbl.id] ? ' ' + marks[lbl.id] : '');
+        tgt.dataset.label = lbl.id;
+        placeAt(tgt, lbl.at, 4);
+        const term = placed[lbl.id] && labelFor(placed[lbl.id]);
         if (term) {
           const lines = term.twoLines || [term.name];
-          t.innerHTML = lines.map((x) => '<span>' + x + '</span>').join('') + (term.also ? '<small>' + term.also + '</small>' : '');
-          t.title = fullName(term);
+          tgt.innerHTML = lines.map((posX) => '<span>' + posX + '</span>').join('') + (term.also ? '<small>' + term.also + '</small>' : '');
+          tgt.title = fullName(term);
         }
-        t.setAttribute('aria-label', term ? 'Label with ' + fullName(term) + (marks[l.id] ? ', ' + marks[l.id] : '') : 'Blank label');
-        t.disabled = marks[l.id] === 'right';
-        t.onclick = () => clickLabel(l.id);
-        if (term && marks[l.id] !== 'right') { t.style.touchAction = 'none'; t.onpointerdown = (e) => startDrag(e, placed[l.id], t, l.id); }
-        holder.appendChild(t);
+        tgt.setAttribute('aria-label', term ? 'Label with ' + fullName(term) + (marks[lbl.id] ? ', ' + marks[lbl.id] : '') : 'Blank label');
+        tgt.disabled = marks[lbl.id] === 'right';
+        tgt.onclick = () => clickLabel(lbl.id);
+        if (term && marks[lbl.id] !== 'right') { tgt.style.touchAction = 'none'; tgt.onpointerdown = (evt) => startDrag(evt, placed[lbl.id], tgt, lbl.id); }
+        holder.appendChild(tgt);
       });
       fitWords();
     }
@@ -296,15 +296,15 @@
 
     // Make the words fit inside each label, however big the picture is on this screen
     function fitWords() {
-      document.querySelectorAll('.target').forEach((t) => {
-        if (!t.children.length) return;
-        const w = t.clientWidth - 4, h = t.clientHeight - 2;
-        let size = h / (t.children.length * 1.05);
-        t.style.fontSize = size + 'px';
+      document.querySelectorAll('.target').forEach((tgt) => {
+        if (!tgt.children.length) return;
+        const wide = tgt.clientWidth - 4, high = tgt.clientHeight - 2;
+        let size = high / (tgt.children.length * 1.05);
+        tgt.style.fontSize = size + 'px';
         let widest = 0;
-        Array.from(t.children).forEach((c) => { widest = Math.max(widest, c.scrollWidth); });
-        if (widest > w) size = size * w / widest;
-        t.style.fontSize = Math.max(5, size * 0.94) + 'px';
+        Array.from(tgt.children).forEach((kid) => { widest = Math.max(widest, kid.scrollWidth); });
+        if (widest > wide) size = size * wide / widest;
+        tgt.style.fontSize = Math.max(5, size * 0.94) + 'px';
       });
     }
     window.addEventListener('resize', fitWords);
@@ -312,58 +312,58 @@
 
     // Dragging a term with the mouse, a finger or a pen
     let drag = null, justDragged = false;
-    function startDrag(e, id, button, from) {      // from: the label the term is being picked up from, if it was already placed
-      if (e.button) return;
-      drag = { id, button, from, x: e.clientX, y: e.clientY, ghost: null };
-      button.setPointerCapture(e.pointerId);
+    function startDrag(evt, id, button, from) {      // from: the label the term is being picked up from, if it was already placed
+      if (evt.button) return;
+      drag = { id: id, button: button, from: from, startX: evt.clientX, startY: evt.clientY, ghost: null };
+      button.setPointerCapture(evt.pointerId);
       button.onpointermove = moveDrag;
       button.onpointerup = endDrag;
       button.onpointercancel = () => { if (drag && drag.ghost) drag.ghost.remove(); drag = null; };
     }
-    function labelUnder(x, y) {
+    function labelUnder(posX, posY) {
       let best = null, bestGap = 26;      // a near miss still counts, which helps with the three tiny bone labels
-      document.querySelectorAll('.target').forEach((t) => {
-        const r = t.getBoundingClientRect();
-        const gap = Math.hypot(Math.max(r.left - x, 0, x - r.right), Math.max(r.top - y, 0, y - r.bottom));
-        if (gap < bestGap) { bestGap = gap; best = t; }
+      document.querySelectorAll('.target').forEach((tgt) => {
+        const rect = tgt.getBoundingClientRect();
+        const gap = Math.hypot(Math.max(rect.left - posX, 0, posX - rect.right), Math.max(rect.top - posY, 0, posY - rect.bottom));
+        if (gap < bestGap) { bestGap = gap; best = tgt; }
       });
       return best;
     }
-    function moveDrag(e) {
+    function moveDrag(evt) {
       if (!drag) return;
       if (!drag.ghost) {
-        if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return;
+        if (Math.hypot(evt.clientX - drag.startX, evt.clientY - drag.startY) < 6) return;
         drag.ghost = document.createElement('div');
         drag.ghost.textContent = fullName(labelFor(drag.id));
         drag.ghost.className = 'term held ghost';
         if (drag.from) drag.button.style.opacity = '0.25';
         document.body.appendChild(drag.ghost);
       }
-      drag.ghost.style.left = e.clientX + 'px'; drag.ghost.style.top = e.clientY + 'px';
-      const over = labelUnder(e.clientX, e.clientY);
-      document.querySelectorAll('.target.over').forEach((t) => { if (t !== over) t.classList.remove('over'); });
+      drag.ghost.style.left = evt.clientX + 'px'; drag.ghost.style.top = evt.clientY + 'px';
+      const over = labelUnder(evt.clientX, evt.clientY);
+      document.querySelectorAll('.target.over').forEach((tgt) => { if (tgt !== over) tgt.classList.remove('over'); });
       if (over) over.classList.add('over');
     }
-    function endDrag(e) {
+    function endDrag(evt) {
       if (!drag) return;
-      const d = drag; drag = null;
-      d.button.onpointermove = null; d.button.onpointerup = null;
-      if (!d.ghost) return;                  // it was a click, not a drag
-      d.ghost.remove();
+      const held2 = drag; drag = null;
+      held2.button.onpointermove = null; held2.button.onpointerup = null;
+      if (!held2.ghost) return;                  // it was a click, not a drag
+      held2.ghost.remove();
       justDragged = true; setTimeout(() => { justDragged = false; }, 0);
-      const over = labelUnder(e.clientX, e.clientY);
+      const over = labelUnder(evt.clientX, evt.clientY);
       const to = over ? over.dataset.label : null;
-      if (d.from && to === d.from) return drawLabeling();           // dropped back where it was
-      if (d.from) { delete placed[d.from]; delete marks[d.from]; }   // picked up from a label: that label is blank again
-      if (to && marks[to] !== 'right') put(d.id, to); else { box('labelResult').textContent = ''; drawLabeling(); }   // dropped off the labels: back to the list
+      if (held2.from && to === held2.from) return drawLabeling();           // dropped back where it was
+      if (held2.from) { delete placed[held2.from]; delete marks[held2.from]; }   // picked up from a label: that label is blank again
+      if (to && marks[to] !== 'right') put(held2.id, to); else { box('labelResult').textContent = ''; drawLabeling(); }   // dropped off the labels: back to the list
     }
 
     box('checkWork').onclick = () => {
       let right = 0;
-      active.forEach((l) => {
-        if (!placed[l.id]) { delete marks[l.id]; return; }
-        marks[l.id] = placed[l.id] === l.id ? 'right' : 'wrong';
-        if (marks[l.id] === 'right') right++;
+      active.forEach((lbl) => {
+        if (!placed[lbl.id]) { delete marks[lbl.id]; return; }
+        marks[lbl.id] = placed[lbl.id] === lbl.id ? 'right' : 'wrong';
+        if (marks[lbl.id] === 'right') right++;
       });
       const all = active.length;
       box('labelResult').textContent = right === all ? 'All ' + all + ' correct!'
@@ -372,7 +372,7 @@
     };
     box('startOver').onclick = startLabeling;
     box('showAnswers').onclick = () => {
-      active.forEach((l) => { placed[l.id] = l.id; marks[l.id] = 'right'; });
+      active.forEach((lbl) => { placed[lbl.id] = lbl.id; marks[lbl.id] = 'right'; });
       box('labelResult').textContent = 'These are the answers.';
       drawLabeling();
     };
@@ -381,19 +381,19 @@
     // ================= QUIZ 2: QUESTIONS =================
     // Every question: topic, the question, the choices, the right answer, a short reason, and (sometimes) a label to point at.
     const QUESTIONS = [];
-    const ask = (topic, q, choices, answer, why, extra) => QUESTIONS.push(Object.assign({ topic, q, choices, answer, why }, extra || {}));
+    const ask = (topic, prompt, choices, answer, why, extra) => QUESTIONS.push(Object.assign({ topic: topic, prompt: prompt, choices: choices, answer: answer, why: why }, extra || {}));
     const TF = ['True', 'False'], SECTIONS = ['Outer ear', 'Middle ear', 'Inner ear'];
     const TWO = ['Conductive hearing loss', 'Sensorineural hearing loss'];
     const THREE = ['Conductive hearing loss', 'Sensory hearing loss', 'Neural hearing loss'];
 
     // Names: point at one label in the picture
-    const structures = LABELS.filter((l) => !l.heading);
-    structures.forEach((l) => {
-      const others = shuffled(structures.filter((o) => o.id !== l.id)).slice(0, 3).map(fullName);
-      ask('names', 'What is the name of the highlighted structure on the diagram?', [fullName(l)].concat(others), fullName(l), 'It is the ' + fullName(l) + '.', { point: l.id, mix: true });
+    const structures = LABELS.filter((lbl) => !lbl.heading);
+    structures.forEach((lbl) => {
+      const others = shuffled(structures.filter((oth) => oth.id !== lbl.id)).slice(0, 3).map(fullName);
+      ask('names', 'What is the name of the highlighted structure on the diagram?', [fullName(lbl)].concat(others), fullName(lbl), 'It is the ' + fullName(lbl) + '.', { point: lbl.id, mix: true });
     });
-    LABELS.filter((l) => l.heading).forEach((l) => {
-      ask('names', 'What is the name of the highlighted section on the diagram?', SECTIONS, l.name.replace('Ear', 'ear'), 'It is the ' + PART_NAME[l.part] + ' ' + l.also + '.', { point: l.id });
+    LABELS.filter((lbl) => lbl.heading).forEach((lbl) => {
+      ask('names', 'What is the name of the highlighted section on the diagram?', SECTIONS, lbl.name.replace('Ear', 'ear'), 'It is the ' + PART_NAME[lbl.part] + ' ' + lbl.also + '.', { point: lbl.id });
     });
     // Names: other words for the same thing
     ask('names', 'Another name for the eardrum is the…', ['Tympanic membrane', 'Tympanic cavity', 'Eustachian tube', 'Auricle'], 'Tympanic membrane', 'The eardrum is the tympanic membrane.', { mix: true });
@@ -429,13 +429,13 @@
       { name: 'Vestibulocochlear nerve', does: 'It carries electrical signals from the inner ear to the brain',               which: 'carries electrical signals from the inner ear to the brain' }
     ];
     const lower = (name) => name.charAt(0).toLowerCase() + name.slice(1).replace('eustachian', 'Eustachian').replace('/Pinna', '/pinna');
-    JOBS.forEach((j) => {
-      const others = shuffled(JOBS.filter((o) => o !== j)).slice(0, 3);
-      const say = (o) => o.does.replace(/^(It|They) /, '').replace(/^./, (c) => c.toUpperCase());
-      const the = 'The ' + lower(j.name).replace('Eustachian tube', 'Eustachian tube');
-      const why = the + (j.plural ? ': they ' : ': it ') + j.does.replace(/^(It|They) /, '') + '.';
-      ask('jobs', 'What ' + (j.plural ? 'do' : 'does') + ' the ' + lower(j.name) + ' do?', [say(j)].concat(others.map(say)), say(j), why, { mix: true });
-      ask('jobs', 'Which part of the ear ' + j.which + '?', [j.name].concat(others.map((o) => o.name)), j.name, why, { mix: true });
+    JOBS.forEach((jdx) => {
+      const others = shuffled(JOBS.filter((oth) => oth !== jdx)).slice(0, 3);
+      const say = (oth) => oth.does.replace(/^(It|They) /, '').replace(/^./, (kid) => kid.toUpperCase());
+      const the = 'The ' + lower(jdx.name).replace('Eustachian tube', 'Eustachian tube');
+      const why = the + (jdx.plural ? ': they ' : ': it ') + jdx.does.replace(/^(It|They) /, '') + '.';
+      ask('jobs', 'What ' + (jdx.plural ? 'do' : 'does') + ' the ' + lower(jdx.name) + ' do?', [say(jdx)].concat(others.map(say)), say(jdx), why, { mix: true });
+      ask('jobs', 'Which part of the ear ' + jdx.which + '?', [jdx.name].concat(others.map((oth) => oth.name)), jdx.name, why, { mix: true });
     });
     ask('jobs', 'Which part divides the outer ear from the middle ear?', ['Tympanic membrane (eardrum)', 'Cochlea', 'Eustachian tube', 'Auricle/Pinna'], 'Tympanic membrane (eardrum)', 'The eardrum divides the outer ear from the middle ear.', { mix: true });
     ask('jobs', 'The Eustachian tube links the middle ear with the…', ['Back of the nose', 'Cochlea', 'Ear canal', 'Brain'], 'Back of the nose', 'The Eustachian tube links the middle ear with the back of the nose.', { mix: true });
@@ -510,36 +510,36 @@
 
     function startQuestions() {
       const topic = box('topicChoice').value;
-      quiz = shuffled(QUESTIONS.filter((Q) => topic === 'mix' || Q.topic === topic)).slice(0, QUIZ_LENGTH);
+      quiz = shuffled(QUESTIONS.filter((item) => topic === 'mix' || item.topic === topic)).slice(0, QUIZ_LENGTH);
       at = 0; score = 0; missed = [];
       box('scoreBox').hidden = true; box('questionBox').hidden = false;
       showQuestion();
     }
     function showQuestion() {
-      const Q = quiz[at];
+      const item = quiz[at];
       box('quizCount').textContent = 'Question ' + (at + 1) + ' of ' + quiz.length;
-      box('quizPrompt').textContent = Q.Q;
+      box('quizPrompt').textContent = item.prompt;
       box('askWhy').textContent = '';
       box('askNext').hidden = true;
       const holder = box('askChoices');
       holder.innerHTML = '';
-      (Q.mix ? shuffled(Q.choices) : Q.choices).forEach((choice) => {
-        const B = document.createElement('button');
-        B.textContent = choice;
-        B.onclick = () => answer(choice);
-        holder.appendChild(B);
+      (item.mix ? shuffled(item.choices) : item.choices).forEach((choice) => {
+        const btn = document.createElement('button');
+        btn.textContent = choice;
+        btn.onclick = () => answer(choice);
+        holder.appendChild(btn);
       });
       showMode();
     }
     function answer(choice) {
-      const Q = quiz[at], good = choice === Q.answer;
-      if (good) score++; else missed.push(Q);
-      box('askChoices').querySelectorAll('button').forEach((B) => {
-        B.disabled = true;
-        if (B.textContent === Q.answer) B.classList.add('right');
-        else if (B.textContent === choice) B.classList.add('wrong');
+      const item = quiz[at], good = choice === item.answer;
+      if (good) score++; else missed.push(item);
+      box('askChoices').querySelectorAll('button').forEach((btn) => {
+        btn.disabled = true;
+        if (btn.textContent === item.answer) btn.classList.add('right');
+        else if (btn.textContent === choice) btn.classList.add('wrong');
       });
-      box('askWhy').innerHTML = (good ? '<b class="good">Correct.</b> ' : '<b class="bad">Not quite.</b> ') + Q.why;
+      box('askWhy').innerHTML = (good ? '<strong class="good">Correct.</strong> ' : '<strong class="bad">Not quite.</strong> ') + item.why;
       const next = box('askNext');
       next.textContent = at + 1 < quiz.length ? 'Next question' : 'See my score';
       next.hidden = false; next.focus();
@@ -549,7 +549,7 @@
       if (at < quiz.length) return showQuestion();
       box('questionBox').hidden = true; box('scoreBox').hidden = false;
       box('scoreLine').textContent = 'You got ' + score + ' of ' + quiz.length + '.';
-      box('missedList').innerHTML = missed.map((Q) => '<li>' + Q.Q + '<br><b>' + Q.answer + '.</b> ' + Q.why + '</li>').join('');
+      box('missedList').innerHTML = missed.map((item) => '<li>' + item.prompt + '<br><strong>' + item.answer + '.</strong> ' + item.why + '</li>').join('');
       box('missedList').hidden = !missed.length;
       showMode();
       box('askAgain').focus();
@@ -561,29 +561,29 @@
     function showMode() {
       const labeling = mode === 'label';
       document.body.classList.toggle('labeling', labeling);
-      document.querySelectorAll('#modeTiles button').forEach((B) => B.classList.toggle('on', B.dataset.mode === mode));
+      document.querySelectorAll('#modeTiles button').forEach((btn) => btn.classList.toggle('on', btn.dataset.mode === mode));
       box('mode-label').hidden = !labeling;
       box('mode-ask').hidden = labeling;
       box('targets').hidden = !labeling;
 
-      const Q = !labeling && !box('questionBox').hidden ? quiz[at] : null;
-      const pointing = Q && Q.point ? labelFor(Q.point) : null;
+      const item = !labeling && !box('questionBox').hidden ? quiz[at] : null;
+      const pointing = item && item.point ? labelFor(item.point) : null;
       const part = box('partChoice').value;
-      PARTS.forEach((P) => {
-        const img = box('img-ear-' + P + '-boxes');
-        img.hidden = labeling ? !(part === 'all' || part === P) : !pointing;
-        img.classList.toggle('faded', !!pointing && pointing.part !== P);     // the other parts fade so the highlighted one stands out
+      PARTS.forEach((each) => {
+        const img = box('img-ear-' + each + '-boxes');
+        img.hidden = labeling ? !(part === 'all' || part === each) : !pointing;
+        img.classList.toggle('faded', !!pointing && pointing.part !== each);     // the other parts fade so the highlighted one stands out
       });
       box('ring').hidden = !pointing;
       if (pointing) placeAt(box('ring'), pointing.at, 10);
       if (labeling) fitWords();
     }
-    document.querySelectorAll('#modeTiles button').forEach((B) => { B.onclick = () => { mode = B.dataset.mode; showMode(); }; });
+    document.querySelectorAll('#modeTiles button').forEach((btn) => { btn.onclick = () => { mode = btn.dataset.mode; showMode(); }; });
 
     // ---------- COLORS AND TEXT SIZE (shared with the other pages) ----------
     const themeChoice = box('themeChoice'), textChoice = box('textChoice');
-    function remember(key, value) { try { localStorage.setItem(key, value); } catch (E) { /* not allowed here */ } }
-    function recall(key)          { try { return localStorage.getItem(key); } catch (E) { return null; } }
+    function remember(key, value) { try { localStorage.setItem(key, value); } catch (evt) { /* not allowed here */ } }
+    function recall(key)          { try { return localStorage.getItem(key); } catch (evt) { return null; } }
     function showLook() {
       document.body.classList.toggle('dark', themeChoice.value === 'dark');
       document.body.classList.toggle('contrast', themeChoice.value === 'contrast');
