@@ -592,6 +592,33 @@
     .keyRight { background: #d81e1e; color: #fff; padding: 0 5px; border-radius: 3px; font-weight: bold; }
     .keyLeft  { background: #1565d8; color: #fff; padding: 0 5px; border-radius: 3px; font-weight: bold; }
     .chart.locked .cap, .chart.locked .slot { pointer-events: none; }
+    .gameScoreArea { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line, #999); }
+    #gameScoreBoard { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+    .gameOverall { font-size: 24px; font-weight: 800; }
+    .gameTallyRows { font-size: 14px; }
+    .gameTallyRows b { font-weight: 800; }
+    .gameName input { font: inherit; font-size: 15px; padding: 5px 10px; border: 1.5px solid var(--line, #999); border-radius: 10px; background: var(--raised, #fff); color: var(--ink, #111); width: 170px; }
+    /* The score report is always black on white, so it prints and screenshots clearly */
+    #gameReport { position: fixed; inset: 0; z-index: 100; background: rgba(0, 0, 0, 0.6); display: flex; align-items: flex-start; justify-content: center; padding: 30px 16px; overflow: auto; }
+    #gameReport .reportCard { background: #fff; color: #111; border-radius: 14px; padding: 24px 28px; width: 100%; max-width: 560px; box-sizing: border-box; }
+    #gameReport h2 { font-size: 24px; margin: 0 0 12px 0; color: #111; }
+    #gameReport .reportLine { margin: 2px 0; font-size: 17px; }
+    #gameReport .reportBig { margin: 14px 0 10px 0; font-size: 18px; }
+    #gameReportPercent { font-size: 44px; font-weight: 800; line-height: 1; margin-right: 8px; }
+    #gameReport .reportTable { width: 100%; border-collapse: collapse; font-size: 16px; }
+    #gameReport .reportTable th, #gameReport .reportTable td { text-align: right; padding: 6px 4px; border-bottom: 1px solid #bbb; color: #111; }
+    #gameReport .reportTable th:first-child, #gameReport .reportTable td:first-child { text-align: left; }
+    #gameReport .reportTable tr.total td { font-weight: 800; border-top: 2px solid #111; border-bottom: 0; }
+    #gameReport .reportNote { font-size: 13px; color: #444; margin: 12px 0 0 0; }
+    #gameReport .reportButtons { margin-top: 14px; }
+    #gameReport button { font: inherit; font-size: 15px; font-weight: 700; padding: 7px 16px; border-radius: 999px !important; cursor: pointer; background: #eee !important; color: #111 !important; border: 1.5px solid #999 !important; }
+    #gameReport button.main { background: #111 !important; color: #fff !important; border-color: #111 !important; }
+    @media print {
+      body > *:not(#gameReport) { display: none !important; }
+      body { background: #fff !important; margin: 0; padding: 0; zoom: 1 !important; }
+      #gameReport { position: static; background: none; padding: 0; display: block; }
+      #gameReport .reportButtons { display: none !important; }
+    }
     /* On a wide screen the question sits beside the chart, so both can be seen without scrolling */
     @media (min-width: 1100px) {
       body.gameQuiet #readBox, body.gameQuiet #buildBox { float: left; width: 36%; box-sizing: border-box; margin-top: 0; }
@@ -763,6 +790,33 @@
       <button data-activity="read"><b>Read the audiogram</b><small>Look at an audiogram and answer questions about what that person can hear.</small></button>
       <button data-activity="build"><b>Build it</b><small>Read a description and drag the faders to make the audiogram.</small></button>
     </div>
+    <!-- THE RUNNING SCORE for the three games: it counts until the page is reloaded -->
+    <div class="gameScoreArea">
+      <label class="switch">Keep score <input type="checkbox" id="keepGameScore" checked><span></span></label>
+      <span id="gameScoreBoard">
+        <span class="gameOverall" id="gameOverall">&ndash;</span>
+        <span class="gameTallyRows" id="gameTallyRows"></span>
+        <label class="gameName">Your name <input type="text" id="gameStudent" autocomplete="off" maxlength="60"></label>
+        <button id="gameReportButton">Score report</button>
+        <button id="gameReset">Reset score</button>
+      </span>
+    </div>
+  </div>
+
+  <!-- THE SCORE REPORT: a plain white card to print or screenshot and hand in -->
+  <div id="gameReport" hidden>
+    <div class="reportCard" role="dialog" aria-label="Score report">
+      <h2>Hearing Loss Games score report</h2>
+      <p class="reportLine"><strong>Name:</strong> <span id="gameReportName"></span></p>
+      <p class="reportLine"><strong>Date:</strong> <span id="gameReportDate"></span></p>
+      <p class="reportBig"><span id="gameReportPercent"></span> <span id="gameReportCount"></span></p>
+      <table class="reportTable">
+        <thead><tr><th>Game</th><th>Answered</th><th>Correct</th><th>Score</th></tr></thead>
+        <tbody id="gameReportRows"></tbody>
+      </table>
+      <p class="reportNote">Every answer since the score was last reset is counted. Listen and guess and Build it count only the first try at each one. Using "Reveal the answer" or "Show me the answer" first counts as not correct.</p>
+      <div class="reportButtons"><button class="main" id="gamePrint">Print</button> <button id="gameReportClose">Close</button></div>
+    </div>
   </div>
 
   <div class="mysteryBox" id="readBox" hidden>
@@ -773,8 +827,7 @@
     <p class="gamePrompt" id="readPrompt"></p>
     <div class="gameChoices" id="readChoices"></div>
     <p id="readWhy" aria-live="polite"></p>
-    <p><button id="readNext" hidden>Next question</button> <button id="readNewChart">New audiogram</button> <button class="leaveGame">Close the game</button>
-       <span class="gameScore" id="readScore"></span></p>
+    <p><button id="readNext" hidden>Next question</button> <button id="readNewChart">New audiogram</button> <button class="leaveGame">Close the game</button></p>
   </div>
 
   <div class="mysteryBox" id="buildBox" hidden>
@@ -782,8 +835,7 @@
     <p class="gamePrompt" id="buildPrompt"></p>
     <ul class="buildRules" id="buildRules" hidden></ul>
     <p id="buildResult" aria-live="polite"></p>
-    <p><button id="buildCheck">Check my audiogram</button> <button id="buildShow">Show me the answer</button> <button id="buildNew">New one to build</button> <button class="leaveGame">Close the game</button>
-       <span class="gameScore" id="buildScore"></span></p>
+    <p><button id="buildCheck">Check my audiogram</button> <button id="buildShow">Show me the answer</button> <button id="buildNew">New one to build</button> <button class="leaveGame">Close the game</button></p>
   </div>
 
   <!-- Mystery mode: appears in place of the preset buttons -->
@@ -1297,6 +1349,8 @@
     let split = false;
     let dragActive = false;              // true while a fader is being dragged
     let fadersLocked = false;            // true in the "Read the audiogram" game, where the chart is only for looking at
+    let gameTally = {};                  // the running score in the games: for each game, how many were right and how many were answered
+    let mysteryCounted = false;          // has this mystery already gone into the score? (only the first guess counts)
 
     const caps   = { left: [], right: [] };   // the fader caps on the chart, for each ear
 
@@ -3140,6 +3194,7 @@
       setEarValues('right', MYSTERIES[mystery]);
       soundLevel = LEVEL_START;    // every new mystery starts with no degree of loss added
       mysteryHidden = true;
+      mysteryCounted = false;
 
       mysteryBox.hidden = false;
       presetGroups.hidden = true;
@@ -3151,6 +3206,7 @@
 
     function revealMystery() {
       if (!mystery) return;
+      if (!mysteryCounted && GAME) { countGame('listen', false); mysteryCounted = true; }
       mysteryHidden = false;
       mysteryResult.textContent = 'The answer: ' + mystery + '. The audiogram is showing on the chart.';
       fadersChanged();
@@ -3232,6 +3288,7 @@
     document.getElementById('leaveMystery').onclick  = leaveMystery;
     document.getElementById('checkGuess').onclick = () => {
       if (!guessShape.value) { mysteryResult.textContent = 'Choose an answer first.'; return; }
+      if (!mysteryCounted) { countGame('listen', guessShape.value === mystery); mysteryCounted = true; }
       if (guessShape.value === mystery) {
         // A right answer shows the audiogram straight away. "New mystery" hides it again.
         revealMystery();
@@ -3378,7 +3435,7 @@
 
     // ----- Read the audiogram -----
     const QUESTIONS_PER_CHART = 4;
-    let gram = null, readQueue = [], readAsked = 0, readRight = 0, readTotal = 0;
+    let gram = null, readQueue = [], readAsked = 0;
     function newReadChart() {
       let pick;
       do { pick = pickFrom(AUDIOGRAMS); } while (pick === gram);
@@ -3409,14 +3466,13 @@
         button.textContent = choice;
         button.onclick = () => {
           const good = choice === item.answer;
-          readTotal++; if (good) readRight++;
+          countGame('read', good);
           holder.querySelectorAll('button').forEach((other) => {
             other.disabled = true;
             if (other.textContent === item.answer) other.classList.add('right');
             else if (other.textContent === choice) other.classList.add('wrong');
           });
           document.getElementById('readWhy').innerHTML = '<b>' + (good ? 'Correct.' : 'Not quite.') + '</b> ' + item.why;
-          document.getElementById('readScore').textContent = 'Score: ' + readRight + ' of ' + readTotal;
           const next = document.getElementById('readNext');
           next.textContent = readQueue.length ? 'Next question' : 'Next audiogram';
           next.hidden = false; next.focus();
@@ -3474,7 +3530,7 @@
       'in the left ear':  { right: flat(5), left: flat(105) },         'in the right ear': { right: flat(105), left: flat(5) }
     };
     const answerFor = (target) => BUILD_ANSWERS[Object.keys(BUILD_ANSWERS).find((key) => target.name.indexOf(key) >= 0)];
-    let build = null, buildRight = 0, buildTotal = 0, buildCounted = false;
+    let build = null, buildCounted = false;
     function newBuild() {
       let pick;
       do { pick = pickFrom(BUILDS); } while (pick === build);
@@ -3496,8 +3552,7 @@
       document.querySelectorAll('#buildRules li').forEach((line, at) => { line.className = met[at] ? 'met' : 'unmet'; });
       const all = met.every((good) => good);
       document.getElementById('buildRules').hidden = all;
-      if (!buildCounted) { buildTotal++; if (all) buildRight++; buildCounted = true; }       // only the first check of each one counts
-      document.getElementById('buildScore').textContent = 'Right on the first check: ' + buildRight + ' of ' + buildTotal;
+      if (!buildCounted) { countGame('build', all); buildCounted = true; }       // only the first check of each one counts
       document.getElementById('buildResult').innerHTML = all ? '<b>That matches.</b> Click "New one to build" for another.'
         : '<b>Not yet. Try again.</b> The checklist above shows what this audiogram needs. Lines marked with an X are not met yet. A bigger number means more hearing loss, and it is lower on the chart. Move the faders and check again.';
     };
@@ -3509,17 +3564,61 @@
       setEarValues('left', answer.left || answer.right);
       showEar();
       fadersChanged();
-      if (!buildCounted) { buildTotal++; buildCounted = true; }
-      document.getElementById('buildScore').textContent = 'Right on the first check: ' + buildRight + ' of ' + buildTotal;
+      if (!buildCounted) { countGame('build', false); buildCounted = true; }
       document.getElementById('buildRules').hidden = false;
       document.querySelectorAll('#buildRules li').forEach((line) => { line.className = 'met'; });
       document.getElementById('buildResult').innerHTML = '<b>Here is one audiogram that fits.</b> The checklist above shows what makes it fit. Other audiograms would fit too.';
     };
 
+    // ----- The running score, shared by the three games -----
+    // Every answer counts as one. It is kept only in this page's memory, so it starts again when the page is reloaded.
+    const GAME_ROWS = [['listen', 'Listen and guess'], ['read', 'Read the audiogram'], ['build', 'Build it']];
+    const percentOf = (got) => got && got.total ? Math.round(100 * got.right / got.total) + '%' : '\u2013';
+    function countGame(group, good) {
+      if (!document.getElementById('keepGameScore').checked) return;       // switched off: nothing is counted
+      if (!gameTally[group]) gameTally[group] = { right: 0, total: 0 };
+      gameTally[group].total++;
+      if (good) gameTally[group].right++;
+      drawGameScore();
+    }
+    function gameTotals() {
+      let right = 0, total = 0;
+      GAME_ROWS.forEach((row) => { const got = gameTally[row[0]]; if (got) { right += got.right; total += got.total; } });
+      return { right: right, total: total };
+    }
+    function drawGameScore() {
+      const all = gameTotals();
+      document.getElementById('gameOverall').textContent = all.total ? percentOf(all) + ' (' + all.right + ' of ' + all.total + ')' : 'No answers yet';
+      document.getElementById('gameTallyRows').innerHTML = GAME_ROWS.map((row) => {
+        const got = gameTally[row[0]];
+        return row[1] + ': <b>' + (got ? got.right + ' of ' + got.total + ', ' + percentOf(got) : '\u2013') + '</b>';
+      }).join(' &nbsp;|&nbsp; ');
+      document.getElementById('gameScoreBoard').hidden = !document.getElementById('keepGameScore').checked;
+    }
+    document.getElementById('keepGameScore').onchange = drawGameScore;
+    document.getElementById('gameReset').onclick = () => { gameTally = {}; drawGameScore(); };
+    document.getElementById('gameReportButton').onclick = () => {
+      const all = gameTotals();
+      document.getElementById('gameReportRows').innerHTML = GAME_ROWS.map((row) => {
+        const got = gameTally[row[0]] || { right: 0, total: 0 };
+        return '<tr><td>' + row[1] + '</td><td>' + got.total + '</td><td>' + got.right + '</td><td>' + percentOf(got) + '</td></tr>';
+      }).join('') + '<tr class="total"><td>Total</td><td>' + all.total + '</td><td>' + all.right + '</td><td>' + percentOf(all) + '</td></tr>';
+      document.getElementById('gameReportName').textContent = document.getElementById('gameStudent').value.trim() || '(no name typed)';
+      document.getElementById('gameReportDate').textContent = new Date().toLocaleString([], { dateStyle: 'full', timeStyle: 'short' });
+      document.getElementById('gameReportPercent').textContent = percentOf(all);
+      document.getElementById('gameReportCount').textContent = all.total ? all.right + ' correct out of ' + all.total + ' answered' : 'No answers yet';
+      document.getElementById('gameReport').hidden = false;
+      document.getElementById('gameReportClose').focus();
+    };
+    document.getElementById('gameReportClose').onclick = () => { document.getElementById('gameReport').hidden = true; };
+    document.getElementById('gamePrint').onclick = () => window.print();
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && !document.getElementById('gameReport').hidden) document.getElementById('gameReport').hidden = true; });
+    drawGameScore();
+
     // ----- Switching between the three games -----
     function showActivity(name) {
       activity = name;
-      gameMenu.querySelectorAll('button').forEach((button) => button.classList.toggle('playing', button.dataset.activity === name));
+      gameMenu.querySelectorAll('[data-activity]').forEach((button) => button.classList.toggle('playing', button.dataset.activity === name));
       [voices.guided.clip, voices.story.clip, player].forEach((clip) => { if (clip && !clip.paused) clip.pause(); });
       document.body.classList.toggle('gameQuiet', name !== 'listen');
       mysteryBox.hidden = name !== 'listen';
@@ -3531,7 +3630,7 @@
       presetGroups.hidden = true;
       if (name === 'read') newReadChart(); else newBuild();
     }
-    gameMenu.querySelectorAll('button').forEach((button) => { button.onclick = () => showActivity(button.dataset.activity); });
+    gameMenu.querySelectorAll('[data-activity]').forEach((button) => { button.onclick = () => showActivity(button.dataset.activity); });
     document.querySelectorAll('.leaveGame').forEach((button) => { button.onclick = leaveMystery; });
 
     // Draw everything once at the start
