@@ -99,7 +99,7 @@
     <div class="titleSide">
       <nav class="pageNav" aria-label="Other pages">
         <a class="pageLink" href="index.html" title="Back to the welcome page">&larr; Home</a>
-        <a class="pageLink" href="parts-of-the-ear.html" title="Opens the ear picture with labels you can switch on and off">Parts of the ear</a>
+        <a class="pageLink" href="parts-of-the-ear.html" title="Opens the ear picture and the definitions to study">Parts of the ear</a>
       </nav>
       <h1>Ear Quiz</h1>
     </div>
@@ -147,6 +147,7 @@
             <option value="mix">A mix of everything</option>
             <option value="names">Names of structures</option>
             <option value="where">Outer, middle or inner</option>
+            <option value="jobs">What each part does</option>
             <option value="types">Types of hearing loss</option>
             <option value="truefalse">True or false</option>
           </select>
@@ -416,6 +417,35 @@
           SECTIONS[PARTS.indexOf(part)], 'The ' + name.toLowerCase().replace('eustachian', 'Eustachian') + (plural ? ' are' : ' is') + ' in the ' + PART_NAME[part] + '.');
     });
 
+    // What each part does (these match the definitions at the bottom of the Parts of the Ear page)
+    const JOBS = [
+      { name: 'Auricle/Pinna',           does: 'It is the outside part of the ear, where sound waves enter',                 which: 'is on the outside of the head, where sound waves enter' },
+      { name: 'Ear canal',               does: 'It carries sound waves to the eardrum',                                       which: 'is the tube that carries sound waves to the eardrum' },
+      { name: 'Tympanic membrane (eardrum)', does: 'It vibrates when sound waves hit it and passes the vibrations to the ossicles', which: 'vibrates when sound waves hit it and passes the vibrations to the ossicles' },
+      { name: 'Ossicles',                does: 'They amplify the vibrations and send them to the cochlea',                    which: 'amplifies the vibrations and sends them to the cochlea', plural: true },
+      { name: 'Eustachian tube',         does: 'It helps equalize the pressure in the middle ear',                            which: 'helps equalize the pressure in the middle ear' },
+      { name: 'Cochlea',                 does: 'It turns vibrations into electrical signals for hearing',                     which: 'is the snail-shaped hearing organ, filled with fluid' },
+      { name: 'Vestibular apparatus',    does: 'It holds the receptors for balance',                                          which: 'holds the receptors for balance' },
+      { name: 'Vestibulocochlear nerve', does: 'It carries electrical signals from the inner ear to the brain',               which: 'carries electrical signals from the inner ear to the brain' }
+    ];
+    const lower = (name) => name.charAt(0).toLowerCase() + name.slice(1).replace('eustachian', 'Eustachian').replace('/Pinna', '/pinna');
+    JOBS.forEach((j) => {
+      const others = shuffled(JOBS.filter((o) => o !== j)).slice(0, 3);
+      const say = (o) => o.does.replace(/^(It|They) /, '').replace(/^./, (c) => c.toUpperCase());
+      const the = 'The ' + lower(j.name).replace('Eustachian tube', 'Eustachian tube');
+      const why = the + (j.plural ? ': they ' : ': it ') + j.does.replace(/^(It|They) /, '') + '.';
+      ask('jobs', 'What ' + (j.plural ? 'do' : 'does') + ' the ' + lower(j.name) + ' do?', [say(j)].concat(others.map(say)), say(j), why, { mix: true });
+      ask('jobs', 'Which part of the ear ' + j.which + '?', [j.name].concat(others.map((o) => o.name)), j.name, why, { mix: true });
+    });
+    ask('jobs', 'Which part divides the outer ear from the middle ear?', ['Tympanic membrane (eardrum)', 'Cochlea', 'Eustachian tube', 'Auricle/Pinna'], 'Tympanic membrane (eardrum)', 'The eardrum divides the outer ear from the middle ear.', { mix: true });
+    ask('jobs', 'The Eustachian tube links the middle ear with the…', ['Back of the nose', 'Cochlea', 'Ear canal', 'Brain'], 'Back of the nose', 'The Eustachian tube links the middle ear with the back of the nose.', { mix: true });
+    ask('jobs', 'When the stereocilia bend, what is made?', ['An electrical signal', 'Earwax', 'Air pressure', 'A new ossicle'], 'An electrical signal', 'When the stereocilia bend, an electrical signal is made.', { mix: true });
+    ask('jobs', 'Where are the hair cells that turn vibrations into electrical signals?', ['In the cochlea', 'In the ear canal', 'On the eardrum', 'In the Eustachian tube'], 'In the cochlea', 'The hair cells are inside the cochlea.', { mix: true });
+    ask('jobs', 'The eardrum vibrates. Where do the vibrations go next?', ['To the ossicles', 'To the auricle', 'To the Eustachian tube', 'To the brain'], 'To the ossicles', 'The eardrum passes its vibrations to the ossicles.', { mix: true });
+    ask('jobs', 'The ossicles amplify the vibrations. Where do the vibrations go next?', ['To the cochlea', 'To the ear canal', 'To the eardrum', 'To the auricle'], 'To the cochlea', 'The ossicles send the vibrations to the cochlea.', { mix: true });
+    ask('jobs', 'Which order does sound travel in?', ['Ear canal, eardrum, ossicles, cochlea', 'Cochlea, ossicles, eardrum, ear canal', 'Eardrum, ear canal, cochlea, ossicles', 'Ossicles, ear canal, cochlea, eardrum'], 'Ear canal, eardrum, ossicles, cochlea', 'Sound goes through the ear canal to the eardrum, then the ossicles, then the cochlea.', { mix: true });
+    ask('jobs', 'Which part of the ear is the hearing organ?', ['Cochlea', 'Vestibular apparatus', 'Eustachian tube', 'Auricle/Pinna'], 'Cochlea', 'The cochlea is the hearing organ.', { mix: true });
+
     // Types of hearing loss: which structure goes with which type
     [['the ear canal', 0], ['the eardrum', 0], ['the ossicles', 0], ['the middle ear space', 0], ['the Eustachian tube', 0],
      ['the cochlea', 1], ['the stereocilia', 1], ['cranial nerve VIII', 1]].forEach(([thing, type]) => {
@@ -463,7 +493,15 @@
      ['Sensorineural hearing loss can involve the cochlea, the stereocilia or cranial nerve VIII.', true, 'Those are the structures involved in sensorineural hearing loss.'],
      ['Neural hearing loss involves the vestibulocochlear nerve.', true, 'Neural hearing loss involves the vestibulocochlear nerve (cranial nerve VIII).'],
      ['Sensory hearing loss and neural hearing loss are both kinds of sensorineural hearing loss.', true, 'Sensorineural = sensory + neural.'],
-     ['A problem with the ossicles causes sensorineural hearing loss.', false, 'A problem with the ossicles causes conductive hearing loss.']].forEach(([statement, truth, why]) => {
+     ['A problem with the ossicles causes sensorineural hearing loss.', false, 'A problem with the ossicles causes conductive hearing loss.'],
+     ['The Eustachian tube helps equalize the pressure in the middle ear.', true, 'That is what the Eustachian tube does.'],
+     ['The cochlea holds the receptors for balance.', false, 'The vestibular apparatus holds the receptors for balance. The cochlea is the hearing organ.'],
+     ['The ossicles amplify sound vibrations.', true, 'The ossicles amplify the vibrations and send them to the cochlea.'],
+     ['The eardrum divides the middle ear from the inner ear.', false, 'The eardrum divides the outer ear from the middle ear.'],
+     ['The cochlea is filled with fluid.', true, 'The cochlea is a snail-shaped structure filled with fluid.'],
+     ['The ear canal carries sound waves to the eardrum.', true, 'Sound waves travel through the ear canal to the eardrum.'],
+     ['The vestibulocochlear nerve carries signals from the inner ear to the brain.', true, 'It carries the electrical signals to the brain.'],
+     ['The Eustachian tube carries sound waves to the cochlea.', false, 'The Eustachian tube links the middle ear with the back of the nose and helps equalize pressure.']].forEach(([statement, truth, why]) => {
       ask('truefalse', 'True or false? ' + statement, TF, truth ? 'True' : 'False', why);
     });
 
