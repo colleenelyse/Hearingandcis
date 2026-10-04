@@ -51,6 +51,9 @@
     /* The picture: every layer is the same size and sits exactly on top of the others. It is always on white, as it was drawn. */
     .stage    { position: relative; aspect-ratio: 16 / 9; background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
     .stage img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; }
+    /* Three types: the neural zone (the right-hand strip) is drawn over the ear so it tints the nerve, as in the original picture. The rest stays behind the ear. */
+    #img-loss-three-areas { clip-path: inset(0 31.77% 0 0); }
+    .stage img.frontPart  { clip-path: inset(0 0 0 68.23%); }
     .stage img.shifted { transform: translateX(0.885%); }   /* in the hearing-loss pictures the ear was drawn 17 dots further right */
 
     /* The rows of switches */
@@ -164,6 +167,7 @@
         <img id="img-loss-two-areas"   alt="" hidden>
         <img id="img-loss-three-areas" alt="" hidden>
         <img id="img-ear-base" alt="A cutaway drawing of the ear, from the outer ear on the left to the inner ear on the right">
+        <img id="img-loss-three-front" class="frontPart" alt="" hidden>
         <img id="img-ear-outer-boxes"  alt="" hidden>
         <img id="img-ear-middle-boxes" alt="" hidden>
         <img id="img-ear-inner-boxes"  alt="" hidden>
@@ -245,6 +249,7 @@
       "loss-three-notes": "loss-three-notes.png"
 };
     Object.keys(LAYERS).forEach((name) => { document.getElementById('img-' + name).src = LAYERS[name]; });
+    document.getElementById('img-loss-three-front').src = LAYERS['loss-three-areas'];      // the same picture again, for the part drawn over the ear
     const layer = (name) => document.getElementById('img-' + name);
     const box = (id) => document.getElementById(id);
 
@@ -266,6 +271,7 @@
       ['two', 'three'].forEach((kind) => {
         const on = !parts && loss === kind;
         layer('loss-' + kind + '-areas').hidden  = !(on && box('loss-areas').checked);
+        if (kind === 'three') layer('loss-three-front').hidden = !(on && box('loss-areas').checked);
         layer('loss-' + kind + '-titles').hidden = !(on && box('loss-titles').checked);
         layer('loss-' + kind + '-notes').hidden  = !(on && box('loss-notes').checked);
       });

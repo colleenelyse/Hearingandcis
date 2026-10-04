@@ -78,6 +78,49 @@
     .target.right::after { content: '\2713'; background: #1a7f37; }
     .target.wrong::after { content: '\2715'; background: #c62828; }
 
+    /* THE RUNNING SCORE */
+    .scoreArea { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .switch   { display: inline-flex; align-items: center; cursor: pointer; }
+    .switch input { position: absolute; opacity: 0; }
+    .switch span { width: 46px; height: 24px; border-radius: 12px; background: #9a93ad; position: relative; transition: background 150ms; flex: none; }
+    .switch span::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: left 150ms; }
+    .switch input:checked + span { background: var(--accent); }
+    .switch input:checked + span::after { left: 25px; }
+    .switch input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+    .contrast .switch span { background: #000; border: 2px solid #fff; box-sizing: border-box; }
+    .contrast .switch span::after { top: 1px; }
+    .contrast .switch input:checked + span::after { background: #000; }
+    @media (prefers-reduced-motion: reduce) { .switch span, .switch span::after { transition: none; } }
+    .overall  { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 8px 0; }
+    #overallPercent { font-size: 34px; font-weight: 800; line-height: 1; }
+    .tally    { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .tally td { padding: 3px 0; border-top: 1px solid var(--line); }
+    .tally td + td { text-align: right; white-space: nowrap; padding-left: 8px; }
+    .tally .none td { color: var(--quiet); }
+    .tally .percent { font-weight: 800; }
+
+    .nameRow input { font: inherit; font-size: 15px; padding: 6px 10px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--raised); color: var(--ink); min-width: 0; flex: 1 1 120px; max-width: 220px; }
+    /* The score report is always black on white, so it prints and screenshots clearly */
+    #report   { position: fixed; inset: 0; z-index: 100; background: rgba(0, 0, 0, 0.6); display: flex; align-items: flex-start; justify-content: center; padding: 30px 16px; overflow: auto; }
+    .reportCard { background: #fff; color: #111; border-radius: 14px; padding: 24px 28px; width: 100%; max-width: 560px; box-sizing: border-box; }
+    .reportCard h2 { font-size: 24px; margin: 0 0 12px 0; color: #111; }
+    .reportLine { margin: 2px 0; font-size: 17px; }
+    .reportBig { margin: 14px 0 10px 0; font-size: 18px; }
+    #reportPercent { font-size: 44px; font-weight: 800; line-height: 1; margin-right: 8px; }
+    .reportTable { width: 100%; border-collapse: collapse; font-size: 16px; }
+    .reportTable th, .reportTable td { text-align: right; padding: 6px 4px; border-bottom: 1px solid #bbb; }
+    .reportTable th:first-child, .reportTable td:first-child { text-align: left; }
+    .reportTable tr.total td { font-weight: 800; border-top: 2px solid #111; border-bottom: 0; }
+    .reportNote { font-size: 13px; color: #444; margin: 12px 0 0 0; }
+    .reportCard button { background: #eee; color: #111; border-color: #999; }
+    .reportCard button.main { background: #111; color: #fff; border-color: #111; }
+    @media print {
+      body > *:not(#report) { display: none !important; }
+      body { background: #fff !important; margin: 0; padding: 0; zoom: 1 !important; }
+      #report { position: static; background: none; padding: 0; display: block; }
+      .reportButtons { display: none !important; }
+    }
+
     /* QUESTIONS */
     .quizCount  { color: var(--quiet); font-size: 14px; font-weight: 700; margin: 0 0 4px 0; }
     .quizPrompt { display: block; color: var(--ink); font-size: 19px; font-weight: 800; margin: 0 0 12px 0; line-height: 1.35; min-height: 26px; }
@@ -173,6 +216,17 @@
           <div class="quick"><button class="main" id="askAgain">New questions</button></div>
         </div>
       </div>
+
+      <!-- THE RUNNING SCORE: counts every answer until the page is reloaded -->
+      <div class="scoreArea">
+        <label class="single">Keep score <span class="switch"><input type="checkbox" id="keepScore" checked><span></span></span></label>
+        <div id="scoreBoard">
+          <div class="overall"><span id="overallPercent">&ndash;</span><span class="hint" id="overallCount">No answers yet</span></div>
+          <table class="tally" id="tallyRows"></table>
+          <label class="single nameRow">Your name <input type="text" id="studentName" autocomplete="off" maxlength="60"></label>
+          <div class="quick"><button class="main" id="showReport">Score report</button><button id="resetScore">Reset score</button></div>
+        </div>
+      </div>
     </div>
 
     <div class="panel stageBox">
@@ -184,6 +238,22 @@
         <div id="targets"></div>
         <div class="ring" id="ring" hidden></div>
       </div>
+    </div>
+  </div>
+
+  <!-- THE SCORE REPORT: a plain white card to print or screenshot and hand in -->
+  <div id="report" hidden>
+    <div class="reportCard" role="dialog" aria-label="Score report">
+      <h2>Ear Quiz score report</h2>
+      <p class="reportLine"><strong>Name:</strong> <span id="reportName"></span></p>
+      <p class="reportLine"><strong>Date:</strong> <span id="reportDate"></span></p>
+      <p class="reportBig"><span id="reportPercent"></span> <span id="reportCount"></span></p>
+      <table class="reportTable">
+        <thead><tr><th>Part of the quiz</th><th>Answered</th><th>Correct</th><th>Score</th></tr></thead>
+        <tbody id="reportRows"></tbody>
+      </table>
+      <p class="reportNote">Every answer since the score was last reset is counted: each question answered and each label checked.</p>
+      <div class="quick reportButtons"><button class="main" id="printReport">Print</button><button id="closeReport">Close</button></div>
     </div>
   </div>
 
@@ -239,13 +309,14 @@
     let order = [];         // the order the terms are listed in
     let placed = {};        // label id -> the term the student put there
     let marks = {};         // label id -> 'right' or 'wrong' after checking
+    let counted = {};       // which checked placements have already gone into the running score, so none is counted twice
     let held = null;        // the term that was clicked and is waiting for a label
 
     function startLabeling() {
       const part = box('partChoice').value;
       active = LABELS.filter((lbl) => part === 'all' || lbl.part === part);
       order = shuffled(active.map((lbl) => lbl.id));
-      placed = {}; marks = {}; held = null;
+      placed = {}; marks = {}; held = null; counted = {};
       box('labelResult').textContent = '';
       drawLabeling();
     }
@@ -373,6 +444,9 @@
         if (!placed[lbl.id]) { delete marks[lbl.id]; return; }
         marks[lbl.id] = placed[lbl.id] === lbl.id ? 'right' : 'wrong';
         if (marks[lbl.id] === 'right') right++;
+        const placement = lbl.id + ' ' + placed[lbl.id];
+        if (!counted[placement] && !counted[lbl.id]) { countAnswer('label', marks[lbl.id] === 'right'); counted[placement] = true; }
+        if (marks[lbl.id] === 'right') counted[lbl.id] = true;
       });
       const all = active.length;
       box('labelResult').textContent = right === all ? 'All ' + all + ' correct!'
@@ -381,7 +455,7 @@
     };
     box('startOver').onclick = startLabeling;
     box('showAnswers').onclick = () => {
-      active.forEach((lbl) => { placed[lbl.id] = lbl.id; marks[lbl.id] = 'right'; });
+      active.forEach((lbl) => { placed[lbl.id] = lbl.id; marks[lbl.id] = 'right'; counted[lbl.id] = true; });     // shown answers are not scored
       box('labelResult').textContent = 'These are the answers.';
       drawLabeling();
     };
@@ -624,6 +698,7 @@
     function answer(choice) {
       const item = quiz[at], good = choice === item.answer;
       if (good) score++; else missed.push(item);
+      countAnswer(item.topic, good);
       box('askChoices').querySelectorAll('button').forEach((btn) => {
         btn.disabled = true;
         if (btn.textContent === item.answer) btn.classList.add('right');
@@ -648,6 +723,54 @@
     };
     box('askAgain').onclick = startQuestions;
     box('topicChoice').onchange = startQuestions;
+
+    // ================= THE RUNNING SCORE =================
+    // Every answer counts as one: each question answered, and each label checked in "Label the ear".
+    // It is kept only in this page's memory, so it starts again when the page is reloaded.
+    const TALLY_ROWS = [['label', 'Label the ear'], ['names', 'Names of structures'], ['where', 'Outer, middle or inner'],
+                        ['jobs', 'What each part does'], ['types', 'Types of hearing loss'], ['truefalse', 'True or false']];
+    let tally = {};
+    function countAnswer(group, good) {
+      if (!box('keepScore').checked) return;            // switched off: nothing is counted
+      if (!tally[group]) tally[group] = { right: 0, total: 0 };
+      tally[group].total++;
+      if (good) tally[group].right++;
+      drawTally();
+    }
+    function drawTally() {
+      let right = 0, total = 0;
+      box('tallyRows').innerHTML = TALLY_ROWS.map((row) => {
+        const got = tally[row[0]];
+        if (!got) return '<tr class="none"><td>' + row[1] + '</td><td>&ndash;</td><td></td></tr>';
+        right += got.right; total += got.total;
+        return '<tr><td>' + row[1] + '</td><td>' + got.right + ' of ' + got.total + '</td><td class="percent">' + Math.round(100 * got.right / got.total) + '%</td></tr>';
+      }).join('');
+      box('overallPercent').textContent = total ? Math.round(100 * right / total) + '%' : '\u2013';
+      box('overallCount').textContent = total ? right + ' of ' + total + ' correct' : 'No answers yet';
+      box('scoreBoard').hidden = !box('keepScore').checked;
+    }
+    box('keepScore').onchange = drawTally;
+
+    // The score report: name, date, how many were answered, and the score for each part
+    box('showReport').onclick = () => {
+      let right = 0, total = 0;
+      box('reportRows').innerHTML = TALLY_ROWS.map((row) => {
+        const got = tally[row[0]] || { right: 0, total: 0 };
+        right += got.right; total += got.total;
+        return '<tr><td>' + row[1] + '</td><td>' + got.total + '</td><td>' + got.right + '</td><td>' + (got.total ? Math.round(100 * got.right / got.total) + '%' : '\u2013') + '</td></tr>';
+      }).join('') + '<tr class="total"><td>Total</td><td>' + total + '</td><td>' + right + '</td><td>' + (total ? Math.round(100 * right / total) + '%' : '\u2013') + '</td></tr>';
+      box('reportName').textContent = box('studentName').value.trim() || '(no name typed)';
+      box('reportDate').textContent = new Date().toLocaleString([], { dateStyle: 'full', timeStyle: 'short' });
+      box('reportPercent').textContent = total ? Math.round(100 * right / total) + '%' : '\u2013';
+      box('reportCount').textContent = total ? right + ' correct out of ' + total + ' answered' : 'No answers yet';
+      box('report').hidden = false;
+      box('closeReport').focus();
+    };
+    box('closeReport').onclick = () => { box('report').hidden = true; box('showReport').focus(); };
+    box('printReport').onclick = () => window.print();
+    document.addEventListener('keydown', (press) => { if (press.key === 'Escape' && !box('report').hidden) box('closeReport').click(); });
+    box('resetScore').onclick = () => { tally = {}; drawTally(); };
+    drawTally();
 
     // ================= WHICH QUIZ IS SHOWING, AND WHAT THE PICTURE SHOWS =================
     function showMode() {
