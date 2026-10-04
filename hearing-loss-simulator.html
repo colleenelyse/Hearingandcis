@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23362e55%22/%3E%3Cpath d=%22M4 10H28M4 17H28M4 24H28M9 5V28M16 5V28M23 5V28%22 stroke=%22%235a5080%22 stroke-width=%221%22/%3E%3Cpath d=%22M5 9 L11 10 L16 14 L21 20 L27 24%22 fill=%22none%22 stroke=%22%23ff6fb1%22 stroke-width=%222.6%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3Cg fill=%22%23ff6fb1%22 stroke=%22%231d1930%22 stroke-width=%221%22%3E%3Crect x=%223%22 y=%225.5%22 width=%224.4%22 height=%227%22 rx=%221.4%22/%3E%3Crect x=%2213.8%22 y=%2210.5%22 width=%224.4%22 height=%227%22 rx=%221.4%22/%3E%3Crect x=%2224.6%22 y=%2220.5%22 width=%224.4%22 height=%227%22 rx=%221.4%22/%3E%3C/g%3E%3C/svg%3E">
   <title>Hearing Loss Simulator</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Comic+Neue:wght@400;700&family=Inter:wght@400;600;700;800&family=Lexend:wght@400;600;700;800&family=Literata:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&family=Source+Sans+3:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Inter:wght@400;600;700;800&family=Lexend:wght@400;600;700;800&family=Literata:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&family=Source+Sans+3:wght@400;600;700;800&display=swap">
 
   <script>
     // ---------- VIDEO WINDOW MODE ----------
@@ -556,11 +556,16 @@
     @font-face { font-family: 'OpenDyslexic'; font-weight: 700; font-display: swap;
                  src: url('OpenDyslexic-Bold.otf') format('opentype'), url('OpenDyslexic-Bold.woff2') format('woff2'), url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff2') format('woff2'); }
     .fontPick { position: relative; display: inline-flex; align-items: center; gap: 5px; }
-    #fontButton { min-width: 150px; text-align: left; font-weight: 400; }
-    #fontButton::after { content: '\25BE'; float: right; margin-left: 10px; }
+    /* Menus look the same in every browser (Safari otherwise draws its own glossy style), and match the Font button */
+    select { -webkit-appearance: none; appearance: none; padding-right: 30px !important; background-repeat: no-repeat !important; background-position: right 11px center !important; background-size: 10px 6px !important;
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0 L5 6 L10 0 Z' fill='%23999'/%3E%3C/svg%3E") !important; }
+    .pageTools select, .pageTools #fontButton { font-size: 15px; line-height: 1.25; padding-top: 7px; padding-bottom: 7px; padding-left: 14px; border-radius: 999px; box-sizing: border-box; height: 36px; }
+    #fontButton { border: 1.5px solid var(--line, #999); background-color: var(--raised, #fff); color: var(--ink, #111); cursor: pointer; font-family: inherit;
+                  padding-right: 30px; position: relative; min-width: 150px; text-align: left; font-weight: 400; white-space: nowrap; background-repeat: no-repeat; background-position: right 11px center; background-size: 10px 6px;
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0 L5 6 L10 0 Z' fill='%23999'/%3E%3C/svg%3E"); }
     #fontMenu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 80; min-width: 270px; padding: 6px; box-sizing: border-box;
                 background: var(--card, #fff); color: var(--ink, #111); border: 1.5px solid var(--line, #999); border-radius: 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
-    #fontMenu button { display: block; width: 100%; text-align: left; border: 0 !important; background: none; color: inherit; border-radius: 9px !important;
+    #fontMenu button { cursor: pointer; display: block; width: 100%; text-align: left; border: 0 !important; background: none; color: inherit; border-radius: 9px !important;
                        padding: 8px 10px; margin: 0; font-size: 17px; font-weight: 400; }
     #fontMenu button:hover, #fontMenu button:focus-visible { background: var(--raised, #eee); }
     #fontMenu button[aria-selected="true"] { box-shadow: inset 0 0 0 2px var(--accent, #e6007e); }
@@ -3242,8 +3247,7 @@
         ['source',   'Source Sans',                     "'Source Sans 3', Arial, sans-serif"],
         ['nunito',   'Nunito (rounded)',                "'Nunito', ui-rounded, 'Trebuchet MS', Arial, sans-serif"],
         ['literata', 'Literata (book style)',           "'Literata', Georgia, serif"],
-        ['comic',    'Comic Neue (playful)',            "'Comic Neue', 'Comic Sans MS', cursive"],
-        ['dyslexic', 'OpenDyslexic (dyslexia-friendly)', "'OpenDyslexic', 'Comic Sans MS', Arial, sans-serif"]
+        ['dyslexic', 'OpenDyslexic (dyslexia-friendly)', "'OpenDyslexic', Arial, sans-serif"]
       ];
       const fontButton = document.getElementById('fontButton'), fontMenu = document.getElementById('fontMenu');
       function saved() { try { return localStorage.getItem('simulatorFont') || ''; } catch (problem) { return ''; } }

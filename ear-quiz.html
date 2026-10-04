@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ear Quiz</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2328223f%22/%3E%3Cpath%20d%3D%22M22%2030c0-9%206-15%2013-15s12%205%2012%2012c0%206-4%209-7%2012s-3%206-5%209c-2%203-7%203-9-1%22%20fill%3D%22none%22%20stroke%3D%22%23ff6fb1%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M29%2030c0-4%203-7%206-7s5%202%205%205-3%204-4%206%22%20fill%3D%22none%22%20stroke%3D%22%23ff6fb1%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Comic+Neue:wght@400;700&family=Inter:wght@400;600;700;800&family=Lexend:wght@400;600;700;800&family=Literata:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&family=Source+Sans+3:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Inter:wght@400;600;700;800&family=Lexend:wght@400;600;700;800&family=Literata:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&family=Source+Sans+3:wght@400;600;700;800&display=swap">
   <style>
     /* The same colors, font and shapes as the other pages */
     body      { --page: #f3eff9; --card: #ffffff; --raised: #f7f4fc; --line: #ddd3ec; --ink: #2a2440; --quiet: #675f80;
@@ -149,11 +149,16 @@
     @font-face { font-family: 'OpenDyslexic'; font-weight: 700; font-display: swap;
                  src: url('OpenDyslexic-Bold.otf') format('opentype'), url('OpenDyslexic-Bold.woff2') format('woff2'), url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff2') format('woff2'); }
     .fontPick { position: relative; display: inline-flex; align-items: center; gap: 5px; }
-    #fontButton { min-width: 150px; text-align: left; font-weight: 400; }
-    #fontButton::after { content: '\25BE'; float: right; margin-left: 10px; }
+    /* Menus look the same in every browser (Safari otherwise draws its own glossy style), and match the Font button */
+    select { -webkit-appearance: none; appearance: none; padding-right: 30px !important; background-repeat: no-repeat !important; background-position: right 11px center !important; background-size: 10px 6px !important;
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0 L5 6 L10 0 Z' fill='%23999'/%3E%3C/svg%3E") !important; }
+    .pageTools select, .pageTools #fontButton { font-size: 15px; line-height: 1.25; padding-top: 7px; padding-bottom: 7px; padding-left: 14px; border-radius: 999px; box-sizing: border-box; height: 36px; }
+    #fontButton { border: 1.5px solid var(--line, #999); background-color: var(--raised, #fff); color: var(--ink, #111); cursor: pointer; font-family: inherit;
+                  padding-right: 30px; position: relative; min-width: 150px; text-align: left; font-weight: 400; white-space: nowrap; background-repeat: no-repeat; background-position: right 11px center; background-size: 10px 6px;
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0 L5 6 L10 0 Z' fill='%23999'/%3E%3C/svg%3E"); }
     #fontMenu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 80; min-width: 270px; padding: 6px; box-sizing: border-box;
                 background: var(--card, #fff); color: var(--ink, #111); border: 1.5px solid var(--line, #999); border-radius: 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
-    #fontMenu button { display: block; width: 100%; text-align: left; border: 0 !important; background: none; color: inherit; border-radius: 9px !important;
+    #fontMenu button { cursor: pointer; display: block; width: 100%; text-align: left; border: 0 !important; background: none; color: inherit; border-radius: 9px !important;
                        padding: 8px 10px; margin: 0; font-size: 17px; font-weight: 400; }
     #fontMenu button:hover, #fontMenu button:focus-visible { background: var(--raised, #eee); }
     #fontMenu button[aria-selected="true"] { box-shadow: inset 0 0 0 2px var(--accent, #e6007e); }
@@ -257,6 +262,9 @@
         <img id="img-ear-outer-boxes"  alt="" hidden>
         <img id="img-ear-middle-boxes" alt="" hidden>
         <img id="img-ear-inner-boxes"  alt="" hidden>
+        <img id="showLine" alt="" hidden>
+        <img id="showBox"  alt="" hidden>
+        <img id="showName" alt="" hidden>
         <div id="targets"></div>
         <div class="ring" id="ring" hidden></div>
       </div>
@@ -285,9 +293,12 @@
       "ear-base": "ear-base.png",
       "ear-outer-boxes": "ear-outer-boxes.png",
       "ear-middle-boxes": "ear-middle-boxes.png",
-      "ear-inner-boxes": "ear-inner-boxes.png"
+      "ear-inner-boxes": "ear-inner-boxes.png",
+      "ear-outer-names": "ear-outer-names.png",
+      "ear-middle-names": "ear-middle-names.png",
+      "ear-inner-names": "ear-inner-names.png"
 };
-    Object.keys(LAYERS).forEach((name) => { document.getElementById('img-' + name).src = LAYERS[name]; });
+    Object.keys(LAYERS).forEach((name) => { const picture = document.getElementById('img-' + name); if (picture) picture.src = LAYERS[name]; });
     const box = (id) => document.getElementById(id);
     const PARTS = ['outer', 'middle', 'inner'];
     const PART_NAME = { outer: 'outer ear', middle: 'middle ear', inner: 'inner ear' };
@@ -297,20 +308,20 @@
     // at: where the label's box sits in the 1920 x 1080 picture (left, top, width, height)
     const LABELS = [
       { id: 'outerEar',  part: 'outer',  name: 'Outer Ear',               also: '(external ear)',      at: [408, 48, 345, 101],   heading: true },
-      { id: 'skull',     part: 'outer',  name: 'Skull',                   also: '',                    at: [518, 278, 119, 68] },
-      { id: 'pinna',     part: 'outer',  name: 'Auricle/Pinna',           also: '',                    at: [58, 380, 345, 68] },
-      { id: 'eardrum',   part: 'outer',  name: 'Tympanic Membrane',       also: '(Eardrum)',           at: [937, 828, 210, 126],  twoLines: ['Tympanic', 'Membrane'] },
-      { id: 'canal',     part: 'outer',  name: 'Ear Canal',               also: '',                    at: [639, 948, 277, 65] },
+      { id: 'skull',     part: 'outer',  name: 'Skull',                   also: '',                    at: [518, 278, 119, 68], line: [585, 353, 676, 488] },
+      { id: 'pinna',     part: 'outer',  name: 'Auricle/Pinna',           also: '',                    at: [58, 380, 345, 68], line: [410, 444, 521, 497] },
+      { id: 'eardrum',   part: 'outer',  name: 'Tympanic Membrane',       also: '(Eardrum)',           at: [937, 828, 210, 126], line: [1023, 820, 979, 695],  twoLines: ['Tympanic', 'Membrane'] },
+      { id: 'canal',     part: 'outer',  name: 'Ear Canal',               also: '',                    at: [639, 948, 277, 65], line: [749, 940, 775, 717] },
       { id: 'middleEar', part: 'middle', name: 'Middle Ear',              also: '(tympanic cavity)',   at: [808, 48, 344, 92],    heading: true },
       { id: 'ossicles',  part: 'middle', name: 'Ossicles (3 small bones)', also: '',                   at: [693, 318, 501, 65] },
-      { id: 'incus',     part: 'middle', name: 'Incus',                   also: '(Anvil)',             at: [864, 403, 74, 49] },
-      { id: 'stapes',    part: 'middle', name: 'Stapes',                  also: '(Stirrup)',           at: [955, 448, 103, 41] },
-      { id: 'malleus',   part: 'middle', name: 'Malleus',                 also: '(Hammer)',            at: [780, 468, 103, 41] },
-      { id: 'tube',      part: 'middle', name: 'Eustachian Tube',         also: '',                    at: [1197, 977, 383, 65] },
+      { id: 'incus',     part: 'middle', name: 'Incus',                   also: '(Anvil)',             at: [864, 403, 74, 49], line: [913, 459, 1006, 645] },
+      { id: 'stapes',    part: 'middle', name: 'Stapes',                  also: '(Stirrup)',           at: [955, 448, 103, 41], line: [1003, 496, 1044, 664] },
+      { id: 'malleus',   part: 'middle', name: 'Malleus',                 also: '(Hammer)',            at: [780, 468, 103, 41], line: [863, 516, 978, 646] },
+      { id: 'tube',      part: 'middle', name: 'Eustachian Tube',         also: '',                    at: [1197, 977, 383, 65], line: [1333, 969, 1218, 834] },
       { id: 'innerEar',  part: 'inner',  name: 'Inner Ear',               also: '(labyrinth)',         at: [1193, 47, 344, 92],   heading: true },
-      { id: 'vestibule', part: 'inner',  name: 'Vestibular Apparatus',    also: '',                    at: [1361, 310, 456, 60] },
-      { id: 'nerve',     part: 'inner',  name: 'Vestibulocochlear Nerve', also: '(Cranial Nerve VIII)', at: [1393, 421, 499, 88] },
-      { id: 'cochlea',   part: 'inner',  name: 'Cochlea',                 also: '',                    at: [1436, 647, 382, 65] }
+      { id: 'vestibule', part: 'inner',  name: 'Vestibular Apparatus',    also: '',                    at: [1361, 310, 456, 60], line: [1378, 377, 1116, 645] },
+      { id: 'nerve',     part: 'inner',  name: 'Vestibulocochlear Nerve', also: '(Cranial Nerve VIII)', at: [1393, 421, 499, 88], line: [1399, 516, 1371, 535] },
+      { id: 'cochlea',   part: 'inner',  name: 'Cochlea',                 also: '',                    at: [1436, 647, 382, 65], line: [1428, 678, 1218, 655] }
     ];
     const labelFor = (id) => LABELS.find((lbl) => lbl.id === id);
     const fullName = (lbl) => lbl.name + (lbl.also ? ' ' + lbl.also : '');
@@ -581,14 +592,14 @@
 
     // ---- What each part does (these match the definitions at the bottom of the Parts of the Ear page) ----
     const JOBS = [
-      { name: 'Auricle/Pinna',               does: 'It is the outside part of the ear, where sound waves enter',                    which: 'is on the outside of the head, where sound waves enter' },
-      { name: 'Ear canal',                   does: 'It carries sound waves to the tympanic membrane (eardrum)',                     which: 'is the tube that carries sound waves to the tympanic membrane (eardrum)' },
-      { name: 'Tympanic membrane (eardrum)', does: 'It vibrates when sound waves hit it and passes the vibrations to the ossicles', which: 'vibrates when sound waves hit it and passes the vibrations to the ossicles' },
-      { name: 'Ossicles',                    does: 'They amplify the vibrations and send them to the cochlea',                      which: 'amplifies the vibrations and sends them to the cochlea', plural: true },
-      { name: 'Eustachian tube',             does: 'It helps equalize the pressure in the middle ear',                              which: 'helps equalize the pressure in the middle ear' },
-      { name: 'Cochlea',                     does: 'It turns vibrations into electrical signals for hearing',                       which: 'is the snail-shaped hearing organ, filled with fluid' },
-      { name: 'Vestibular apparatus',        does: 'It holds the receptors for balance',                                            which: 'holds the receptors for balance' },
-      { name: 'Vestibulocochlear nerve',     does: 'It carries electrical signals from the inner ear to the brain',                 which: 'carries electrical signals from the inner ear to the brain' }
+      { id: 'pinna', name: 'Auricle/Pinna',               does: 'It is the outside part of the ear, where sound waves enter',                    which: 'is on the outside of the head, where sound waves enter' },
+      { id: 'canal', name: 'Ear canal',                   does: 'It carries sound waves to the tympanic membrane (eardrum)',                     which: 'is the tube that carries sound waves to the tympanic membrane (eardrum)' },
+      { id: 'eardrum', name: 'Tympanic membrane (eardrum)', does: 'It vibrates when sound waves hit it and passes the vibrations to the ossicles', which: 'vibrates when sound waves hit it and passes the vibrations to the ossicles' },
+      { id: 'ossicles', name: 'Ossicles',                    does: 'They amplify the vibrations and send them to the cochlea',                      which: 'amplifies the vibrations and sends them to the cochlea', plural: true },
+      { id: 'tube', name: 'Eustachian tube',             does: 'It helps equalize the pressure in the middle ear',                              which: 'helps equalize the pressure in the middle ear' },
+      { id: 'cochlea', name: 'Cochlea',                     does: 'It turns vibrations into electrical signals for hearing',                       which: 'is the snail-shaped hearing organ, filled with fluid' },
+      { id: 'vestibule', name: 'Vestibular apparatus',        does: 'It holds the receptors for balance',                                            which: 'holds the receptors for balance' },
+      { id: 'nerve', name: 'Vestibulocochlear nerve',     does: 'It carries electrical signals from the inner ear to the brain',                 which: 'carries electrical signals from the inner ear to the brain' }
     ];
     const lower = (name) => name.charAt(0).toLowerCase() + name.slice(1).replace('eustachian', 'Eustachian').replace('/Pinna', '/pinna');
     const jobSaid = (job) => job.does.replace(/^(It|They) /, '').replace(/^./, (first) => first.toUpperCase());
@@ -599,21 +610,21 @@
     JOBS.forEach((job) => {
       const others = shuffled(JOBS.filter((other) => other !== job)).slice(0, 3);
       const why = 'The ' + lower(job.name) + (job.plural ? ': they ' : ': it ') + job.does.replace(/^(It|They) /, '') + '.';
-      ask('jobs', 'What ' + (job.plural ? 'do' : 'does') + ' the ' + lower(job.name) + ' do?', [jobSaid(job)].concat(others.map(jobSaid)), jobSaid(job), why + ' The other choices are jobs done by other parts of the ear.', { mix: true });
+      ask('jobs', 'What ' + (job.plural ? 'do' : 'does') + ' the ' + lower(job.name) + ' do?', [jobSaid(job)].concat(others.map(jobSaid)), jobSaid(job), why + ' The other choices are jobs done by other parts of the ear.', { mix: true, show: job.id });
       ask('jobs', 'Which part of the ear ' + job.which + '?', [job.name].concat(others.map((other) => other.name)), job.name, why, { mix: true });
     });
     ask('jobs', 'Which part divides the outer ear from the middle ear?', ['Tympanic membrane (eardrum)', 'Cochlea', 'Eustachian tube', 'Auricle/Pinna'], 'Tympanic membrane (eardrum)',
         'The tympanic membrane (eardrum) sits at the end of the ear canal. The outer ear is on one side of it and the middle ear is on the other.', { mix: true });
     ask('jobs', 'The Eustachian tube links the middle ear with the…', ['Back of the nose', 'Cochlea', 'Ear canal', 'Brain'], 'Back of the nose',
-        'The Eustachian tube runs from the middle ear to the back of the nose. That link is how it helps equalize the pressure in the middle ear.', { mix: true });
+        'The Eustachian tube runs from the middle ear to the back of the nose. That link is how it helps equalize the pressure in the middle ear.', { mix: true, show: 'tube' });
     ask('jobs', 'When the stereocilia bend, what is made?', ['An electrical signal', 'Earwax', 'Air pressure', 'A new ossicle'], 'An electrical signal',
         'The stereocilia are tiny hair-like tips on the hair cells in the cochlea. When they bend, an electrical signal is made, and the vestibulocochlear nerve carries it to the brain.', { mix: true });
     ask('jobs', 'Where are the hair cells that turn vibrations into electrical signals?', ['In the cochlea', 'In the ear canal', 'On the tympanic membrane (eardrum)', 'In the Eustachian tube'], 'In the cochlea',
         'The hair cells are inside the cochlea, the hearing organ. The ear canal, tympanic membrane (eardrum) and Eustachian tube do not turn vibrations into signals.', { mix: true });
     ask('jobs', 'The tympanic membrane (eardrum) vibrates. Where do the vibrations go next?', ['To the ossicles', 'To the auricle', 'To the Eustachian tube', 'To the brain'], 'To the ossicles',
-        'The tympanic membrane (eardrum) passes its vibrations to the ossicles, the three small bones of the middle ear. The auricle comes before it, and the brain is the last stop.', { mix: true });
+        'The tympanic membrane (eardrum) passes its vibrations to the ossicles, the three small bones of the middle ear. The auricle comes before it, and the brain is the last stop.', { mix: true, show: 'eardrum' });
     ask('jobs', 'The ossicles amplify the vibrations. Where do the vibrations go next?', ['To the cochlea', 'To the ear canal', 'To the tympanic membrane (eardrum)', 'To the auricle'], 'To the cochlea',
-        'The ossicles send the vibrations on to the cochlea in the inner ear. The auricle, ear canal and tympanic membrane (eardrum) all come before the ossicles.', { mix: true });
+        'The ossicles send the vibrations on to the cochlea in the inner ear. The auricle, ear canal and tympanic membrane (eardrum) all come before the ossicles.', { mix: true, show: 'ossicles' });
     ask('jobs', 'Which order does sound travel in?', ['Ear canal, tympanic membrane, ossicles, cochlea', 'Cochlea, ossicles, tympanic membrane, ear canal', 'Tympanic membrane, ear canal, cochlea, ossicles', 'Ossicles, ear canal, cochlea, tympanic membrane'], 'Ear canal, tympanic membrane, ossicles, cochlea',
         'Sound moves from the outside in: through the ear canal to the tympanic membrane (eardrum), then the ossicles, then the cochlea.', { mix: true });
     ask('jobs', 'Which part of the ear is the hearing organ?', ['Cochlea', 'Vestibular apparatus', 'Eustachian tube', 'Auricle/Pinna'], 'Cochlea',
@@ -622,20 +633,20 @@
     // ---- Types of hearing loss: which structure goes with which type ----
     const BLOCKED = ' A problem there is a structural or mechanical blockage, and a blockage is conductive hearing loss.';
     const DAMAGED = ' Damage there affects the cells or the nerve pathway, not a blockage. That is sensorineural hearing loss.';
-    [['the ear canal', 0, 'The ear canal is part of the outer ear.'],
-     ['the tympanic membrane (eardrum)', 0, 'The tympanic membrane (eardrum) is where the outer ear meets the middle ear.'],
-     ['the ossicles', 0, 'The ossicles are in the middle ear.'],
+    [['the ear canal', 0, 'The ear canal is part of the outer ear.', 'canal'],
+     ['the tympanic membrane (eardrum)', 0, 'The tympanic membrane (eardrum) is where the outer ear meets the middle ear.', 'eardrum'],
+     ['the ossicles', 0, 'The ossicles are in the middle ear.', 'ossicles'],
      ['the middle ear space', 0, 'The middle ear space is the space that holds the ossicles.'],
-     ['the Eustachian tube', 0, 'The Eustachian tube is part of the middle ear.'],
-     ['the cochlea', 1, 'The cochlea is in the inner ear.'],
+     ['the Eustachian tube', 0, 'The Eustachian tube is part of the middle ear.', 'tube'],
+     ['the cochlea', 1, 'The cochlea is in the inner ear.', 'cochlea'],
      ['the stereocilia', 1, 'The stereocilia are on the hair cells inside the cochlea.'],
-     ['the vestibulocochlear nerve', 1, 'The vestibulocochlear nerve is the nerve pathway from the inner ear to the brain.']].forEach((row) => {
-      ask('types', 'A problem with ' + row[0] + ' can cause which type of hearing loss?', TWO, TWO[row[1]], row[2] + (row[1] === 0 ? BLOCKED : DAMAGED));
+     ['the vestibulocochlear nerve', 1, 'The vestibulocochlear nerve is the nerve pathway from the inner ear to the brain.', 'nerve']].forEach((row) => {
+      ask('types', 'A problem with ' + row[0] + ' can cause which type of hearing loss?', TWO, TWO[row[1]], row[2] + (row[1] === 0 ? BLOCKED : DAMAGED), { show: row[3] });
     });
-    [['the cochlea', 1, 'The cochlea holds the tiny cell processors of the inner ear, so damage there is sensory hearing loss. Neural hearing loss is damage to the nerve, and conductive hearing loss is a blockage.'],
+    [['the cochlea', 1, 'The cochlea holds the tiny cell processors of the inner ear, so damage there is sensory hearing loss. Neural hearing loss is damage to the nerve, and conductive hearing loss is a blockage.', 'cochlea'],
      ['the stereocilia', 1, 'The stereocilia are part of the hair cells in the cochlea, so damage there is sensory hearing loss. Neural hearing loss is damage to the nerve, and conductive hearing loss is a blockage.'],
-     ['the vestibulocochlear nerve', 2, 'The vestibulocochlear nerve is the nerve pathway, so damage there is neural hearing loss. Sensory hearing loss is damage to the cochlea or stereocilia, and conductive hearing loss is a blockage.']].forEach((row) => {
-      ask('types', 'When hearing loss is split into three types, damage to ' + row[0] + ' is which type?', THREE, THREE[row[1]], row[2]);
+     ['the vestibulocochlear nerve', 2, 'The vestibulocochlear nerve is the nerve pathway, so damage there is neural hearing loss. Sensory hearing loss is damage to the cochlea or stereocilia, and conductive hearing loss is a blockage.', 'nerve']].forEach((row) => {
+      ask('types', 'When hearing loss is split into three types, damage to ' + row[0] + ' is which type?', THREE, THREE[row[1]], row[2], { show: row[3] });
     });
     // ---- Types of hearing loss: what each type means ----
     ask('types', 'Which type of hearing loss is caused by a structural or mechanical blockage of the hearing system?', TWO, TWO[0],
@@ -649,18 +660,18 @@
     ask('types', 'When hearing loss is split into three types, sensorineural hearing loss is divided into which two?', ['Sensory and neural', 'Conductive and sensory', 'Conductive and neural', 'Outer and inner'], 'Sensory and neural',
         'The word sensorineural is "sensory" plus "neural". Sensory is the cochlea and stereocilia. Neural is the vestibulocochlear nerve. Conductive is its own separate type.');
     // ---- Types of hearing loss: what happened, and which type is it ----
-    [['The cochlea did not form fully.', 1, 'The cochlea is in the inner ear, where vibrations are turned into signals. Nothing is blocking the sound, so this is sensorineural hearing loss.'],
-     ['Earwax is blocking the ear canal.', 0, 'The earwax is a mechanical blockage in the ear canal, so sound cannot get through well. A blockage is conductive hearing loss.'],
-     ['There is a hole in the tympanic membrane (eardrum).', 0, 'The tympanic membrane (eardrum) is one of the structures that passes sound inward. A structural problem there is conductive hearing loss.'],
-     ['The ossicles are stiff and cannot move well.', 0, 'The ossicles pass vibrations through the middle ear. If they cannot move well, the vibrations are held back. That is a mechanical problem, so it is conductive hearing loss.'],
-     ['The ear canal did not form fully.', 0, 'The ear canal carries sound to the tympanic membrane (eardrum). A structural problem there keeps sound from getting in, so it is conductive hearing loss.'],
+    [['The cochlea did not form fully.', 1, 'The cochlea is in the inner ear, where vibrations are turned into signals. Nothing is blocking the sound, so this is sensorineural hearing loss.', 'cochlea'],
+     ['Earwax is blocking the ear canal.', 0, 'The earwax is a mechanical blockage in the ear canal, so sound cannot get through well. A blockage is conductive hearing loss.', 'canal'],
+     ['There is a hole in the tympanic membrane (eardrum).', 0, 'The tympanic membrane (eardrum) is one of the structures that passes sound inward. A structural problem there is conductive hearing loss.', 'eardrum'],
+     ['The ossicles are stiff and cannot move well.', 0, 'The ossicles pass vibrations through the middle ear. If they cannot move well, the vibrations are held back. That is a mechanical problem, so it is conductive hearing loss.', 'ossicles'],
+     ['The ear canal did not form fully.', 0, 'The ear canal carries sound to the tympanic membrane (eardrum). A structural problem there keeps sound from getting in, so it is conductive hearing loss.', 'canal'],
      ['Fluid has filled the middle ear space.', 0, 'The fluid gets in the way of the vibrations in the middle ear. That is a blockage, so it is conductive hearing loss.'],
      ['The stereocilia in the cochlea are damaged.', 1, 'The stereocilia are on the hair cells in the inner ear. Damage to cells is sensorineural hearing loss. Nothing is blocking the sound.'],
-     ['The vestibulocochlear nerve is damaged.', 1, 'The vestibulocochlear nerve is the nerve pathway to the brain. Damage to the nerve is sensorineural hearing loss. Nothing is blocking the sound.']].forEach((row) => {
-      ask('types', row[0] + ' Which type of hearing loss is this?', TWO, TWO[row[1]], row[2]);
+     ['The vestibulocochlear nerve is damaged.', 1, 'The vestibulocochlear nerve is the nerve pathway to the brain. Damage to the nerve is sensorineural hearing loss. Nothing is blocking the sound.', 'nerve']].forEach((row) => {
+      ask('types', row[0] + ' Which type of hearing loss is this?', TWO, TWO[row[1]], row[2], { show: row[3] });
     });
     ask('types', 'The cochlea did not form fully. When hearing loss is split into three types, which type is this?', THREE, THREE[1],
-        'The cochlea is part of the sensory group, so this is sensory hearing loss. Neural hearing loss would be the vestibulocochlear nerve, and conductive hearing loss would be a blockage.');
+        'The cochlea is part of the sensory group, so this is sensory hearing loss. Neural hearing loss would be the vestibulocochlear nerve, and conductive hearing loss would be a blockage.', { show: 'cochlea' });
 
     // ---- True or false ----
     [['The cochlea is part of the inner ear.', true, 'The cochlea has a purple label on the diagram, the color of the inner ear.'],
@@ -674,21 +685,21 @@
      ['The inner ear is also called the labyrinth.', true, 'Outer ear = external ear, middle ear = tympanic cavity, inner ear = labyrinth.'],
      ['The vestibulocochlear nerve is cranial nerve VIII.', true, 'The vestibulocochlear nerve is cranial nerve VIII. VIII is the Roman numeral for eight.'],
      ['Conductive hearing loss is caused by a structural or mechanical blockage of the hearing system.', true, 'That is the meaning of conductive hearing loss: something blocks or stops sound on its way in.'],
-     ['Damage to the cochlea causes conductive hearing loss.', false, 'Damage to the cochlea is damage to cells in the inner ear, which is sensorineural hearing loss. Conductive hearing loss is a blockage in the outer or middle ear.'],
-     ['A problem in the ear canal can cause conductive hearing loss.', true, 'The ear canal carries sound in. A problem there blocks the sound, and a blockage is conductive hearing loss.'],
+     ['Damage to the cochlea causes conductive hearing loss.', false, 'Damage to the cochlea is damage to cells in the inner ear, which is sensorineural hearing loss. Conductive hearing loss is a blockage in the outer or middle ear.', 'cochlea'],
+     ['A problem in the ear canal can cause conductive hearing loss.', true, 'The ear canal carries sound in. A problem there blocks the sound, and a blockage is conductive hearing loss.', 'canal'],
      ['Sensorineural hearing loss can involve the cochlea, the stereocilia or the vestibulocochlear nerve.', true, 'Those are the cell and nerve structures. Damage to any of them is sensorineural hearing loss.'],
-     ['Neural hearing loss involves the vestibulocochlear nerve.', true, 'Neural means "of the nerve". The nerve here is the vestibulocochlear nerve.'],
+     ['Neural hearing loss involves the vestibulocochlear nerve.', true, 'Neural means "of the nerve". The nerve here is the vestibulocochlear nerve.', 'nerve'],
      ['Sensory hearing loss and neural hearing loss are both kinds of sensorineural hearing loss.', true, 'The word sensorineural is "sensory" plus "neural". The three-type system splits it into those two.'],
-     ['A problem with the ossicles causes sensorineural hearing loss.', false, 'The ossicles are bones in the middle ear. A problem there is a mechanical blockage, which is conductive hearing loss.'],
-     ['The Eustachian tube helps equalize the pressure in the middle ear.', true, 'The Eustachian tube links the middle ear with the back of the nose, which lets the pressure even out.'],
-     ['The cochlea holds the receptors for balance.', false, 'The vestibular apparatus holds the receptors for balance. The cochlea is the hearing organ.'],
-     ['The ossicles amplify sound vibrations.', true, 'The ossicles amplify the vibrations from the tympanic membrane (eardrum) and send them to the cochlea.'],
-     ['The tympanic membrane (eardrum) divides the middle ear from the inner ear.', false, 'The tympanic membrane (eardrum) divides the outer ear from the middle ear. It sits at the end of the ear canal.'],
-     ['The cochlea is filled with fluid.', true, 'The cochlea is a snail-shaped structure filled with fluid.'],
-     ['The ear canal carries sound waves to the tympanic membrane (eardrum).', true, 'Sound waves travel through the ear canal and reach the tympanic membrane (eardrum) at its end.'],
-     ['The vestibulocochlear nerve carries signals from the inner ear to the brain.', true, 'The electrical signals made in the inner ear travel along this nerve to the brain.'],
-     ['The Eustachian tube carries sound waves to the cochlea.', false, 'The Eustachian tube does not carry sound. It links the middle ear with the back of the nose and helps equalize pressure. The ossicles are what send vibrations to the cochlea.']].forEach((row) => {
-      ask('truefalse', 'True or false? ' + row[0], TRUE_FALSE, row[1] ? 'True' : 'False', (row[1] ? 'This is true. ' : 'This is false. ') + row[2]);
+     ['A problem with the ossicles causes sensorineural hearing loss.', false, 'The ossicles are bones in the middle ear. A problem there is a mechanical blockage, which is conductive hearing loss.', 'ossicles'],
+     ['The Eustachian tube helps equalize the pressure in the middle ear.', true, 'The Eustachian tube links the middle ear with the back of the nose, which lets the pressure even out.', 'tube'],
+     ['The cochlea holds the receptors for balance.', false, 'The vestibular apparatus holds the receptors for balance. The cochlea is the hearing organ.', 'cochlea'],
+     ['The ossicles amplify sound vibrations.', true, 'The ossicles amplify the vibrations from the tympanic membrane (eardrum) and send them to the cochlea.', 'ossicles'],
+     ['The tympanic membrane (eardrum) divides the middle ear from the inner ear.', false, 'The tympanic membrane (eardrum) divides the outer ear from the middle ear. It sits at the end of the ear canal.', 'eardrum'],
+     ['The cochlea is filled with fluid.', true, 'The cochlea is a snail-shaped structure filled with fluid.', 'cochlea'],
+     ['The ear canal carries sound waves to the tympanic membrane (eardrum).', true, 'Sound waves travel through the ear canal and reach the tympanic membrane (eardrum) at its end.', 'canal'],
+     ['The vestibulocochlear nerve carries signals from the inner ear to the brain.', true, 'The electrical signals made in the inner ear travel along this nerve to the brain.', 'nerve'],
+     ['The Eustachian tube carries sound waves to the cochlea.', false, 'The Eustachian tube does not carry sound. It links the middle ear with the back of the nose and helps equalize pressure. The ossicles are what send vibrations to the cochlea.', 'tube']].forEach((row) => {
+      ask('truefalse', 'True or false? ' + row[0], TRUE_FALSE, row[1] ? 'True' : 'False', (row[1] ? 'This is true. ' : 'This is false. ') + row[2], { show: row[3] });
     });
 
     const QUIZ_LENGTH = 10;
@@ -812,6 +823,27 @@
         img.classList.toggle('faded', !!pointing && pointing.part !== each);     // the other parts fade so the highlighted one stands out
       });
       box('ring').hidden = !pointing;
+
+      // Some questions name a structure. Those show that one label, with its line and its name, and nothing else.
+      const showing = item && item.show && !pointing ? labelFor(item.show) : null;
+      ['showBox', 'showLine', 'showName'].forEach((id) => { box(id).hidden = !showing; });
+      if (showing) {
+        const percent = (value, whole) => (100 * value / whole).toFixed(3) + '%';
+        const spot = showing.at, edge = 7;
+        const window = 'inset(' + percent(spot[1] - edge, 1080) + ' ' + percent(1920 - spot[0] - spot[2] - edge, 1920) + ' ' + percent(1080 - spot[1] - spot[3] - edge, 1080) + ' ' + percent(spot[0] - edge, 1920) + ')';
+        box('showBox').src  = LAYERS['ear-' + showing.part + '-boxes'];  box('showBox').style.clipPath = window;
+        box('showName').src = LAYERS['ear-' + showing.part + '-names'];  box('showName').style.clipPath = window;
+        box('showLine').hidden = !showing.line;
+        if (showing.line) {
+          // a thin strip along the pointer line, a little longer than the line at both ends
+          const fromX = showing.line[0], fromY = showing.line[1], toX = showing.line[2], toY = showing.line[3];
+          const long = Math.hypot(toX - fromX, toY - fromY), alongX = (toX - fromX) / long, alongY = (toY - fromY) / long, half = 7, extra = 12;
+          const corners = [[fromX - alongX * extra - alongY * half, fromY - alongY * extra + alongX * half], [toX + alongX * extra - alongY * half, toY + alongY * extra + alongX * half],
+                           [toX + alongX * extra + alongY * half, toY + alongY * extra - alongX * half], [fromX - alongX * extra + alongY * half, fromY - alongY * extra - alongX * half]];
+          box('showLine').src = LAYERS['ear-' + showing.part + '-boxes'];
+          box('showLine').style.clipPath = 'polygon(' + corners.map((corner) => percent(corner[0], 1920) + ' ' + percent(corner[1], 1080)).join(', ') + ')';
+        }
+      }
       if (pointing) placeAt(box('ring'), pointing.at, 10);
       if (labeling) fitWords();
     }
@@ -851,8 +883,7 @@
         ['source',   'Source Sans',                     "'Source Sans 3', Arial, sans-serif"],
         ['nunito',   'Nunito (rounded)',                "'Nunito', ui-rounded, 'Trebuchet MS', Arial, sans-serif"],
         ['literata', 'Literata (book style)',           "'Literata', Georgia, serif"],
-        ['comic',    'Comic Neue (playful)',            "'Comic Neue', 'Comic Sans MS', cursive"],
-        ['dyslexic', 'OpenDyslexic (dyslexia-friendly)', "'OpenDyslexic', 'Comic Sans MS', Arial, sans-serif"]
+        ['dyslexic', 'OpenDyslexic (dyslexia-friendly)', "'OpenDyslexic', Arial, sans-serif"]
       ];
       const fontButton = document.getElementById('fontButton'), fontMenu = document.getElementById('fontMenu');
       function saved() { try { return localStorage.getItem('simulatorFont') || ''; } catch (problem) { return ''; } }
