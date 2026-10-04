@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23362e55%22/%3E%3Cpath d=%22M4 10H28M4 17H28M4 24H28M9 5V28M16 5V28M23 5V28%22 stroke=%22%235a5080%22 stroke-width=%221%22/%3E%3Cpath d=%22M5 9 L11 10 L16 14 L21 20 L27 24%22 fill=%22none%22 stroke=%22%23ff6fb1%22 stroke-width=%222.6%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22/%3E%3Cg fill=%22%23ff6fb1%22 stroke=%22%231d1930%22 stroke-width=%221%22%3E%3Crect x=%223%22 y=%225.5%22 width=%224.4%22 height=%227%22 rx=%221.4%22/%3E%3Crect x=%2213.8%22 y=%2210.5%22 width=%224.4%22 height=%227%22 rx=%221.4%22/%3E%3Crect x=%2224.6%22 y=%2220.5%22 width=%224.4%22 height=%227%22 rx=%221.4%22/%3E%3C/g%3E%3C/svg%3E">
   <title>Hearing Loss Simulator</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
 
@@ -14,7 +15,7 @@
     const YOUTUBE_ID = new URLSearchParams(location.search).get('youtube');
 
     if (YOUTUBE_ID) {
-      document.title = 'YouTube video for the simulator';
+      document.title = 'CHOOSE THIS TO CONNECT SOUND';
       // The pink strip along the bottom edge is how the simulator page recognizes this window when it is shared
       document.write('<body style="margin:0; background:#e6007e; overflow:hidden"><div style="width:100vw; height:calc(100vh - 12px); background:#000"><div id="ytplayer" style="width:100%; height:100%"></div></div>');
 
@@ -478,6 +479,12 @@
     .contrast .youtubeGuide li.now::marker { color: #ffe600; }
     #transportNote { font-size: 12.5px; line-height: 1.3; }
 
+    /* the Home arrow and the link to the other simulator, stacked at the top left */
+    .titleSide { display: flex; align-items: center; gap: 20px; }
+    .pageNav  { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+    .pageNav .pageLink { font-size: 14px; padding: 5px 12px; white-space: nowrap; }
+    body.game .pageNav { display: none; }
+
     /* the link to the other page */
     .pageLink { text-decoration: none; font-weight: 700; padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--line, #777); color: inherit; }
     .pageLink:hover { border-color: var(--pink, #e6007e); }
@@ -492,7 +499,13 @@
 </head>
 <body>
   <div class="pageBar">
-    <h1 id="pageTitle">Hearing Loss Simulator</h1>
+    <div class="titleSide">
+      <nav class="pageNav" aria-label="Other pages">
+        <a class="pageLink" href="index.html" title="Back to the welcome page">&larr; Home</a>
+        <a class="pageLink" href="cochlear-implant-simulator.html" title="Opens the other page: what a cochlear implant sounds like">Cochlear implant simulator</a>
+      </nav>
+      <h1 id="pageTitle">Hearing Loss Simulator</h1>
+    </div>
     <div class="pageTools">
       <label>Colors:
         <select id="themeChoice">
@@ -502,8 +515,6 @@
       <label>Text size:
         <select id="textChoice"><option value="">Normal</option><option value="big">Large</option></select>
       </label>
-      <a class="pageLink" href="index.html" title="Back to the welcome page">Home</a>
-      <a class="pageLink" href="cochlear-implant-simulator.html" title="Opens the other page: what a cochlear implant sounds like">Cochlear implant simulator</a>
       <button id="mysteryButton" title="Opens a guessing game in a new tab: the page picks a hidden hearing loss for students to work out by listening">Mystery game</button>
     </div>
   </div>
@@ -1861,7 +1872,7 @@
     const youtubeHint = document.createElement('ol');        // the three steps; the one to do next is highlighted
     youtubeHint.className = 'hint youtubeGuide';
     youtubeHint.innerHTML = '<li><b>Open.</b> Paste a YouTube link in the box and click <b>Open the video</b>. The video opens in its own small window.</li>'
-      + '<li><b>Connect.</b> Come back to this page and click <b>Connect the sound</b>. Chrome shows a box: click the tab named <b>YouTube video for the simulator</b>, then click <b>Share</b>.</li>'
+      + '<li><b>Connect.</b> Come back to this page and click <b>Connect the sound</b>. Chrome shows a box: click the tab named <b>CHOOSE THIS TO CONNECT SOUND</b>, then click <b>Share</b>.</li>'
       + '<li><b>Listen.</b> Use the play and skip buttons under the video on this page. The sound now goes through the simulator.</li>';
     if (ON_THE_WEB) {
       const row = document.createElement('div');
@@ -1873,7 +1884,7 @@
       const help = document.createElement('details');
       help.className = 'hint';
       help.innerHTML = '<summary>Not working?</summary>'
-        + '<ul><li>In the box Chrome shows, pick the tab named <b>YouTube video for the simulator</b>, and keep "Also share tab audio" switched on.</li>'
+        + '<ul><li>In the box Chrome shows, pick the tab named <b>CHOOSE THIS TO CONNECT SOUND</b>, and keep "Also share tab audio" switched on.</li>'
         + '<li>If you hear nothing, look at the small video window and make sure the YouTube player is not muted and its volume is all the way up.</li>'
         + '<li>If no small window opens, allow pop-ups for this page with the icon at the right end of the address bar.</li></ul>';
       youtubeHint.after(help);
@@ -2086,7 +2097,7 @@
       say('Connecting…');
       if (await sharedTheVideoWindow(stream) === false) {
         stream.getTracks().forEach((track) => track.stop());
-        say('That was a different tab, so the video would not go through the simulator. Click Connect the sound again and choose the tab named "YouTube video for the simulator".');
+        say('That was a different tab, so the video would not go through the simulator. Click Connect the sound again and choose the tab named "CHOOSE THIS TO CONNECT SOUND".');
         return;
       }
 
