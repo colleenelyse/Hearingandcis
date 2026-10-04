@@ -516,6 +516,11 @@
     body.lite #source-builtin button { font-size: 18px; padding: 14px 22px; border-width: 2px; }
     body.lite .videoPanel { flex: 0 0 320px; }
     body.lite .chartCard { margin-top: 14px; }
+    .liteStep { font-size: 20px; font-weight: 800; margin: 0 0 8px 0; }
+    .liteNote { margin: 8px 0 0 0; }
+    body.lite #source-builtin button { border-color: var(--pink, #e6007e); }
+    body.lite #source-builtin button::before { content: '\25B6'; margin-right: 10px; font-size: 0.85em; }
+    body.lite #source-builtin button.playing::before { content: '\275A\275A'; letter-spacing: 1px; }
     .liteLine { font-size: 18px; font-weight: 700; margin: 10px 0 12px 0; min-height: 27px; }
     .liteTag  { font-size: 15px; font-weight: 800; padding: 3px 10px; border-radius: 999px; background: var(--pink, #e6007e); color: #fff; vertical-align: middle; margin-left: 8px; letter-spacing: 0; }
     .dark .liteTag { color: var(--page); }
@@ -3125,6 +3130,20 @@
       const other = document.querySelectorAll('.pageNav a')[1];
       other.href = 'cochlear-implant-lite.html';
       other.textContent = 'Cochlear implant simulator: Lite';
+
+      // Numbered headings, so it is clear where to start
+      const stepOne = document.createElement('h2');
+      stepOne.className = 'liteStep';
+      stepOne.textContent = '1. Choose a recording to play';
+      document.getElementById('source-builtin').before(stepOne);
+      const lengths = document.createElement('p');
+      lengths.className = 'hint liteNote';
+      lengths.textContent = 'The story is 45 seconds. The listening tutorial is about 2 minutes and walks through low, middle and high speech sounds.';
+      document.getElementById('source-builtin').after(lengths);
+      const stepTwo = document.createElement('h2');
+      stepTwo.className = 'liteStep';
+      stepTwo.textContent = '2. Choose a hearing loss, or drag the faders on the chart';
+      document.getElementById('presetGroups').before(stepTwo);
 
       // One plain sentence about the hearing loss that is chosen
       const DEGREE_LINES = {
