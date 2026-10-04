@@ -42,7 +42,14 @@
         if (command === 'play')  ytPlayer.playVideo();
         if (command === 'pause') ytPlayer.pauseVideo();
         if (command === 'skip')  ytPlayer.seekTo(ytPlayer.getCurrentTime() + event.data.seconds, true);
+        if (command === 'seek')  ytPlayer.seekTo(event.data.seconds, true);
       });
+
+      // Twice a second, tell the simulator page where the video is, for its position bar
+      setInterval(() => {
+        if (!ytPlayer || !ytPlayer.getDuration || !window.opener) return;
+        window.opener.postMessage({ simulatorVideo: 'time', time: ytPlayer.getCurrentTime() || 0, length: ytPlayer.getDuration() || 0 }, '*');
+      }, 500);
 
       const youtubeCode = document.createElement('script');
       youtubeCode.src = 'https://www.youtube.com/iframe_api';
@@ -485,6 +492,38 @@
     .pageNav .pageLink { font-size: 14px; padding: 5px 12px; white-space: nowrap; }
     body.game .pageNav { display: none; }
 
+    /* the big warning when the wrong tab was shared */
+    .alertBox { margin: 10px 0 4px 0; padding: 12px 14px 12px 46px; border-radius: 12px; background: #c62828; color: #fff; font-size: 16px; line-height: 1.35;
+                border: 2px solid #fff; box-shadow: 0 0 0 3px #c62828; position: relative; }
+    .alertBox::before { content: '!'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; border-radius: 50%;
+                background: #fff; color: #c62828; font-weight: 900; font-size: 18px; text-align: center; line-height: 24px; }
+    .alertBox b { color: #fff; }
+
+    .seekRow  { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+    .seekRow input[type=range] { flex: 1; min-width: 0; margin: 0; accent-color: var(--pink, var(--accent, #e6007e)); cursor: pointer; }
+    .contrast .seekRow input[type=range] { accent-color: #ffe600; }
+
+    /* ===== LITE: the same page with almost everything hidden (the file is opened with <body class="lite">) ===== */
+    body.lite { max-width: 1100px; }
+    body.lite .setup, body.lite .earsPanel, body.lite #sourceTabs, body.lite #source-file, body.lite #source-youtube, body.lite #source-mic,
+    body.lite #source-builtin .hint, body.lite #player, body.lite #mysteryButton, body.lite .presetGroups > div:has(#twoEarPresets),
+    body.lite .presetTitle .hint, body.lite .options, body.lite .realism, body.lite .levelNote, body.lite .soundPicture, body.lite .directions,
+    body.lite .tone, body.lite .toneBracket, body.lite .toneCaption, body.lite .levelTag, body.lite .levelLine, body.lite #status { display: none !important; }
+    body.lite .cap, body.lite .slot { pointer-events: none; }               /* the faders show the loss but are not dragged */
+    body.lite .top { align-items: center; }
+    body.lite .top .panel { border: none; background: none !important; box-shadow: none !important; padding: 0; }
+    body.lite .source { margin-top: 0; border: none; background: none !important; padding: 0; }
+    body.lite #source-builtin p { margin: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+    body.lite #source-builtin button { font-size: 18px; padding: 14px 22px; border-width: 2px; }
+    body.lite .videoPanel { flex: 0 0 320px; }
+    body.lite .chartCard { margin-top: 14px; }
+    .liteLine { font-size: 18px; font-weight: 700; margin: 10px 0 12px 0; min-height: 27px; }
+    .liteTag  { font-size: 15px; font-weight: 800; padding: 3px 10px; border-radius: 999px; background: var(--pink, #e6007e); color: #fff; vertical-align: middle; margin-left: 8px; letter-spacing: 0; }
+    .dark .liteTag { color: var(--page); }
+    .contrast .liteTag { background: #ffe600; color: #000; }
+    .deeper   { margin: 18px 0 30px 0; text-align: center; }
+    .deeper a { font-size: 16px; padding: 10px 20px; }
+
     /* the link to the other page */
     .pageLink { text-decoration: none; font-weight: 700; padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--line, #777); color: inherit; }
     .pageLink:hover { border-color: var(--pink, #e6007e); }
@@ -601,6 +640,11 @@
     <!-- The video and its buttons -->
     <div class="panel videoPanel">
       <video id="player" controls loop playsinline></video>
+      <div class="seekRow" id="seekRow" hidden>
+        <span id="seekNow">0:00</span>
+        <input type="range" id="seekBar" min="0" max="100" step="1" value="0" aria-label="Position in the video or recording">
+        <span id="seekEnd">0:00</span>
+      </div>
       <div class="transport">
         <button id="backButton" aria-label="Back 10 seconds"></button>
         <button id="playButton" aria-label="Play"></button>
@@ -1869,6 +1913,10 @@
     // (Chrome allows only one of "open a window" and "share a tab" per click, so it takes two clicks.)
     const openButton = document.createElement('button');     // these two are never shown; the one button below runs them
     const youtubeButton = document.createElement('button');
+    const youtubeAlert = document.createElement('p');        // the big warning shown when the wrong tab was shared
+    youtubeAlert.className = 'alertBox';
+    youtubeAlert.setAttribute('role', 'alert');
+    youtubeAlert.hidden = true;
     const youtubeHint = document.createElement('ol');        // the three steps; the one to do next is highlighted
     youtubeHint.className = 'hint youtubeGuide';
     youtubeHint.innerHTML = '<li><b>Open.</b> Paste a YouTube link in the box and click <b>Open the video</b>. The video opens in its own small window.</li>'
@@ -1878,7 +1926,7 @@
       const row = document.createElement('div');
       row.className = 'youtubeRow';
       row.append(link, youtubeButton);
-      youtubeSteps.before(row, youtubeHint);
+      youtubeSteps.before(row, youtubeAlert, youtubeHint);
       youtubeSteps.hidden = true;
       connectButton.hidden = true;
       const help = document.createElement('details');
@@ -1948,12 +1996,42 @@
     window.addEventListener('message', (event) => {
       if (event.source !== videoWindow || !event.data || !event.data.simulatorVideo) return;
       const news = event.data.simulatorVideo;
+      if (news === 'time') { videoTime = event.data.time; videoLength = event.data.length; return; }
       if (news === 'playing') videoPlaying = true;
       if (news === 'paused')  videoPlaying = false;
       if (news === 'error') say('YouTube would not play this video in the small window (some videos do not allow it). '
                               + 'Open it in a normal tab and connect that tab instead.');
       showButtons();
     });
+
+    // ----- The position bar: shows where the video or recording is, and jumps when dragged -----
+    const seekRow = document.getElementById('seekRow'), seekBar = document.getElementById('seekBar');
+    const seekNow = document.getElementById('seekNow'), seekEnd = document.getElementById('seekEnd');
+    let videoTime = 0, videoLength = 0;      // reported by the small YouTube window
+    let seeking = false;                     // true while the bar is being dragged
+    const clock = (seconds) => Math.floor(seconds / 60) + ':' + String(Math.floor(seconds % 60)).padStart(2, '0');
+
+    function showPosition() {
+      const target = transportTarget();
+      // a file has its own bar on the video itself, so this one is for YouTube and the built-in recordings
+      const clip = target === 'builtin' ? builtInClip() : null;
+      const now = target === 'youtube' ? videoTime : clip ? clip.currentTime : 0;
+      const length = target === 'youtube' ? videoLength : clip ? clip.duration : 0;
+      seekRow.hidden = !(length > 0);
+      if (seekRow.hidden || seeking) return;
+      seekBar.max = Math.floor(length);
+      seekBar.value = Math.floor(now);
+      seekNow.textContent = clock(now);
+      seekEnd.textContent = clock(length);
+    }
+    setInterval(showPosition, 250);
+    seekBar.oninput = () => { seeking = true; seekNow.textContent = clock(Number(seekBar.value)); };
+    seekBar.onchange = () => {
+      const target = transportTarget(), to = Number(seekBar.value);
+      if (target === 'youtube') { tellVideo('seek', to); videoTime = to; }
+      else if (target === 'builtin') builtInClip().currentTime = to;
+      seeking = false;
+    };
 
     // ----- Play, pause and skip buttons (work for files and for YouTube) -----
 
@@ -2028,7 +2106,7 @@
                                                  : sourceShown === 'file' ? 'Choose a file to use these buttons.'
                                                  : sourceShown === 'youtube' ? 'Connect a YouTube video to use these buttons.'
                                                  : 'These buttons are not used with the microphone.')
-                                : (videoWindow && !videoWindow.closed) ? 'If the video starts with an ad, these buttons work once the ad is over. To skip the ad, do it in the small video window.' : '';
+                                : (videoWindow && !videoWindow.closed) ? 'During an ad, these buttons and the bar wait until the ad is over. To skip the ad, use the small video window.' : '';
 
       [playButton, backButton, forwardButton].forEach((button) => {
         button.disabled = sharedTabOnly || nothingLoaded;
@@ -2094,10 +2172,14 @@
 
       // Was it the small video window that was shared? If another tab was picked, the video would play straight
       // to the speakers, around the simulator, and nothing on this page would change its sound.
+      youtubeAlert.hidden = true;
       say('Connecting…');
       if (await sharedTheVideoWindow(stream) === false) {
         stream.getTracks().forEach((track) => track.stop());
-        say('That was a different tab, so the video would not go through the simulator. Click Connect the sound again and choose the tab named "CHOOSE THIS TO CONNECT SOUND".');
+        say('');
+        youtubeAlert.innerHTML = '<b>Wrong tab. Nothing was connected.</b> Click <b>Connect the sound</b> again and pick the tab named <b>CHOOSE THIS TO CONNECT SOUND</b>.';
+        youtubeAlert.hidden = false;
+        youtubeAlert.scrollIntoView({ block: 'nearest' });
         return;
       }
 
@@ -2160,6 +2242,7 @@
 
     // Disconnect YouTube (also runs when you click "Stop sharing" in Chrome)
     function stopYouTube(keepWindow) {
+      if (!keepWindow) youtubeAlert.hidden = true;
       setTimeout(showYouTubeStep, 0);
       if (!keepWindow) {
         if (videoWindow && !videoWindow.closed) videoWindow.close();
@@ -3031,6 +3114,61 @@
     showEar();
     showChosen();
     fadersChanged();
+  </script>
+
+  <script>
+    // ---------- LITE ----------
+    // The Lite page is this same file opened with <body class="lite">: built-in recordings, degree and shape buttons, and the chart.
+    if (document.body.classList.contains('lite')) {
+      document.title = 'Hearing Loss Simulator: Lite';
+      document.getElementById('pageTitle').innerHTML = 'Hearing Loss Simulator <span class="liteTag">Lite</span>';
+      const other = document.querySelectorAll('.pageNav a')[1];
+      other.href = 'cochlear-implant-lite.html';
+      other.textContent = 'Cochlear implant simulator: Lite';
+
+      // One plain sentence about the hearing loss that is chosen
+      const DEGREE_LINES = {
+        'Normal':   'Normal hearing: nothing is taken away.',
+        'Mild':     'Mild: soft sounds and whispers are hard to hear.',
+        'Moderate': 'Moderate: ordinary conversation is hard to follow.',
+        'Severe':   'Severe: only loud sounds get through.',
+        'Profound': 'Profound: almost nothing gets through, even shouting.'
+      };
+      const SHAPE_LINES = {
+        'High-frequency loss':          'High pitches are lost, so sounds like s, f and th fade and speech turns muffled.',
+        'Ski slope':                    'Low pitches are fine, but middle and high pitches drop away steeply.',
+        'Noise-induced notch':          'A dip near 4,000 Hz, the mark that loud noise leaves behind.',
+        'Low-frequency loss':           'Low pitches are lost, so voices sound thin.',
+        'Cookie bite':                  'Middle pitches are lost, right where much of speech sits.',
+        'Reverse cookie bite':          'Low and high pitches are lost. The middle is clearest.',
+        'Corner audiogram':             'Only the lowest pitches are heard at all.',
+        'Conductive loss (ear fluid)':  'Everything is quieter by about the same amount, like fluid in the ear or an earplug.'
+      };
+      const liteLine = document.createElement('p');
+      liteLine.className = 'liteLine';
+      document.getElementById('presetGroups').after(liteLine);
+      function showLiteLine() {
+        liteLine.textContent = chosenShape !== null && SHAPE_LINES[chosenShape] ? chosenShape + ': ' + SHAPE_LINES[chosenShape].charAt(0).toLowerCase() + SHAPE_LINES[chosenShape].slice(1)
+                             : DEGREE_LINES[chosenDegree] || '';
+      }
+      const plainShowChosen = showChosen;
+      showChosen = function () { plainShowChosen(); showLiteLine(); };
+      showLiteLine();
+
+      // shorter headings for the two rows of buttons
+      const titles = document.querySelectorAll('#presetGroups .presetTitle');
+      titles[0].firstChild.textContent = 'How much hearing is lost ';
+      titles[2].firstChild.textContent = 'Which pitches are lost ';
+
+      // the faders are for looking at, so they are taken out of the keyboard's path
+      document.querySelectorAll('.cap').forEach((cap) => { cap.tabIndex = -1; });
+
+      // a way on to the full version
+      const deeper = document.createElement('p');
+      deeper.className = 'deeper';
+      deeper.innerHTML = '<a class="pageLink" href="hearing-loss-simulator.html">Want to go deeper? Open the full version</a>';
+      document.querySelector('.chartCard').after(deeper);
+    }
   </script>
 
   <!-- THE PICTURES AND RECORDINGS are separate files that sit next to this page:
