@@ -41,7 +41,14 @@
         if (command === 'play')  ytPlayer.playVideo();
         if (command === 'pause') ytPlayer.pauseVideo();
         if (command === 'skip')  ytPlayer.seekTo(ytPlayer.getCurrentTime() + event.data.seconds, true);
+        if (command === 'seek')  ytPlayer.seekTo(event.data.seconds, true);
       });
+
+      // Twice a second, tell the simulator page where the video is, for its position bar
+      setInterval(() => {
+        if (!ytPlayer || !ytPlayer.getDuration || !window.opener) return;
+        window.opener.postMessage({ simulatorVideo: 'time', time: ytPlayer.getCurrentTime() || 0, length: ytPlayer.getDuration() || 0 }, '*');
+      }, 500);
 
       const youtubeCode = document.createElement('script');
       youtubeCode.src = 'https://www.youtube.com/iframe_api';
@@ -121,6 +128,31 @@
     .pageNav .pageLink { font-size: 14px; padding: 5px 12px; white-space: nowrap; }
     body.game .pageNav { display: none; }
 
+    /* the big warning when the wrong tab was shared */
+    .alertBox { margin: 10px 0 4px 0; padding: 12px 14px 12px 46px; border-radius: 12px; background: #c62828; color: #fff; font-size: 16px; line-height: 1.35;
+                border: 2px solid #fff; box-shadow: 0 0 0 3px #c62828; position: relative; }
+    .alertBox::before { content: '!'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 24px; height: 24px; border-radius: 50%;
+                background: #fff; color: #c62828; font-weight: 900; font-size: 18px; text-align: center; line-height: 24px; }
+    .alertBox b { color: #fff; }
+    .seekRow  { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+    .seekRow input[type=range] { flex: 1; min-width: 0; margin: 0; accent-color: var(--pink, var(--accent, #e6007e)); cursor: pointer; }
+    .contrast .seekRow input[type=range] { accent-color: #ffe600; }
+    /* ===== LITE: the same page with almost everything hidden (the file is opened with <body class="lite">) ===== */
+    body.lite { max-width: 1000px; }
+    body.lite .jump, body.lite #sourceTabs, body.lite #source-file, body.lite #source-youtube, body.lite #source-mic, body.lite #source-story .hint,
+    body.lite #player, body.lite .arrayNotes, body.lite #eraNote, body.lite .backUp, body.lite #status,
+    body.lite .panel:has(#eras) ~ .panel { display: none !important; }
+    .liteInfo { text-align: center; font-weight: 700; min-height: 24px; margin: 6px auto 0 auto; }
+    body.lite .top { align-items: center; }
+    body.lite .top .panel { border: none; background: none; box-shadow: none; padding: 0; }
+    body.lite [id^="source-"] { margin-top: 0; border: none; background: none; padding: 0; }
+    body.lite #source-story p { margin: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+    body.lite #source-story button { font-size: 18px; padding: 14px 22px; border-width: 2px; }
+    body.lite #arrayPicture { margin: 0 auto; max-width: 560px; }
+    body.lite .arrayBox { justify-content: center; }
+    .liteTag  { font-size: 15px; font-weight: 800; padding: 3px 10px; border-radius: 999px; background: var(--accent); color: var(--onAccent); vertical-align: middle; margin-left: 8px; letter-spacing: 0; }
+    .deeper   { margin: 18px 0 30px 0; text-align: center; }
+    .deeper a { font-size: 16px; padding: 10px 20px; }
     .top      { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
     .top .panel { flex: 1; min-width: 300px; margin-bottom: 0; }
     .videoPanel { flex: 0 0 300px !important; min-width: 300px; text-align: center; }
@@ -259,6 +291,11 @@
 
     <div class="panel videoPanel">
       <video id="player" controls loop playsinline></video>
+      <div class="seekRow" id="seekRow" hidden>
+        <span id="seekNow">0:00</span>
+        <input type="range" id="seekBar" min="0" max="100" step="1" value="0" aria-label="Position in the video or recording">
+        <span id="seekEnd">0:00</span>
+      </div>
       <div class="transport">
         <button id="backButton" aria-label="Back 10 seconds"></button>
         <button id="playButton" aria-label="Play"></button>
@@ -1313,6 +1350,10 @@
     // (Chrome allows only one of "open a window" and "share a tab" per click, so it takes two clicks.)
     const openButton = document.createElement('button');     // these two are never shown; the one button below runs them
     const youtubeButton = document.createElement('button');
+    const youtubeAlert = document.createElement('p');        // the big warning shown when the wrong tab was shared
+    youtubeAlert.className = 'alertBox';
+    youtubeAlert.setAttribute('role', 'alert');
+    youtubeAlert.hidden = true;
     const youtubeHint = document.createElement('ol');        // the three steps; the one to do next is highlighted
     youtubeHint.className = 'hint youtubeGuide';
     youtubeHint.innerHTML = '<li><b>Open.</b> Paste a YouTube link in the box and click <b>Open the video</b>. The video opens in its own small window.</li>'
@@ -1322,7 +1363,7 @@
       const row = document.createElement('div');
       row.className = 'youtubeRow';
       row.append(link, youtubeButton);
-      youtubeSteps.before(row, youtubeHint);
+      youtubeSteps.before(row, youtubeAlert, youtubeHint);
       youtubeSteps.hidden = true;
       connectButton.hidden = true;
       const help = document.createElement('details');
@@ -1392,12 +1433,42 @@
     window.addEventListener('message', (event) => {
       if (event.source !== videoWindow || !event.data || !event.data.simulatorVideo) return;
       const news = event.data.simulatorVideo;
+      if (news === 'time') { videoTime = event.data.time; videoLength = event.data.length; return; }
       if (news === 'playing') videoPlaying = true;
       if (news === 'paused')  videoPlaying = false;
       if (news === 'error') say('YouTube would not play this video in the small window (some videos do not allow it). '
                               + 'Open it in a normal tab and connect that tab instead.');
       showButtons();
     });
+
+    // ----- The position bar: shows where the video or recording is, and jumps when dragged -----
+    const seekRow = document.getElementById('seekRow'), seekBar = document.getElementById('seekBar');
+    const seekNow = document.getElementById('seekNow'), seekEnd = document.getElementById('seekEnd');
+    let videoTime = 0, videoLength = 0;      // reported by the small YouTube window
+    let seeking = false;                     // true while the bar is being dragged
+    const clock = (seconds) => Math.floor(seconds / 60) + ':' + String(Math.floor(seconds % 60)).padStart(2, '0');
+
+    function showPosition() {
+      const target = transportTarget();
+      // a file has its own bar on the video itself, so this one is for YouTube and the built-in recordings
+      const clip = target === 'builtin' ? storyClip : null;
+      const now = target === 'youtube' ? videoTime : clip ? clip.currentTime : 0;
+      const length = target === 'youtube' ? videoLength : clip ? clip.duration : 0;
+      seekRow.hidden = !(length > 0);
+      if (seekRow.hidden || seeking) return;
+      seekBar.max = Math.floor(length);
+      seekBar.value = Math.floor(now);
+      seekNow.textContent = clock(now);
+      seekEnd.textContent = clock(length);
+    }
+    setInterval(showPosition, 250);
+    seekBar.oninput = () => { seeking = true; seekNow.textContent = clock(Number(seekBar.value)); };
+    seekBar.onchange = () => {
+      const target = transportTarget(), to = Number(seekBar.value);
+      if (target === 'youtube') { tellVideo('seek', to); videoTime = to; }
+      else if (target === 'builtin') storyClip.currentTime = to;
+      seeking = false;
+    };
 
     // ----- Play, pause and skip buttons (work for files and for YouTube) -----
 
@@ -1469,7 +1540,7 @@
                                                  : sourceShown === 'file' ? 'Choose a file to use these buttons.'
                                                  : sourceShown === 'youtube' ? 'Connect a YouTube video to use these buttons.'
                                                  : 'These buttons are not used with the microphone.')
-                                : (videoWindow && !videoWindow.closed) ? 'If the video starts with an ad, these buttons work once the ad is over. To skip the ad, do it in the small video window.' : '';
+                                : (videoWindow && !videoWindow.closed) ? 'During an ad, these buttons and the bar wait until the ad is over. To skip the ad, use the small video window.' : '';
 
       [playButton, backButton, forwardButton].forEach((button) => {
         button.disabled = sharedTabOnly || nothingLoaded;
@@ -1536,10 +1607,14 @@
 
       // Was it the small video window that was shared? If another tab was picked, the video would play straight
       // to the speakers, around the simulator, and nothing on this page would change its sound.
+      youtubeAlert.hidden = true;
       say('Connecting…');
       if (await sharedTheVideoWindow(stream) === false) {
         stream.getTracks().forEach((track) => track.stop());
-        say('That was a different tab, so the video would not go through the simulator. Click Connect the sound again and choose the tab named "CHOOSE THIS TO CONNECT SOUND".');
+        say('');
+        youtubeAlert.innerHTML = '<b>Wrong tab. Nothing was connected.</b> Click <b>Connect the sound</b> again and pick the tab named <b>CHOOSE THIS TO CONNECT SOUND</b>.';
+        youtubeAlert.hidden = false;
+        youtubeAlert.scrollIntoView({ block: 'nearest' });
         return;
       }
 
@@ -1602,6 +1677,7 @@
 
     // Disconnect YouTube (also runs when you click "Stop sharing" in Chrome)
     function stopYouTube(keepWindow) {
+      if (!keepWindow) youtubeAlert.hidden = true;
       setTimeout(showYouTubeStep, 0);
       if (!keepWindow) {
         if (videoWindow && !videoWindow.closed) videoWindow.close();
@@ -1650,8 +1726,8 @@
     // The choice is remembered on this computer, and shared with the hearing loss page.
     const themeChoice = document.getElementById('themeChoice');
     const textChoice  = document.getElementById('textChoice');
-    function remember(key, value) { try { localStorage.setItem(key, value); } catch (E) { /* not allowed here */ } }
-    function recall(key)          { try { return localStorage.getItem(key); } catch (E) { return null; } }
+    function remember(key, value) { try { localStorage.setItem(key, value); } catch (e) { /* not allowed here */ } }
+    function recall(key)          { try { return localStorage.getItem(key); } catch (e) { return null; } }
     function showLook() {
       document.body.classList.toggle('dark', themeChoice.value === 'dark');
       document.body.classList.toggle('contrast', themeChoice.value === 'contrast');
@@ -1685,6 +1761,50 @@
     // ---------- START ----------
     showSource('story');
     showChoices();
+  </script>
+
+  <script>
+    // ---------- LITE ----------
+    // The Lite page is this same file opened with <body class="lite">: built-in recordings, the three sound choices,
+    // and the electrode-count buttons with the cochlea picture.
+    if (document.body.classList.contains('lite')) {
+      document.title = 'Cochlear Implant Simulator: Lite';
+      document.querySelector('h1').innerHTML = 'Cochlear Implant Simulator <span class="liteTag">Lite</span>';
+      const other = document.querySelectorAll('.pageNav a')[1];
+      other.href = 'hearing-loss-lite.html';
+      other.textContent = 'Hearing loss simulator: Lite';
+
+      // plainer one-line notes for the three sound choices
+      modeNotes.original = 'The recording with nothing changed.';
+      modeNotes.describe = 'The closest match to what people with implants describe: the sound is narrower and blurred.';
+      modeNotes.channels = 'Each switched-on electrode plays its own band of pitches. Try the electrode buttons below.';
+      showChoices();
+
+      // shorter words above the electrode buttons and under the picture
+      const arrayPanel = document.getElementById('eras').parentElement;
+      arrayPanel.querySelector('h2').textContent = 'How many electrodes?';
+      arrayPanel.querySelector('p').textContent = 'Each electrode handles one band of pitches. The most common implant today has 22. Try fewer, and listen to the electrode demonstration change.';
+      const legend = document.createElement('p');
+      legend.className = 'hint';
+      legend.style.cssText = 'text-align: center; margin: 8px auto 0 auto;';
+      legend.textContent = 'Click an electrode to hear its pitch. The numbers are in Hz (1.2k = 1,200). Teal electrodes are switched on, and glow yellow while their pitches sound. Dashed ones are switched off.';
+      // one short line saying what was just clicked
+      const liteInfo = document.createElement('p');
+      liteInfo.className = 'liteInfo';
+      arrayPanel.append(liteInfo, legend);
+      const plainBeep = beep;
+      beep = function (i) {
+        plainBeep(i);
+        const band = bandOf(i);
+        liteInfo.textContent = band ? 'Electrode ' + (i + 1) + ' plays about ' + longHz(Math.sqrt(band[0] * band[1])) + '.' : 'Electrode ' + (i + 1) + ' is switched off.';
+      };
+
+      // a way on to the full version
+      const deeper = document.createElement('p');
+      deeper.className = 'deeper';
+      deeper.innerHTML = '<a class="pageLink" href="cochlear-implant-simulator.html">Want to go deeper? Open the full version</a>';
+      arrayPanel.after(deeper);
+    }
   </script>
 
   <!-- THE BUILT-IN RECORDINGS are separate files that sit next to this page: story.mp3 and listening-tutorial.mp3 -->
