@@ -546,6 +546,7 @@
       <nav class="pageNav" aria-label="Other pages">
         <a class="pageLink" href="index.html" title="Back to the welcome page">&larr; Home</a>
         <a class="pageLink" href="cochlear-implant-simulator.html" title="Opens the other page: what a cochlear implant sounds like">Cochlear implant simulator</a>
+        <a class="pageLink" href="parts-of-the-ear.html" title="Opens a picture of the ear with labels you can switch on and off">Parts of the ear</a>
       </nav>
       <h1 id="pageTitle">Hearing Loss Simulator</h1>
     </div>
@@ -890,15 +891,7 @@
     <section>
       <h2>Parts of the ear and types of hearing loss</h2>
       <p>The type of hearing loss depends on which part of the ear is not working.</p>
-      <div class="earDiagram">
-        <img id="earImage" alt="Cross-section of the ear, divided into the outer ear, middle ear and inner ear">
-        <!-- These two bars line up with the dividing line between the middle ear and the inner ear in the picture -->
-        <div class="lossBars">
-          <div class="conductive" style="width: 57.75%;">Conductive hearing loss<span>outer ear and middle ear</span></div>
-          <div class="sensorineural" style="flex: 1;">Sensorineural hearing loss<span>inner ear and hearing nerve</span></div>
-        </div>
-      </div>
-      <p class="hint">Ear picture source: (add the credit for this picture here)</p>
+      <p><a class="pageLink" href="parts-of-the-ear.html">See the picture: Parts of the ear</a></p>
       <div class="earParts">
         <div>
           <h3>Outer ear</h3>
@@ -3190,12 +3183,11 @@
   </script>
 
   <!-- THE PICTURES AND RECORDINGS are separate files that sit next to this page:
-       audiogram-chart.jpg, ear-diagram.jpg, sample-conversation.mp3, listening-tutorial.mp3 and story.mp3 -->
+       audiogram-chart.jpg, sample-conversation.mp3, listening-tutorial.mp3 and story.mp3 -->
   <script>
     document.getElementById('guidedClip').src = 'listening-tutorial.mp3';
     document.getElementById('storyClip').src = 'story.mp3';
     document.getElementById('sampleClip').src = 'sample-conversation.mp3';
-    document.getElementById('earImage').src = 'ear-diagram.jpg';
     document.getElementById('chartImage').src = 'audiogram-chart.jpg';
   </script>
   <script>
