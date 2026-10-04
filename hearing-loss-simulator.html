@@ -472,7 +472,6 @@
     #sourceTabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     #sourceTabs span { grid-column: 1 / -1; margin: 0; font-size: 15px; }
     #sourceTabs button { border-radius: 12px !important; padding: 11px 8px; font-size: 15px; text-align: center; border-width: 2px; }
-    body.game #sourceTabs { grid-template-columns: repeat(3, 1fr); }
     .source   { margin-top: 12px; padding: 10px 14px 12px 14px; border-radius: 14px; border: 1px solid #ccc; }
     .soft .source, .dark .source { background: var(--page); border-color: var(--line); }
     .contrast .source { border: 2px solid #fff; }
@@ -546,7 +545,6 @@
     .dark .pageLink { color: var(--ink); background: var(--raised); }
     .contrast .pageLink { border: 2px solid #fff; color: #fff; }
     body.game .pageLink { display: none; }
-    body.game #sourceTabs button[data-source=builtin], body.game #source-builtin { display: none !important; }   /* the game has its own buttons for these */
     .source button.playing { background: var(--pink, #e6007e); color: #fff; border-color: var(--pink, #e6007e); }
     .dark .source button.playing { color: var(--page); }
     .contrast .source button.playing { background: #ffe600; color: #000; border-color: #ffe600; }
@@ -572,7 +570,38 @@
     .contrast #fontMenu { background: #000; color: #fff; border: 2px solid #fff; }
     .contrast #fontMenu button:hover, .contrast #fontMenu button:focus-visible { background: #333; }
     body.game .fontPick { display: none; }
-      /* The mystery game button stands out from the menus beside it */
+      /* THE GAMES */
+    .gameMenu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 8px 0 6px 0; }
+    @media (max-width: 760px) { .gameMenu { grid-template-columns: 1fr; } }
+    .mysteryBox .gameMenu button { text-align: left; padding: 10px 14px; margin: 0; border-radius: 14px !important; font-size: 16px; line-height: 1.3; }
+    .gameMenu button small { display: block; font-weight: 400; font-size: 13px; margin-top: 2px; }
+    .gamePrompt { font-size: 19px; font-weight: 800; margin: 10px 0 !important; }
+    .gameChoices { display: grid; gap: 8px; max-width: 640px; }
+    .mysteryBox .gameChoices button { text-align: left; padding: 9px 14px; margin: 0; font-size: 16px; border-radius: 12px !important; }
+    .gameChoices button:disabled { opacity: 1; cursor: default; }
+    .gameChoices button.right { outline: 3px solid #1a7f37; }
+    .gameChoices button.wrong { outline: 3px solid #c62828; }
+    .gameChoices button.right::after { content: '  \2713  Correct answer'; font-weight: 800; }
+    .gameChoices button.wrong::after { content: '  \2715  Your answer'; font-weight: 800; }
+    .gameScore { margin-left: 10px; font-weight: 800; }
+    .buildRules { margin: 6px 0; padding-left: 22px; }
+    .buildRules li { margin-bottom: 4px; }
+    .buildRules li.met::marker { content: '\2713  '; }
+    .buildRules li.unmet::marker { content: '\2715  '; }
+    .buildRules li.met { font-weight: 700; }
+    .keyRight { background: #d81e1e; color: #fff; padding: 0 5px; border-radius: 3px; font-weight: bold; }
+    .keyLeft  { background: #1565d8; color: #fff; padding: 0 5px; border-radius: 3px; font-weight: bold; }
+    .chart.locked .cap, .chart.locked .slot { pointer-events: none; }
+    /* On a wide screen the question sits beside the chart, so both can be seen without scrolling */
+    @media (min-width: 1100px) {
+      body.gameQuiet #readBox, body.gameQuiet #buildBox { float: left; width: 36%; box-sizing: border-box; margin-top: 0; }
+      body.gameQuiet .chartCard { overflow: hidden; margin-left: 37.5%; }
+      body.gameQuiet .chartCard ~ * { clear: both; }
+    }
+    /* Read the audiogram and Build it make no sound, so the sound boxes are put away */
+    body.gameQuiet .tone, body.gameQuiet .toneBracket, body.gameQuiet .toneCaption { display: none !important; }
+    body.gameQuiet .top, body.gameQuiet .soundPicture, body.gameQuiet .levelTag, body.gameQuiet .levelLine, body.gameQuiet #status { display: none !important; }
+    /* The mystery game button stands out from the menus beside it */
     #mysteryButton { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 18px 0 14px; font-size: 16px; font-weight: 800; cursor: pointer;
                      background: var(--accent, #e6007e); color: var(--onAccent, #fff); border: 2px solid var(--accent, #e6007e); border-radius: 999px !important;
                      box-shadow: 0 0 0 3px rgba(230, 0, 126, 0.25); }
@@ -611,7 +640,7 @@
         <div id="fontMenu" role="listbox" aria-labelledby="fontLabel" hidden></div>
       </div>
       <a class="helpButton" href="troubleshooting.html" title="Opens the troubleshooting page: what to try when something does not work"><svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3 17.8V21h3.2l6.3-6.3a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>Troubleshooting</a>
-      <button id="mysteryButton" title="Opens a guessing game in a new tab: the page picks a hidden hearing loss for students to work out by listening"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a2.9 2.9 0 1 1 4.2 2.6c-.9.5-1.4 1.1-1.4 2.1"/><path d="M12 17.3v.1"/></svg>Play the mystery game</button>
+      <button id="mysteryButton" title="Opens three games in a new tab: listen and guess a hidden hearing loss, read an audiogram, or build one"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.2 9.2a2.9 2.9 0 1 1 4.2 2.6c-.9.5-1.4 1.1-1.4 2.1"/><path d="M12 17.3v.1"/></svg>Play the games</button>
     </div>
   </div>
 
@@ -724,6 +753,37 @@
          Drag each one on its own. When they sit on the same spot, the X is on top: drag it away to reach the O.</p>
       <p class="hint"><b>Separate ear settings are meant to be used with headphones.</b> Through speakers, both ears hear both sides.</p>
     </div>
+  </div>
+
+  <!-- THE GAMES: three activities that share the chart. They show only in the game tab. -->
+  <div class="mysteryBox" id="gameMenu" hidden>
+    <p><b>Choose a game.</b></p>
+    <div class="gameMenu">
+      <button data-activity="listen"><b>Listen and guess</b><small>Hear a hidden hearing loss and work out which pitches are missing.</small></button>
+      <button data-activity="read"><b>Read the audiogram</b><small>Look at an audiogram and answer questions about what that person can hear.</small></button>
+      <button data-activity="build"><b>Build it</b><small>Read a description and drag the faders to make the audiogram.</small></button>
+    </div>
+  </div>
+
+  <div class="mysteryBox" id="readBox" hidden>
+    <p><b>Read the audiogram.</b> The chart below shows one person's hearing. The <span class="keyRight">red circles</span> are the right ear and the <span class="keyLeft">blue X's</span> are the left ear.
+       This person can hear sounds that are on or below their line (louder), and cannot hear sounds above it (softer).</p>
+    <p class="hint">An audiogram shows how loud a sound must be before a person can hear it. It does not show how clear speech sounds to them. Every question here is about hearing without hearing aids.</p>
+    <p class="hint" id="readCount"></p>
+    <p class="gamePrompt" id="readPrompt"></p>
+    <div class="gameChoices" id="readChoices"></div>
+    <p id="readWhy" aria-live="polite"></p>
+    <p><button id="readNext" hidden>Next question</button> <button id="readNewChart">New audiogram</button> <button class="leaveGame">Close the game</button>
+       <span class="gameScore" id="readScore"></span></p>
+  </div>
+
+  <div class="mysteryBox" id="buildBox" hidden>
+    <p><b>Build it.</b> Drag the faders on the chart to make the audiogram described here, then check your work.</p>
+    <p class="gamePrompt" id="buildPrompt"></p>
+    <ul class="buildRules" id="buildRules" hidden></ul>
+    <p id="buildResult" aria-live="polite"></p>
+    <p><button id="buildCheck">Check my audiogram</button> <button id="buildShow">Show me the answer</button> <button id="buildNew">New one to build</button> <button class="leaveGame">Close the game</button>
+       <span class="gameScore" id="buildScore"></span></p>
   </div>
 
   <!-- Mystery mode: appears in place of the preset buttons -->
@@ -1237,6 +1297,7 @@
     // The faders are split whenever "Separate ears" is chosen.
     let split = false;
     let dragActive = false;              // true while a fader is being dragged
+    let fadersLocked = false;            // true in the "Read the audiogram" game, where the chart is only for looking at
 
     const caps   = { left: [], right: [] };   // the fader caps on the chart, for each ear
 
@@ -1359,6 +1420,7 @@
 
     // Change one fader. "target" says which ear it changes: 'left', 'right' or 'both'.
     function setLoss(i, loss, target) {
+      if (fadersLocked) return;      // in "Read the audiogram" the chart cannot be changed
       const value = Math.max(0, Math.min(MAX_LOSS, loss));
       glideFrom = null;                                    // dragging a fader moves it at once
       if (target !== 'right') losses.left[i]  = value;
@@ -1666,7 +1728,7 @@
       // Separate ears: the menus are ignored, and the faders become the
       // audiogram's own marks, a red O (right ear) and a blue X (left ear).
       chart.className = 'chart ' + (split ? 'split' : faderShape.value) + (softPicture.checked ? ' soft' : '')
-                      + (mysteryHidden ? ' mystery' : '');
+                      + (mysteryHidden ? ' mystery' : '') + (fadersLocked ? ' locked' : '');
 
       const color = FADER_COLORS[faderColor.value];
       FREQS.forEach((freq, i) => {
@@ -3180,14 +3242,309 @@
       }
     };
 
+    // ================= THE GAMES =================
+    // Three activities share the chart in the game tab:
+    //   listen = the mystery game above (hear a hidden loss, name it)
+    //   read   = an audiogram is shown and the student answers questions about it
+    //   build  = a description is given and the student drags the faders to match it
+    const gameMenu = document.getElementById('gameMenu'), readBox = document.getElementById('readBox'), buildBox = document.getElementById('buildBox');
+    let activity = 'listen';
+    const degreeNameOf = (loss) => loss <= 20 ? 'Normal' : loss <= 40 ? 'Mild' : loss <= 70 ? 'Moderate' : loss <= 90 ? 'Severe' : 'Profound';
+    const mixed = (list) => { const copy = list.slice(); for (let at = copy.length - 1; at > 0; at--) { const swap = Math.floor(Math.random() * (at + 1)); [copy[at], copy[swap]] = [copy[swap], copy[at]]; } return copy; };
+    const flat = (loss) => FREQS.map(() => loss);
+    // Where an ear's line is at any pitch: a straight line between the two nearest faders, as it is drawn on the chart
+    function lineAt(freq, values) {
+      const last = FREQS.length - 1;
+      if (freq <= FREQS[0]) return values[0];
+      if (freq >= FREQS[last]) return values[last];
+      for (let at = 0; at < last; at++) {
+        if (freq <= FREQS[at + 1]) return values[at] + (freq - FREQS[at]) / (FREQS[at + 1] - FREQS[at]) * (values[at + 1] - values[at]);
+      }
+    }
+
+    // The audiograms used in "Read the audiogram". Both ears are always drawn. The two ears differ a little, as real ears do.
+    const nudge = (values, changes) => values.map((loss, at) => Math.max(0, loss + changes[at]));
+    const SMALL = [0, 5, 0, -5, 0, 5, 0, -5];
+    const AUDIOGRAMS = [
+      { name: 'Normal hearing',  kind: 'degree', right: flat(5),   left: nudge(flat(10), SMALL) },
+      { name: 'Mild loss',       kind: 'degree', right: flat(30),  left: nudge(flat(30), SMALL) },
+      { name: 'Moderate loss',   kind: 'degree', right: flat(55),  left: nudge(flat(55), SMALL) },
+      { name: 'Severe loss',     kind: 'degree', right: flat(80),  left: nudge(flat(80), SMALL) },
+      { name: 'Profound loss',   kind: 'degree', right: flat(105), left: nudge(flat(105), SMALL) },
+      { name: 'High-frequency loss', kind: 'shape', right: SHAPES['High-frequency loss'], left: nudge(SHAPES['High-frequency loss'], SMALL) },
+      { name: 'Ski slope',           kind: 'shape', right: SHAPES['Ski slope'],           left: nudge(SHAPES['Ski slope'], SMALL) },
+      { name: 'Noise-induced notch', kind: 'shape', right: SHAPES['Noise-induced notch'], left: nudge(SHAPES['Noise-induced notch'], SMALL) },
+      { name: 'Low-frequency loss',  kind: 'shape', right: SHAPES['Low-frequency loss'],  left: nudge(SHAPES['Low-frequency loss'], SMALL) },
+      { name: 'Cookie bite',         kind: 'shape', right: SHAPES['Cookie bite'],         left: nudge(SHAPES['Cookie bite'], SMALL) },
+      { name: 'Reverse cookie bite', kind: 'shape', right: SHAPES['Reverse cookie bite'], left: nudge(SHAPES['Reverse cookie bite'], SMALL) },
+      { name: 'Single-sided deafness (left ear)',  kind: 'oneSide', deaf: 'left',  right: flat(5),   left: flat(105) },
+      { name: 'Single-sided deafness (right ear)', kind: 'oneSide', deaf: 'right', right: flat(105), left: flat(5) }
+    ];
+    const SHAPE_HINTS = {
+      'High-frequency loss': 'The line is near the top at the low pitches and drops as the pitch gets higher.',
+      'Ski slope': 'The line starts near the top, then falls steeply through the middle pitches and stays very low at the high pitches.',
+      'Noise-induced notch': 'The line is near the top except for one dip around 4000 Hz, and it comes back up at 8000 Hz.',
+      'Low-frequency loss': 'The line is low at the low pitches and rises toward the top as the pitch gets higher.',
+      'Cookie bite': 'The line dips in the middle pitches and is better at both ends, like a bite out of a cookie.',
+      'Reverse cookie bite': 'The line is best in the middle pitches and worse at both the low and the high ends.'
+    };
+
+    // Sounds pictured on the chart, read off the chart itself: about where each one sits (pitch in Hz, loudness in dB).
+    // Only sounds at 8000 Hz or lower are used, because that is where the faders are.
+    const CHART_SOUNDS = [
+      { name: 'whispering', hz: 4400, level: 10 },          { name: 'a bird chirping', hz: 8000, level: 5 },
+      { name: 'a baby crying', hz: 1300, level: 50 },       { name: 'people talking', hz: 5200, level: 50 },
+      { name: 'a dog barking', hz: 650, level: 65 },        { name: 'a phone ringing', hz: 2800, level: 60 },
+      { name: 'a vacuum cleaner', hz: 5200, level: 65 },    { name: 'a lawnmower', hz: 800, level: 80 },
+      { name: 'a leaf blower', hz: 2850, level: 80 },       { name: 'a chainsaw', hz: 5400, level: 80 },
+      { name: 'fireworks', hz: 1550, level: 105 },          { name: 'a jackhammer', hz: 3600, level: 100 },
+      { name: 'a siren', hz: 5200, level: 100 },
+      { name: 'the speech sounds "f" and "s"', hz: 8000, level: 25, speech: true },
+      { name: 'the speech sounds "m", "d" and "b"', hz: 1900, level: 25, speech: true },
+      { name: 'the speech sounds "a" and "o"', hz: 4000, level: 35, speech: true }
+    ];
+    const CLEAR_GAP = 10;      // a sound is only asked about when it is at least this many dB above or below the person's line
+
+    // Every question that fits one audiogram
+    function questionsFor(gram) {
+      const list = [];
+      const add = (prompt, choices, answer, why) => list.push({ prompt: prompt, choices: choices, answer: answer, why: why });
+      const earWords = { right: 'right ear (red circles)', left: 'left ear (blue X\'s)' };
+
+      // What does it show?
+      if (gram.kind === 'degree') {
+        add('How much hearing loss does this audiogram show?', ['Normal hearing', 'Mild loss', 'Moderate loss', 'Severe loss', 'Profound loss'], gram.name,
+            'Both lines sit in the ' + gram.name.split(' ')[0].toLowerCase() + ' band of the chart at every pitch. A line that stays at about the same level is called a flat loss.');
+      } else if (gram.kind === 'shape') {
+        const others = mixed(Object.keys(SHAPE_HINTS).filter((name) => name !== gram.name)).slice(0, 3);
+        add('Which shape of hearing loss does this audiogram show?', mixed([gram.name].concat(others)), gram.name, SHAPE_HINTS[gram.name]);
+      } else {
+        add('What does this audiogram show?', ['Single-sided deafness (left ear)', 'Single-sided deafness (right ear)', 'Normal hearing in both ears', 'Profound loss in both ears'], gram.name,
+            'One ear\'s line is near the top (normal hearing) and the other ear\'s line is at the bottom (profound loss). The ' + (gram.deaf === 'left' ? 'blue X\'s (left ear)' : 'red circles (right ear)') + ' are the ones at the bottom.');
+      }
+
+      // Reading a number off the chart
+      const readEar = Math.random() < 0.5 ? 'right' : 'left';
+      const readFreq = [500, 1000, 2000, 4000][Math.floor(Math.random() * 4)];
+      const value = gram[readEar][FREQS.indexOf(readFreq)];
+      const numbers = [value, value + 15, value - 15, value + 30, value - 30, value + 45].filter((loss) => loss >= 0 && loss <= 120).slice(0, 4).sort((first, second) => first - second);
+      add('What is the threshold of the ' + earWords[readEar] + ' at ' + readFreq.toLocaleString() + ' Hz?', numbers.map((loss) => loss + ' dB'), value + ' dB',
+          'Find ' + readFreq.toLocaleString() + ' Hz along the top of the chart, go down to the ' + (readEar === 'right' ? 'red circle' : 'blue X') + ', and read across to the numbers on the left: ' + value + ' dB. The threshold is the softest sound that ear can hear at that pitch.');
+
+      // How much loss at one pitch
+      const degreeFreq = [250, 1000, 4000, 8000][Math.floor(Math.random() * 4)], degreeEar = Math.random() < 0.5 ? 'right' : 'left';
+      const degreeValue = gram[degreeEar][FREQS.indexOf(degreeFreq)];
+      if ([20, 40, 70, 90].indexOf(degreeValue) < 0) {
+        add('At ' + degreeFreq.toLocaleString() + ' Hz, how much hearing loss does the ' + earWords[degreeEar] + ' have?', ['Normal', 'Mild', 'Moderate', 'Severe', 'Profound'], degreeNameOf(degreeValue),
+            'At ' + degreeFreq.toLocaleString() + ' Hz that ear\'s mark is at ' + degreeValue + ' dB, which is in the ' + degreeNameOf(degreeValue).toLowerCase() + ' band. The bands are: normal 0 to 20, mild 21 to 40, moderate 41 to 70, severe 71 to 90, profound 91 to 120.');
+      }
+
+      // Which ear is better?
+      const average = (values) => values.reduce((sum, loss) => sum + loss, 0) / values.length;
+      const gap = average(gram.left) - average(gram.right);
+      const better = Math.abs(gap) < 15 ? 'About the same' : gap > 0 ? 'The right ear' : 'The left ear';
+      add('Which ear hears better?', ['The right ear', 'The left ear', 'About the same'], better,
+          better === 'About the same' ? 'The red circles and the blue X\'s are close together at every pitch, so the two ears hear about the same.'
+            : 'The better ear is the one whose marks are higher on the chart, because higher means it can hear softer sounds. Here that is ' + better.toLowerCase() + '.');
+
+      // The symbols
+      const symbolEar = Math.random() < 0.5 ? 'left' : 'right';
+      add('On an audiogram, which symbol shows the ' + symbolEar + ' ear?', ['A red circle', 'A blue X'], symbolEar === 'right' ? 'A red circle' : 'A blue X',
+          'The right ear is drawn with red circles and the left ear with blue X\'s.');
+
+      // Sounds pictured on the chart: is the sound clearly below one ear's line (heard) or clearly above it (not heard)?
+      mixed(CHART_SOUNDS).forEach((sound) => {
+        // Each question names one ear, because the two ears can give different answers (single-sided deafness is the clearest case)
+        ['right', 'left'].forEach((side) => {
+          const line = lineAt(sound.hz, gram[side]);
+          if (Math.abs(sound.level - line) < CLEAR_GAP) return;
+          const heard = sound.level > line, shown = Math.round(line / 5) * 5, mark = side === 'right' ? 'red circles' : 'blue X\'s';
+          add('On this chart, ' + sound.name + (sound.speech ? ', said at a normal speaking level, sit' : ' sits') + ' at about ' + sound.hz.toLocaleString() + ' Hz and ' + sound.level + ' dB. Is this person likely to hear '
+                + (sound.speech ? 'them' : 'it') + ' in their ' + side + ' ear?', ['Likely', 'Unlikely'], heard ? 'Likely' : 'Unlikely',
+              'At ' + sound.hz.toLocaleString() + ' Hz the ' + side + ' ear (' + mark + ') is at about ' + shown + ' dB. The sound is at ' + sound.level + ' dB, which is '
+                + (heard ? 'below that ear\'s line (louder than the softest sound it can hear), so they are likely to hear it in that ear.' : 'above that ear\'s line (softer than the softest sound it can hear), so they are unlikely to hear it in that ear.'));
+        });
+      });
+
+      // One hearing ear
+      if (gram.kind === 'oneSide') {
+        const good = gram.deaf === 'left' ? 'right' : 'left';
+        add('A friend wants this person to hear them as well as possible. Which side should the friend sit on?', ['The person\'s right side', 'The person\'s left side', 'It makes no difference'], 'The person\'s ' + good + ' side',
+            'The ' + good + ' ear is the one with normal hearing, so a voice on that side reaches the hearing ear directly.');
+        add('Is this person likely to have trouble telling which direction a sound is coming from?', ['Likely', 'Unlikely'], 'Likely',
+            'The brain compares what the two ears hear to work out where a sound is. With only one hearing ear there is nothing to compare.');
+      }
+      return list;
+    }
+
+    // ----- Read the audiogram -----
+    const QUESTIONS_PER_CHART = 4;
+    let gram = null, readQueue = [], readAsked = 0, readRight = 0, readTotal = 0;
+    function newReadChart() {
+      let pick;
+      do { pick = pickFrom(AUDIOGRAMS); } while (pick === gram);
+      gram = pick;
+      const all = questionsFor(gram);
+      readQueue = [all[0]].concat(mixed(all.slice(1)).slice(0, QUESTIONS_PER_CHART - 1));     // the "what does it show" question, then three others
+      readAsked = 0;
+      ear = 'separate';
+      clearChosen();
+      setEarValues('left', gram.left);
+      setEarValues('right', gram.right);
+      showEar();
+      fadersChanged();
+      nextReadQuestion();
+    }
+    function nextReadQuestion() {
+      if (!readQueue.length) return newReadChart();
+      const item = readQueue.shift();
+      readAsked++;
+      document.getElementById('readCount').textContent = 'Question ' + readAsked + ' of ' + QUESTIONS_PER_CHART + ' about this audiogram';
+      document.getElementById('readPrompt').textContent = item.prompt;
+      document.getElementById('readWhy').textContent = '';
+      document.getElementById('readNext').hidden = true;
+      const holder = document.getElementById('readChoices');
+      holder.innerHTML = '';
+      item.choices.forEach((choice) => {
+        const button = document.createElement('button');
+        button.textContent = choice;
+        button.onclick = () => {
+          const good = choice === item.answer;
+          readTotal++; if (good) readRight++;
+          holder.querySelectorAll('button').forEach((other) => {
+            other.disabled = true;
+            if (other.textContent === item.answer) other.classList.add('right');
+            else if (other.textContent === choice) other.classList.add('wrong');
+          });
+          document.getElementById('readWhy').innerHTML = '<b>' + (good ? 'Correct.' : 'Not quite.') + '</b> ' + item.why;
+          document.getElementById('readScore').textContent = 'Score: ' + readRight + ' of ' + readTotal;
+          const next = document.getElementById('readNext');
+          next.textContent = readQueue.length ? 'Next question' : 'Next audiogram';
+          next.hidden = false; next.focus();
+        };
+        holder.append(button);
+      });
+    }
+    document.getElementById('readNext').onclick = nextReadQuestion;
+    document.getElementById('readNewChart').onclick = newReadChart;
+
+    // ----- Build it -----
+    // Each target is a description and a list of rules. A rule is met when every listed pitch is inside the range.
+    const within = (values, freqs, low, high) => freqs.every((freq) => { const loss = values[FREQS.indexOf(freq)]; return loss >= low && loss <= high; });
+    const LOW = [250, 500], MIDDLE = [1000, 2000, 3000], HIGH = [6000, 8000];
+    const flatTarget = (name, low, high) => ({ name: 'Build a flat ' + name + ' hearing loss in both ears.', rules: [
+      { text: 'Every pitch is in the ' + name + ' band (' + low + ' to ' + high + ' dB).', test: (right) => within(right, FREQS, low, high) } ] });
+    const BUILDS = [
+      { name: 'Build normal hearing in both ears.', rules: [ { text: 'Every pitch is in the normal band (0 to 20 dB).', test: (right) => within(right, FREQS, 0, 20) } ] },
+      flatTarget('mild', 21, 40), flatTarget('moderate', 41, 70), flatTarget('severe', 71, 90), flatTarget('profound', 91, 120),
+      { name: 'Build a high-frequency loss: low pitches are heard well, and high pitches are lost.', rules: [
+        { text: 'The low pitches (250 and 500 Hz) are in the normal band (0 to 20 dB).', test: (right) => within(right, LOW, 0, 20) },
+        { text: 'The high pitches (6000 and 8000 Hz) are at 50 dB or more.', test: (right) => within(right, HIGH, 50, 120) },
+        { text: 'The line never rises as the pitch gets higher.', test: (right) => right.every((loss, at) => at === 0 || loss >= right[at - 1]) } ] },
+      { name: 'Build a low-frequency loss: high pitches are heard well, and low pitches are lost.', rules: [
+        { text: 'The high pitches (6000 and 8000 Hz) are in the normal band (0 to 20 dB).', test: (right) => within(right, HIGH, 0, 20) },
+        { text: 'The low pitches (250 and 500 Hz) are at 50 dB or more.', test: (right) => within(right, LOW, 50, 120) },
+        { text: 'The line never drops as the pitch gets higher.', test: (right) => right.every((loss, at) => at === 0 || loss <= right[at - 1]) } ] },
+      { name: 'Build a cookie bite: the middle pitches are lost, and both ends are heard better.', rules: [
+        { text: 'The lowest pitch (250 Hz) and the highest pitch (8000 Hz) are between 0 and 25 dB.', test: (right) => within(right, [250, 8000], 0, 25) },
+        { text: 'The middle pitches (1000, 2000 and 3000 Hz) are at 45 dB or more.', test: (right) => within(right, MIDDLE, 45, 120) } ] },
+      { name: 'Build a reverse cookie bite: the middle pitches are heard well, and both ends are lost.', rules: [
+        { text: 'The middle pitches (2000 and 3000 Hz) are in the normal band (0 to 20 dB).', test: (right) => within(right, [2000, 3000], 0, 20) },
+        { text: 'The lowest pitch (250 Hz) and the highest pitch (8000 Hz) are at 45 dB or more.', test: (right) => within(right, [250, 8000], 45, 120) } ] },
+      { name: 'Build a noise-induced notch: hearing is normal except for a dip around 4000 Hz.', rules: [
+        { text: 'The pitches from 250 to 2000 Hz are in the normal band (0 to 20 dB).', test: (right) => within(right, [250, 500, 1000, 2000], 0, 20) },
+        { text: '4000 Hz is at 45 dB or more.', test: (right) => within(right, [4000], 45, 120) },
+        { text: '8000 Hz is at least 20 dB better (a smaller number) than 4000 Hz.', test: (right) => right[FREQS.indexOf(4000)] - right[FREQS.indexOf(8000)] >= 20 } ] },
+      { name: 'Build a ski slope: low pitches are heard well, then the line falls steeply and the high pitches are very poor.', rules: [
+        { text: 'The low pitches (250 and 500 Hz) are in the normal band (0 to 20 dB).', test: (right) => within(right, LOW, 0, 20) },
+        { text: 'The pitches from 3000 to 8000 Hz are at 70 dB or more.', test: (right) => within(right, [3000, 4000, 6000, 8000], 70, 120) } ] },
+      { name: 'Build single-sided deafness in the left ear: the right ear is normal and the left ear is profoundly deaf.', twoEars: true, rules: [
+        { text: 'Every red circle (right ear) is in the normal band (0 to 20 dB).', test: (right) => within(right, FREQS, 0, 20) },
+        { text: 'Every blue X (left ear) is in the profound band (91 to 120 dB).', test: (right, left) => within(left, FREQS, 91, 120) } ] },
+      { name: 'Build single-sided deafness in the right ear: the left ear is normal and the right ear is profoundly deaf.', twoEars: true, rules: [
+        { text: 'Every blue X (left ear) is in the normal band (0 to 20 dB).', test: (right, left) => within(left, FREQS, 0, 20) },
+        { text: 'Every red circle (right ear) is in the profound band (91 to 120 dB).', test: (right) => within(right, FREQS, 91, 120) } ] }
+    ];
+    // One audiogram that fits each target, for the "Show me the answer" button. Many others would fit too.
+    const BUILD_ANSWERS = {
+      'normal hearing':   { right: flat(10) },      'flat mild':     { right: flat(30) },   'flat moderate': { right: flat(55) },
+      'flat severe':      { right: flat(80) },      'flat profound': { right: flat(105) },
+      'high-frequency':   { right: SHAPES['High-frequency loss'] },    'low-frequency': { right: SHAPES['Low-frequency loss'] },
+      'reverse cookie':   { right: [50, 40, 25, 10, 10, 20, 40, 50] }, 'a cookie bite': { right: SHAPES['Cookie bite'] },
+      'notch':            { right: [10, 10, 10, 15, 35, 55, 40, 20] }, 'ski slope':     { right: SHAPES['Ski slope'] },
+      'in the left ear':  { right: flat(5), left: flat(105) },         'in the right ear': { right: flat(105), left: flat(5) }
+    };
+    const answerFor = (target) => BUILD_ANSWERS[Object.keys(BUILD_ANSWERS).find((key) => target.name.indexOf(key) >= 0)];
+    let build = null, buildRight = 0, buildTotal = 0, buildCounted = false;
+    function newBuild() {
+      let pick;
+      do { pick = pickFrom(BUILDS); } while (pick === build);
+      build = pick; buildCounted = false;
+      ear = build.twoEars ? 'separate' : 'both';
+      clearChosen();
+      const start = build.name.indexOf('normal hearing') >= 0 ? 40 : 0;       // start somewhere that is not already the answer
+      setEarValues('left', flat(start));
+      setEarValues('right', flat(start));
+      showEar();
+      fadersChanged();
+      document.getElementById('buildPrompt').textContent = build.name + (build.twoEars ? ' Each pitch has two faders here: a red circle and a blue X.' : '');
+      document.getElementById('buildRules').innerHTML = build.rules.map((rule) => '<li>' + rule.text + '</li>').join('');
+      document.getElementById('buildRules').hidden = true;      // the checklist is a hint: it only appears after a check that did not match
+      document.getElementById('buildResult').textContent = '';
+    }
+    document.getElementById('buildCheck').onclick = () => {
+      const met = build.rules.map((rule) => rule.test(losses.right, losses.left));
+      document.querySelectorAll('#buildRules li').forEach((line, at) => { line.className = met[at] ? 'met' : 'unmet'; });
+      const all = met.every((good) => good);
+      document.getElementById('buildRules').hidden = all;
+      if (!buildCounted) { buildTotal++; if (all) buildRight++; buildCounted = true; }       // only the first check of each one counts
+      document.getElementById('buildScore').textContent = 'Right on the first check: ' + buildRight + ' of ' + buildTotal;
+      document.getElementById('buildResult').innerHTML = all ? '<b>That matches.</b> Click "New one to build" for another.'
+        : '<b>Not yet. Try again.</b> The checklist above shows what this audiogram needs. Lines marked with an X are not met yet. A bigger number means more hearing loss, and it is lower on the chart. Move the faders and check again.';
+    };
+    document.getElementById('buildNew').onclick = newBuild;
+    // Show me the answer: the faders slide to one audiogram that fits, and the checklist shows why. It does not count as right.
+    document.getElementById('buildShow').onclick = () => {
+      const answer = answerFor(build);
+      setEarValues('right', answer.right);
+      setEarValues('left', answer.left || answer.right);
+      showEar();
+      fadersChanged();
+      if (!buildCounted) { buildTotal++; buildCounted = true; }
+      document.getElementById('buildScore').textContent = 'Right on the first check: ' + buildRight + ' of ' + buildTotal;
+      document.getElementById('buildRules').hidden = false;
+      document.querySelectorAll('#buildRules li').forEach((line) => { line.className = 'met'; });
+      document.getElementById('buildResult').innerHTML = '<b>Here is one audiogram that fits.</b> The checklist above shows what makes it fit. Other audiograms would fit too.';
+    };
+
+    // ----- Switching between the three games -----
+    function showActivity(name) {
+      activity = name;
+      gameMenu.querySelectorAll('button').forEach((button) => button.classList.toggle('playing', button.dataset.activity === name));
+      [voices.guided.clip, voices.story.clip, player].forEach((clip) => { if (clip && !clip.paused) clip.pause(); });
+      document.body.classList.toggle('gameQuiet', name !== 'listen');
+      mysteryBox.hidden = name !== 'listen';
+      readBox.hidden = name !== 'read';
+      buildBox.hidden = name !== 'build';
+      fadersLocked = name === 'read';
+      if (name === 'listen') { newMystery(); return; }
+      mysteryHidden = false;
+      presetGroups.hidden = true;
+      if (name === 'read') newReadChart(); else newBuild();
+    }
+    gameMenu.querySelectorAll('button').forEach((button) => { button.onclick = () => showActivity(button.dataset.activity); });
+    document.querySelectorAll('.leaveGame').forEach((button) => { button.onclick = leaveMystery; });
+
     // Draw everything once at the start
     useSavedSetup();
     if (GAME) {
       document.body.classList.add('game');
-      showSource('file');     // the game has its own buttons for the built-in recordings
-      document.title = 'Mystery Hearing Loss Game';
-      document.getElementById('pageTitle').textContent = 'Mystery Hearing Loss Game';
-      newMystery();
+      showSource('builtin');  // the game starts on the built-in recordings, the same as the simulator
+      document.title = 'Hearing Loss Games';
+      document.getElementById('pageTitle').textContent = 'Hearing Loss Games';
+      document.querySelector('.top').before(gameMenu);     // the choice of game goes at the very top
+      gameMenu.hidden = false;
+      showActivity('listen');
     }
     showEar();
     showChosen();
