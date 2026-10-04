@@ -142,6 +142,11 @@
     body.lite .jump, body.lite #sourceTabs, body.lite #source-file, body.lite #source-youtube, body.lite #source-mic, body.lite #source-story .hint,
     body.lite #player, body.lite .arrayNotes, body.lite #eraNote, body.lite .backUp, body.lite #status,
     body.lite .panel:has(#eras) ~ .panel { display: none !important; }
+    .liteStep { font-size: 20px; font-weight: 800; margin: 0 0 8px 0; }
+    .liteNote { margin: 8px 0 0 0; }
+    body.lite #source-story button { border-color: var(--accent); }
+    body.lite #source-story button::before { content: '\25B6'; margin-right: 10px; font-size: 0.85em; }
+    body.lite #source-story button.playing::before { content: '\275A\275A'; letter-spacing: 1px; }
     .liteInfo { text-align: center; font-weight: 700; min-height: 24px; margin: 6px auto 0 auto; }
     body.lite .top { align-items: center; }
     body.lite .top .panel { border: none; background: none; box-shadow: none; padding: 0; }
@@ -1774,6 +1779,17 @@
       other.href = 'hearing-loss-lite.html';
       other.textContent = 'Hearing loss simulator: Lite';
 
+      // Numbered headings, so it is clear where to start
+      const stepOne = document.createElement('h2');
+      stepOne.className = 'liteStep';
+      stepOne.textContent = '1. Choose a recording to play';
+      document.getElementById('source-story').before(stepOne);
+      const lengths = document.createElement('p');
+      lengths.className = 'hint liteNote';
+      lengths.textContent = 'The story is 45 seconds. The listening tutorial is about 2 minutes and walks through low, middle and high speech sounds.';
+      document.getElementById('source-story').after(lengths);
+      document.querySelector('#modeButtons b').outerHTML = '<h2 class="liteStep" style="flex-basis: 100%;">2. Choose how to hear it</h2>';
+
       // plainer one-line notes for the three sound choices
       modeNotes.original = 'The recording with nothing changed.';
       modeNotes.describe = 'The closest match to what people with implants describe: the sound is narrower and blurred.';
@@ -1782,7 +1798,7 @@
 
       // shorter words above the electrode buttons and under the picture
       const arrayPanel = document.getElementById('eras').parentElement;
-      arrayPanel.querySelector('h2').textContent = 'How many electrodes?';
+      arrayPanel.querySelector('h2').textContent = '3. Choose how many electrodes';
       arrayPanel.querySelector('p').textContent = 'Each electrode handles one band of pitches. The most common implant today has 22. Try fewer, and listen to the electrode demonstration change.';
       const legend = document.createElement('p');
       legend.className = 'hint';
