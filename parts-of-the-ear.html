@@ -61,7 +61,6 @@
     .contrast .switch span::after { top: 1px; }
     .contrast .switch input:checked + span::after { background: #000; }
     @media (prefers-reduced-motion: reduce) { .switch span, .switch span::after { transition: none; } }
-    .single select { max-width: 70%; }
     .single   { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 5px 0; font-weight: 700; }
     .quick    { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
   </style>
@@ -71,8 +70,6 @@
     <div class="titleSide">
       <nav class="pageNav" aria-label="Other pages">
         <a class="pageLink" href="index.html" title="Back to the welcome page">&larr; Home</a>
-        <a class="pageLink" href="hearing-loss-simulator.html" title="Opens the page that plays what different hearing losses sound like">Hearing loss simulator</a>
-        <a class="pageLink" href="cochlear-implant-simulator.html" title="Opens the page that plays what a cochlear implant sounds like">Cochlear implant simulator</a>
       </nav>
       <h1>Parts of the Ear</h1>
     </div>
@@ -97,45 +94,37 @@
       <!-- View 1: the parts of the ear -->
       <div id="view-parts">
         <div class="rows">
-          <span></span><span class="head">Blank labels</span><span class="head">Names</span>
+          <span></span><span class="head">Boxes and lines</span><span class="head">Names</span>
 
           <span class="part"><span class="chip" style="background: #b3d4a5;"></span>Outer ear</span>
-          <label class="switch"><input type="checkbox" id="outer-boxes" aria-label="Outer ear blank labels"><span></span></label>
+          <label class="switch"><input type="checkbox" id="outer-boxes" aria-label="Outer ear boxes and lines"><span></span></label>
           <label class="switch"><input type="checkbox" id="outer-names" aria-label="Outer ear names"><span></span></label>
 
           <span class="part"><span class="chip" style="background: #97cbea;"></span>Middle ear</span>
-          <label class="switch"><input type="checkbox" id="middle-boxes" aria-label="Middle ear blank labels"><span></span></label>
+          <label class="switch"><input type="checkbox" id="middle-boxes" aria-label="Middle ear boxes and lines"><span></span></label>
           <label class="switch"><input type="checkbox" id="middle-names" aria-label="Middle ear names"><span></span></label>
 
           <span class="part"><span class="chip" style="background: #d6c5fd;"></span>Inner ear</span>
-          <label class="switch"><input type="checkbox" id="inner-boxes" aria-label="Inner ear blank labels"><span></span></label>
+          <label class="switch"><input type="checkbox" id="inner-boxes" aria-label="Inner ear boxes and lines"><span></span></label>
           <label class="switch"><input type="checkbox" id="inner-names" aria-label="Inner ear names"><span></span></label>
         </div>
-        <p class="hint">Names always come with their labels. Keep the labels blank to test yourself.</p>
+        <p class="hint">Names always come with their boxes. Turn the names off and keep the boxes to test yourself.</p>
         <div class="quick">
           <button id="showAll">Show everything</button>
-          <button id="quizMe">Blank labels (quiz me)</button>
+          <button id="quizMe">Boxes only (quiz me)</button>
           <button id="hideAll">Just the ear</button>
-        </div>
-        <p class="hint" style="margin: 14px 0 0 0;">One at a time:</p>
-        <div class="quick" style="margin-top: 6px;">
-          <button data-only="outer">Outer only</button>
-          <button data-only="middle">Middle only</button>
-          <button data-only="inner">Inner only</button>
         </div>
       </div>
 
       <!-- View 2: the types of hearing loss -->
       <div id="view-loss" hidden>
-        <label class="single">Split into
-          <select id="lossChoice">
-            <option value="two">2 types</option>
-            <option value="three">3 types</option>
-          </select>
-        </label>
-        <label class="single">Color zones <span class="switch"><input type="checkbox" id="loss-areas" checked><span></span></span></label>
-        <label class="single">Titles <span class="switch"><input type="checkbox" id="loss-titles"><span></span></span></label>
-        <label class="single">Descriptions <span class="switch"><input type="checkbox" id="loss-notes"><span></span></span></label>
+        <div class="tiles" id="lossTiles">
+          <button data-loss="two">Two types</button>
+          <button data-loss="three">Three types</button>
+        </div>
+        <label class="single">Colored areas <span class="switch"><input type="checkbox" id="loss-areas" checked><span></span></span></label>
+        <label class="single">Titles <span class="switch"><input type="checkbox" id="loss-titles" checked><span></span></span></label>
+        <label class="single">Descriptions <span class="switch"><input type="checkbox" id="loss-notes" checked><span></span></span></label>
       </div>
     </div>
 
@@ -189,6 +178,7 @@
     function show() {
       const parts = view === 'parts';
       document.querySelectorAll('#viewTiles button').forEach((b) => b.classList.toggle('on', b.dataset.view === view));
+      document.querySelectorAll('#lossTiles button').forEach((b) => b.classList.toggle('on', b.dataset.loss === loss));
       box('view-parts').hidden = !parts;
       box('view-loss').hidden = parts;
 
@@ -218,21 +208,9 @@
     box('quizMe').onclick  = () => setAll(true, false);
     box('hideAll').onclick = () => setAll(false, false);
 
-    // One at a time: show only this part. Its names show too if any names were showing before.
-    document.querySelectorAll('[data-only]').forEach((b) => {
-      b.onclick = () => {
-        const names = PARTS.some((part) => box(part + '-names').checked);
-        PARTS.forEach((part) => {
-          box(part + '-boxes').checked = part === b.dataset.only;
-          box(part + '-names').checked = part === b.dataset.only && names;
-        });
-        show();
-      };
-    });
-
     ['loss-areas', 'loss-titles', 'loss-notes'].forEach((id) => { box(id).onchange = show; });
     document.querySelectorAll('#viewTiles button').forEach((b) => { b.onclick = () => { view = b.dataset.view; show(); }; });
-    box('lossChoice').onchange = () => { loss = box('lossChoice').value; show(); };
+    document.querySelectorAll('#lossTiles button').forEach((b) => { b.onclick = () => { loss = b.dataset.loss; show(); }; });
 
     // ---------- COLORS AND TEXT SIZE (shared with the other pages) ----------
     const themeChoice = box('themeChoice'), textChoice = box('textChoice');
@@ -250,8 +228,8 @@
     if (!themeChoice.value) themeChoice.value = 'dark';
     showLook();
 
-    // ---------- START: boxes and colored areas, but no words. People switch on more from there. ----------
-    setAll(true, false);
+    // ---------- START: the ear with everything labeled ----------
+    setAll(true, true);
   </script>
 </body>
 </html>
