@@ -63,6 +63,17 @@
     @media (prefers-reduced-motion: reduce) { .switch span, .switch span::after { transition: none; } }
     .single select { max-width: 70%; }
     .single   { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 5px 0; font-weight: 700; }
+    /* What each part does: three cards to study from */
+    .study    { margin-top: 16px; }
+    .study h2 { font-size: 22px; font-weight: 800; margin: 0 0 10px 0; }
+    .jobs     { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+    .jobs > div { background: var(--raised); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; }
+    .jobs h3  { font-size: 18px; font-weight: 800; margin: 0 0 6px 0; display: flex; align-items: center; gap: 8px; }
+    .jobs dl  { margin: 0; }
+    .jobs dt  { font-weight: 800; margin-top: 10px; }
+    .jobs dd  { margin: 0; }
+    .study a  { color: var(--accent); }
+    .contrast .jobs > div { border-width: 2px; }
     .quick    { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
   </style>
 </head>
@@ -160,6 +171,54 @@
         <img id="img-loss-three-notes"  alt="Conductive hearing loss is caused by a structural or mechanical blockage of the hearing system. Sensory hearing loss is caused by damage to the microscopic cellular processors of the inner ear; this could impact the cochlea and/or stereocilia. Neural hearing loss is caused by damage to neural pathways of the hearing system; this impacts the vestibulocochlear nerve (cranial nerve VIII)." hidden>
       </div>
     </div>
+  </div>
+
+  <!-- WHAT EACH PART DOES: the definitions to study. The Ear Quiz page asks about these. -->
+  <div class="panel study" id="study">
+    <h2>What each part does</h2>
+    <div class="jobs">
+      <div>
+        <h3><span class="chip" style="background: #b3d4a5;"></span>Outer ear (external ear)</h3>
+        <dl>
+          <dt>Auricle / Pinna</dt>
+          <dd>The part of the ear on the outside of the head. Sound waves enter here.</dd>
+          <dt>Ear canal</dt>
+          <dd>The tube that carries sound waves to the eardrum.</dd>
+          <dt>Tympanic membrane (eardrum)</dt>
+          <dd>Divides the outer ear from the middle ear. It vibrates when sound waves hit it and passes the vibrations to the ossicles.</dd>
+          <dt>Skull</dt>
+          <dd>The bone of the head. The middle ear and inner ear sit inside it.</dd>
+        </dl>
+      </div>
+      <div>
+        <h3><span class="chip" style="background: #97cbea;"></span>Middle ear (tympanic cavity)</h3>
+        <dl>
+          <dt>Ossicles</dt>
+          <dd>Three small connected bones: the malleus (hammer), the incus (anvil) and the stapes (stirrup).
+              They amplify the vibrations from the eardrum and send them to the cochlea.</dd>
+          <dt>Eustachian tube</dt>
+          <dd>Links the middle ear with the back of the nose. It helps equalize the pressure in the middle ear.</dd>
+        </dl>
+      </div>
+      <div>
+        <h3><span class="chip" style="background: #d6c5fd;"></span>Inner ear (labyrinth)</h3>
+        <dl>
+          <dt>Cochlea</dt>
+          <dd>The hearing organ. It is shaped like a snail and filled with fluid. Hair cells inside it turn vibrations into electrical signals.</dd>
+          <dt>Stereocilia</dt>
+          <dd>Tiny hair-like tips on the hair cells in the cochlea. When they bend, an electrical signal is made. They are too small to see in the picture.</dd>
+          <dt>Vestibular apparatus</dt>
+          <dd>Holds the receptors for balance.</dd>
+          <dt>Vestibulocochlear nerve (cranial nerve VIII)</dt>
+          <dd>Carries the electrical signals from the inner ear to the brain. The hearing part of it is often called the auditory nerve.</dd>
+        </dl>
+      </div>
+    </div>
+    <P class="hint" style="margin: 12px 0 0 0;">Sources:
+      <A href="https://www.nidcd.nih.gov/health/how-do-we-hear" target="_blank" rel="noopener">How Do We Hear? (NIDCD)</A>,
+      <A href="https://www.stanfordchildrens.org/en/topic/default?id=anatomy-and-physiology-of-the-ear-90-P02025" target="_blank" rel="noopener">Anatomy and Physiology of the Ear (Stanford Medicine Children's Health)</A>,
+      <A href="https://my.clevelandclinic.org/health/body/24048-ear" target="_blank" rel="noopener">Ear (Cleveland Clinic)</A>.
+      Ready to test yourself? <A href="ear-quiz.html">Open the Ear Quiz</A>.</P>
   </div>
 
   <script>
