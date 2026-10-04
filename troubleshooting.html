@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Troubleshooting</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2328223f%22/%3E%3Ctext%20x%3D%2232%22%20y%3D%2246%22%20font-size%3D%2240%22%20font-family%3D%22Arial%22%20font-weight%3D%22bold%22%20text-anchor%3D%22middle%22%20fill%3D%22%23ff6fb1%22%3E%3F%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Inter:wght@400;600;700;800&family=Lexend:wght@400;600;700;800&family=Literata:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&family=Source+Sans+3:wght@400;600;700;800&display=swap">
+  <style>
+    /* The same colors and shapes as the other pages */
+    body      { --page: #f3eff9; --card: #ffffff; --raised: #f7f4fc; --line: #ddd3ec; --ink: #2a2440; --quiet: #675f80;
+                --accent: #e6007e; --onAccent: #ffffff; --shadow: 0 1px 2px rgba(60, 40, 110, 0.08), 0 6px 18px rgba(60, 40, 110, 0.07);
+                font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 17px; line-height: 1.5;
+                max-width: 900px; margin: 18px auto; padding: 0 20px 40px 20px; background: var(--page); color: var(--ink); }
+    body.dark { --page: #1d1930; --card: #28223f; --raised: #362e55; --line: #453c6b; --ink: #f4effa; --quiet: #c3b9da;
+                --accent: #ff6fb1; --onAccent: #1d1930; --shadow: none; }
+    body.contrast { --page: #000; --card: #000; --raised: #000; --line: #fff; --ink: #fff; --quiet: #fff; --accent: #ffe600; --onAccent: #000; --shadow: none; }
+    body.big  { zoom: 1.15; }
+    h1        { font-size: 30px; font-weight: 800; letter-spacing: -0.3px; margin: 0; }
+    h2        { font-size: 22px; font-weight: 800; margin: 26px 0 8px 0; }
+    .hint     { color: var(--quiet); font-size: 15px; margin: 6px 0; }
+    .pageBar  { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 20px; margin-bottom: 14px; }
+    .titleSide { display: flex; align-items: center; gap: 20px; }
+    .pageTools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; font-size: 14px; }
+    select, button { font: inherit; font-size: 15px; padding: 7px 14px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--raised); color: var(--ink); }
+    a         { color: var(--accent); }
+    a:focus-visible, select:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    a.homeButton { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; width: 66px; height: 66px; flex: none; box-sizing: border-box;
+                  border-radius: 14px; border: 1.5px solid var(--line); background: var(--raised); color: var(--ink); font-weight: 800; font-size: 14px; line-height: 1.1; text-decoration: none; }
+    .homeButton:hover { border-color: var(--accent); }
+    .contrast .homeButton { border: 2px solid #fff; color: #fff; }
+
+    /* Each problem is a box that opens when clicked */
+    details   { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 0 18px; margin: 8px 0; box-shadow: var(--shadow); }
+    summary   { cursor: pointer; font-weight: 800; padding: 13px 0; }
+    details[open] summary { border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+    details ol, details ul { margin: 8px 0 14px 0; padding-left: 24px; }
+    details li { margin-bottom: 6px; }
+    details p { margin: 8px 0 12px 0; }
+    .contrast details { border-width: 2px; }
+      /* THE FONT MENU: each choice is written in its own font */
+    @font-face { font-family: 'OpenDyslexic'; font-weight: 400; font-display: swap;
+                 src: url('OpenDyslexic-Regular.woff2') format('woff2'), url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-400-normal.woff2') format('woff2'); }
+    @font-face { font-family: 'OpenDyslexic'; font-weight: 700; font-display: swap;
+                 src: url('OpenDyslexic-Bold.woff2') format('woff2'), url('https://cdn.jsdelivr.net/fontsource/fonts/opendyslexic@latest/latin-700-normal.woff2') format('woff2'); }
+    .fontPick { position: relative; display: inline-flex; align-items: center; gap: 5px; }
+    /* Menus look the same in every browser (Safari otherwise draws its own glossy style), and match the Font button */
+    select { -webkit-appearance: none; appearance: none; padding-right: 30px !important; background-repeat: no-repeat !important; background-position: right 11px center !important; background-size: 10px 6px !important;
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0 L5 6 L10 0 Z' fill='%23999'/%3E%3C/svg%3E") !important; }
+    .pageTools select, .pageTools #fontButton { font-size: 15px; line-height: 1.25; padding-top: 7px; padding-bottom: 7px; padding-left: 14px; border-radius: 999px; box-sizing: border-box; height: 36px; }
+    #fontButton { border: 1.5px solid var(--line, #999); background-color: var(--raised, #fff); color: var(--ink, #111); cursor: pointer; font-family: inherit;
+                  padding-right: 30px; position: relative; min-width: 150px; text-align: left; font-weight: 400; white-space: nowrap; background-repeat: no-repeat; background-position: right 11px center; background-size: 10px 6px;
+             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0 L5 6 L10 0 Z' fill='%23999'/%3E%3C/svg%3E"); }
+    #fontMenu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 80; min-width: 270px; padding: 6px; box-sizing: border-box;
+                background: var(--card, #fff); color: var(--ink, #111); border: 1.5px solid var(--line, #999); border-radius: 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
+    #fontMenu button { cursor: pointer; display: block; width: 100%; text-align: left; border: 0 !important; background: none; color: inherit; border-radius: 9px !important;
+                       padding: 8px 10px; margin: 0; font-size: 17px; font-weight: 400; }
+    #fontMenu button:hover, #fontMenu button:focus-visible { background: var(--raised, #eee); }
+    #fontMenu button[aria-selected="true"] { box-shadow: inset 0 0 0 2px var(--accent, #e6007e); }
+    .contrast #fontMenu { background: #000; color: #fff; border: 2px solid #fff; }
+    .contrast #fontMenu button:hover, .contrast #fontMenu button:focus-visible { background: #333; }
+    body.game .fontPick { display: none; }
+  </style>
+</head>
+<body>
+  <div class="pageBar">
+    <div class="titleSide">
+      <a class="homeButton" href="index.html" title="Back to the welcome page">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 3 L21 11"/><path d="M5 9.5 V20 H10 V14 H14 V20 H19 V9.5"/></svg>
+        Home
+      </a>
+      <h1>Troubleshooting</h1>
+    </div>
+    <div class="pageTools">
+      <label>Colors:
+        <select id="themeChoice"><option value="dark">Dark</option><option value="light">Light</option><option value="contrast">High contrast</option></select>
+      </label>
+      <label>Text size:
+        <select id="textChoice"><option value="">Normal</option><option value="big">Large</option></select>
+      </label>
+      <div class="fontPick">
+        <span id="fontLabel">Font:</span>
+        <button type="button" id="fontButton" aria-haspopup="listbox" aria-expanded="false"></button>
+        <div id="fontMenu" role="listbox" aria-labelledby="fontLabel" hidden></div>
+      </div>
+    </div>
+  </div>
+  <p class="hint">Click a problem to see what to try. Start with the first thing in each list.</p>
+
+  <h2>No sound</h2>
+  <details>
+    <summary>I pressed play and hear nothing</summary>
+    <ol>
+      <li>Check that the computer's volume is up and not muted, and that your headphones are plugged in or connected.</li>
+      <li>On the Hearing Loss Simulator, press "Play a sample conversation" in the yellow box at the top. It does not go through the faders, so if you hear it, your sound is working.</li>
+      <li>Check the faders or the hearing loss you chose. A severe or profound loss is meant to make most sounds disappear. Choose no hearing loss and try again.</li>
+      <li>Under "Sound from", make sure the box you want is chosen and that something in it has been started.</li>
+    </ol>
+  </details>
+  <details>
+    <summary>The built-in recordings are silent, but everything else works</summary>
+    <p>This happens when the website version of a page is opened as a file on the computer, not from the web address. The page shows a yellow note when this is the case. Open the site from its web address, or use the single-file version that was made for opening from a folder.</p>
+  </details>
+
+  <h2>Microphone</h2>
+  <details>
+    <summary>The microphone is on, but I hear nothing</summary>
+    <ol>
+      <li><b>Choose the right microphone.</b> After you turn the microphone on, a "Which microphone" menu appears under the button. Pick your computer's built-in microphone, or the one you want. This is the most common fix.</li>
+      <li>Read the message under the buttons. "Picking up sound" means the microphone works. "No sound is coming from it" means the wrong microphone is chosen, or it is muted.</li>
+      <li>Check the faders. If a hearing loss is set, your own voice comes through quiet or not at all.</li>
+      <li>On a Mac, open System Settings, then Privacy &amp; Security, then Microphone, and check that your browser is switched on.</li>
+    </ol>
+  </details>
+  <details>
+    <summary>The page says the microphone could not be turned on</summary>
+    <p>The browser has not been allowed to use the microphone on this site. Click the icon at the left end of the address bar, allow the microphone, and press the button again.</p>
+  </details>
+  <details>
+    <summary>There is a loud squeal or echo</summary>
+    <p>The microphone is hearing the speakers. Wear headphones, or turn the microphone off.</p>
+  </details>
+  <details>
+    <summary>The sound changed or went muffled when I turned the microphone on</summary>
+    <p>Many wireless (Bluetooth) headphones switch to a lower-quality "phone call" mode when their own microphone is used. In the "Which microphone" menu, choose the computer's built-in microphone instead of the headphones' microphone.</p>
+  </details>
+
+  <h2>YouTube</h2>
+  <details>
+    <summary>How do I connect a YouTube video?</summary>
+    <ol>
+      <li>YouTube only works in Chrome or Edge on a computer or Chromebook, on the website. It does not work in Safari, or when the page is opened as a file.</li>
+      <li>On a Full simulator page, choose YouTube under "Sound from", paste the video's link, and press <b>Open the video</b>. A small video window opens.</li>
+      <li>Press <b>Connect the sound</b>. The browser asks what to share.</li>
+      <li>Choose the tab named <b>CHOOSE THIS TO CONNECT SOUND</b>, keep "Also share tab audio" switched on, and press Share.</li>
+    </ol>
+  </details>
+  <details>
+    <summary>The page says "Wrong tab. Nothing was connected"</summary>
+    <p>A different tab or window was shared. Press Connect the sound again and choose the tab named CHOOSE THIS TO CONNECT SOUND. It has a pink strip along the bottom.</p>
+  </details>
+  <details>
+    <summary>The video plays, but the sound is not changed by the simulator</summary>
+    <p>The sound was not connected, so you are hearing the video directly. Press Connect the sound and share the small video window's tab, with "Also share tab audio" switched on.</p>
+  </details>
+  <details>
+    <summary>The play and skip buttons do nothing</summary>
+    <p>During an ad, the buttons and the bar wait until the ad is over. To skip the ad, use the small video window.</p>
+  </details>
+  <details>
+    <summary>The small video window never opens</summary>
+    <p>The browser may have blocked the pop-up window. Look for a blocked pop-up icon at the right end of the address bar and allow pop-ups for this site. On a school computer, the school's settings may block it.</p>
+  </details>
+
+  <h2>The page itself</h2>
+  <details>
+    <summary>The page looks old, or a change is missing</summary>
+    <p>The browser is showing a saved copy. Hold Shift and press the refresh button.</p>
+  </details>
+  <details>
+    <summary>The font does not change when I choose one</summary>
+    <p>Most of the fonts are downloaded from the internet when you pick them. Without a connection, the page uses your computer's own font.</p>
+  </details>
+  <details>
+    <summary>I cannot hear the high-pitch test tones</summary>
+    <p>Whether you hear them depends on your ears and also on your speakers or headphones. Many laptop speakers and wireless headphones cannot play the highest pitches. Keep the volume where it is; turning it up can hurt your ears even when a tone seems silent.</p>
+  </details>
+  <details>
+    <summary>My quiz score disappeared</summary>
+    <p>The score is kept only while the page is open. Reloading or closing the page starts it again. Open the score report and print it or take a picture before you leave the page.</p>
+  </details>
+
+  <script>
+    // ---------- COLORS AND TEXT SIZE (shared with the other pages) ----------
+    const themeChoice = document.getElementById('themeChoice'), textChoice = document.getElementById('textChoice');
+    function remember(key, value) { try { localStorage.setItem(key, value); } catch (problem) { /* not allowed here */ } }
+    function recall(key)          { try { return localStorage.getItem(key); } catch (problem) { return null; } }
+    function showLook() {
+      document.body.classList.toggle('dark', themeChoice.value === 'dark');
+      document.body.classList.toggle('contrast', themeChoice.value === 'contrast');
+      document.body.classList.toggle('big', textChoice.value === 'big');
+    }
+    themeChoice.onchange = () => { remember('simulatorColors', themeChoice.value); showLook(); };
+    textChoice.onchange  = () => { remember('simulatorText', textChoice.value); showLook(); };
+    if (recall('simulatorColors')) themeChoice.value = recall('simulatorColors');
+    if (recall('simulatorText'))   textChoice.value  = recall('simulatorText');
+    if (!themeChoice.value) themeChoice.value = 'dark';
+    showLook();
+  </script>
+  <script>
+    // ---------- THE FONT MENU (the choice is shared by every page, like the colors) ----------
+    // The first one is the default: whatever font this computer normally uses, so nothing has to download.
+    (function () {
+      const FONTS = [
+        ['',         "This device's font",              "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"],
+        ['atkinson', 'Atkinson Hyperlegible',           "'Atkinson Hyperlegible', Arial, sans-serif"],
+        ['lexend',   'Lexend',                          "'Lexend', Arial, sans-serif"],
+        ['inter',    'Inter',                           "'Inter', Arial, sans-serif"],
+        ['source',   'Source Sans',                     "'Source Sans 3', Arial, sans-serif"],
+        ['nunito',   'Nunito (rounded)',                "'Nunito', ui-rounded, 'Trebuchet MS', Arial, sans-serif"],
+        ['literata', 'Literata (book style)',           "'Literata', Georgia, serif"],
+        ['dyslexic', 'OpenDyslexic (dyslexia-friendly)', "'OpenDyslexic', Arial, sans-serif"]
+      ];
+      const fontButton = document.getElementById('fontButton'), fontMenu = document.getElementById('fontMenu');
+      function saved() { try { return localStorage.getItem('simulatorFont') || ''; } catch (problem) { return ''; } }
+      function useFont(key, keep) {
+        const font = FONTS.find((each) => each[0] === key) || FONTS[0];
+        document.body.style.fontFamily = font[2];
+        fontButton.textContent = font[1];
+        fontButton.style.fontFamily = font[2];
+        fontMenu.querySelectorAll('button').forEach((choice) => choice.setAttribute('aria-selected', choice.dataset.font === font[0] ? 'true' : 'false'));
+        if (keep) { try { localStorage.setItem('simulatorFont', font[0]); } catch (problem) { /* not allowed here */ } }
+        window.dispatchEvent(new Event('resize'));      // lets anything that measures text fit itself again
+      }
+      function openMenu(open) {
+        fontMenu.hidden = !open;
+        fontButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (open) (fontMenu.querySelector('[aria-selected="true"]') || fontMenu.querySelector('button')).focus();
+      }
+      FONTS.forEach((font) => {
+        const choice = document.createElement('button');
+        choice.type = 'button'; choice.setAttribute('role', 'option'); choice.dataset.font = font[0];
+        choice.textContent = font[1];
+        choice.style.fontFamily = font[2];             // each name is shown in its own font
+        choice.onclick = () => { useFont(font[0], true); openMenu(false); fontButton.focus(); };
+        fontMenu.appendChild(choice);
+      });
+      fontButton.onclick = () => openMenu(fontMenu.hidden);
+      document.addEventListener('click', (press) => { if (!press.target.closest('.fontPick')) openMenu(false); });
+      fontMenu.addEventListener('keydown', (press) => {
+        const choices = Array.from(fontMenu.querySelectorAll('button')), spot = choices.indexOf(document.activeElement);
+        if (press.key === 'Escape') { openMenu(false); fontButton.focus(); }
+        if (press.key === 'ArrowDown') { press.preventDefault(); choices[Math.min(choices.length - 1, spot + 1)].focus(); }
+        if (press.key === 'ArrowUp')   { press.preventDefault(); choices[Math.max(0, spot - 1)].focus(); }
+      });
+      useFont(saved(), false);
+    })();
+  </script>
+</body>
+</html>

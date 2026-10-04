@@ -323,6 +323,7 @@
       </div>
       <div id="source-mic" hidden>
         <p><button id="micButton">Turn on microphone</button></p>
+        <p id="micChoiceRow" hidden><label>Which microphone: <select id="micChoice"></select></label></p>
         <p class="hint">Put on headphones first, or the sound will loop and squeal. Then speak, or listen to the room.</p>
       </div>
       <p id="status"></p>
@@ -1764,20 +1765,47 @@
 
     // The microphone
     const micButton = document.getElementById('micButton');
-    micButton.onclick = async () => {
+    const micChoice = document.getElementById('micChoice'), micChoiceRow = document.getElementById('micChoiceRow');
+    micButton.onclick = () => {
       if (micStream) { stopMicrophone(); say('Microphone off.'); return; }
+      startMicrophone(micChoice.value);
+    };
+    // Picking a different microphone from the menu switches to it straight away
+    micChoice.onchange = () => { if (micStream) startMicrophone(micChoice.value); };
+
+    // Fill the microphone menu (the browser only shares the names once the microphone is allowed)
+    async function listMicrophones() {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      if (!micStream) return;
+      const inUse = micStream.getAudioTracks()[0].getSettings().deviceId;
+      micChoice.innerHTML = '';
+      devices.filter((device) => device.kind === 'audioinput').forEach((device) => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.textContent = device.label || 'Microphone';
+        option.selected = device.deviceId === inUse;
+        micChoice.append(option);
+      });
+      micChoiceRow.hidden = false;
+    }
+
+    async function startMicrophone(deviceId) {
       startAudio();
+      const wanted = { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 };
+      if (deviceId) wanted.deviceId = { exact: deviceId };
       let stream;
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false, channelCount: 1 } });
+        stream = await navigator.mediaDevices.getUserMedia({ audio: wanted });
       } catch (e) { say('The microphone could not be turned on. Allow it with the icon at the left end of the address bar, then try again.'); return; }
       stopYouTube(); player.pause(); storyClip.pause();
+      stopMicrophone();
       micStream = stream;
       micSource = ctx.createMediaStreamSource(stream);
       micSource.connect(input);
       micButton.textContent = 'Turn off microphone';
       micButton.classList.add('playing');
       say('Microphone on. Wear headphones, or the sound will loop and squeal.');
+      listMicrophones();
 
       // Listen to the microphone for a few seconds. If nothing at all arrives, say so: the microphone may be the wrong one, muted, or blocked by the computer's settings.
       const micCheck = ctx.createAnalyser(), checkedStream = stream;
@@ -1791,7 +1819,7 @@
         looks++;
         if (micStream !== checkedStream || loudest > 0.002 || looks >= 40) clearInterval(micCheckTimer);
         if (micStream === checkedStream && looks >= 40 && loudest <= 0.002) {
-          say('The microphone is on, but no sound is coming from it. Try another microphone, check that it is not muted, and check that your computer lets this browser use the microphone.');
+          say('The microphone is on, but no sound is coming from it. Choose a different one in the "Which microphone" menu. If that does not help, see the Troubleshooting page.');
         } else if (micStream === checkedStream && loudest > 0.002) {
           say('Microphone on and picking up sound. Wear headphones, or the sound will loop and squeal.');
         }

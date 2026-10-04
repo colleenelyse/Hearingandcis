@@ -666,7 +666,7 @@
 
       <div class="source" id="source-mic" hidden>
         <button id="micButton">Turn on microphone</button>
-        <label id="micChoiceRow" hidden>Microphone: <select id="micChoice"></select></label>
+        <label id="micChoiceRow" hidden>Which microphone: <select id="micChoice"></select></label>
         <ol class="hint">
           <li>Put on headphones first. Without them the sound loops and squeals.</li>
           <li>Click <b>Turn on microphone</b> and choose Allow.</li>
@@ -2351,7 +2351,7 @@
         looks++;
         if (micStream !== checkedStream || loudest > 0.002 || looks >= 40) clearInterval(micCheckTimer);
         if (micStream === checkedStream && looks >= 40 && loudest <= 0.002) {
-          say('The microphone is on, but no sound is coming from it. Try another microphone, check that it is not muted, and check that your computer lets this browser use the microphone.');
+          say('The microphone is on, but no sound is coming from it. Choose a different one in the "Which microphone" menu. If that does not help, see the Troubleshooting page.');
         } else if (micStream === checkedStream && loudest > 0.002) {
           say('Microphone on and picking up sound. Wear headphones, or the sound will loop and squeal.');
         }
