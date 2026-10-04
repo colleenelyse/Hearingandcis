@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ear Quiz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2328223f%22/%3E%3Cpath%20d%3D%22M22%2030c0-9%206-15%2013-15s12%205%2012%2012c0%206-4%209-7%2012s-3%206-5%209c-2%203-7%203-9-1%22%20fill%3D%22none%22%20stroke%3D%22%23ff6fb1%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M29%2030c0-4%203-7%206-7s5%202%205%205-3%204-4%206%22%20fill%3D%22none%22%20stroke%3D%22%23ff6fb1%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+  <style>
+    /* The same colors, font and shapes as the other pages */
+    body      { --page: #f3eff9; --card: #ffffff; --raised: #f7f4fc; --line: #ddd3ec; --ink: #2a2440; --quiet: #675f80;
+                --accent: #e6007e; --onAccent: #ffffff; --shadow: 0 1px 2px rgba(60, 40, 110, 0.08), 0 6px 18px rgba(60, 40, 110, 0.07);
+                --right: #1a7f37; --wrong: #c62828;
+                font-family: 'Nunito', ui-rounded, 'Trebuchet MS', Arial, sans-serif; font-size: 16px; line-height: 1.5;
+                max-width: 1300px; margin: 18px auto; padding: 0 20px 40px 20px; background: var(--page); color: var(--ink); }
+    body.dark { --page: #1d1930; --card: #28223f; --raised: #362e55; --line: #453c6b; --ink: #f4effa; --quiet: #c3b9da;
+                --accent: #ff6fb1; --onAccent: #1d1930; --shadow: none; --right: #5bd47f; --wrong: #ff8a80; }
+    body.contrast { --page: #000; --card: #000; --raised: #000; --line: #fff; --ink: #fff; --quiet: #fff; --accent: #ffe600; --onAccent: #000; --shadow: none; --right: #5bff8a; --wrong: #ff9a9a; }
+    body.big  { zoom: 1.15; }
+    [hidden]  { display: none !important; }
+    h1        { font-size: 30px; font-weight: 800; letter-spacing: -0.3px; margin: 0; }
+    h2        { font-size: 20px; font-weight: 800; margin: 0 0 8px 0; }
+    .hint     { color: var(--quiet); font-size: 14px; margin: 6px 0; }
+    .pageBar  { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 20px; margin-bottom: 14px; }
+    .titleSide { display: flex; align-items: center; gap: 20px; }
+    .pageNav  { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+    .pageLink { text-decoration: none; font-weight: 700; font-size: 14px; padding: 5px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--raised); color: var(--ink); white-space: nowrap; }
+    .pageLink:hover { border-color: var(--accent); }
+    .pageTools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; font-size: 14px; }
+    select, button { font: inherit; font-size: 15px; padding: 7px 14px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--raised); color: var(--ink); }
+    button    { cursor: pointer; font-weight: 700; }
+    button:hover:not(:disabled) { border-color: var(--accent); }
+    button:focus-visible, select:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+    button.main { background: var(--accent); color: var(--onAccent); border-color: var(--accent); }
+    .contrast select, .contrast button, .contrast .pageLink, .contrast .panel { border-width: 2px; }
+
+    .layout   { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+    .panel    { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 16px 20px; box-shadow: var(--shadow); }
+    .controls { flex: 1 1 300px; max-width: 400px; }
+    .stageBox { flex: 3 1 520px; min-width: 0; }
+    body.labeling .controls { flex: 1 1 230px; max-width: 270px; padding: 14px; }
+    @media (max-width: 760px) { .controls, body.labeling .controls { max-width: none; } }
+
+    .tiles    { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .tiles button { border-radius: 12px; border-width: 2px; padding: 11px 8px; }
+    .tiles button.on { background: var(--accent); color: var(--onAccent); border-color: var(--accent); }
+    .single   { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 4px 0; font-weight: 700; }
+    .quick    { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .result   { font-weight: 800; margin: 12px 0 0 0; min-height: 24px; }
+
+    /* The picture: always on white, as it was drawn */
+    .stage    { position: relative; aspect-ratio: 16 / 9; background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); user-select: none; }
+    .stage img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+
+    /* LABEL THE EAR: the terms to drag, and the blank labels they land on */
+    .bank     { display: flex; flex-wrap: wrap; gap: 7px; min-height: 40px; }
+    .term     { border-radius: 9px; padding: 5px 10px; font-size: 14px; background: var(--raised); touch-action: none; text-align: left; line-height: 1.25; }
+    .term.held { background: var(--accent); color: var(--onAccent); border-color: var(--accent); }
+    .ghost    { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%); opacity: 0.92; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35); }
+    .target   { position: absolute; box-sizing: border-box; padding: 0; border: 0; border-radius: 4px; background: transparent; color: #000;
+                display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: visible; line-height: 1.02;
+                font-family: inherit; font-weight: 800; white-space: nowrap; cursor: pointer; }
+    .target:hover:not(:disabled), .target.over { outline: 3px solid #e6007e; outline-offset: 1px; }
+    .target:focus-visible { outline: 3px solid #e6007e; outline-offset: 1px; }
+    .target small { font-size: 0.72em; font-weight: 700; }
+    .target:disabled { cursor: default; color: #000; }
+    .target.right { outline: 3px solid #1a7f37; outline-offset: 1px; }
+    .target.wrong { outline: 3px solid #c62828; outline-offset: 1px; }
+    .target.right::after, .target.wrong::after { position: absolute; right: -9px; top: -9px; width: 18px; height: 18px; border-radius: 50%; color: #fff;
+                font-size: 12px; line-height: 18px; text-align: center; font-weight: 800; }
+    .target.right::after { content: '\2713'; background: #1a7f37; }
+    .target.wrong::after { content: '\2715'; background: #c62828; }
+
+    /* QUESTIONS */
+    .count    { color: var(--quiet); font-size: 14px; font-weight: 700; margin: 0 0 4px 0; }
+    .ask      { font-size: 19px; font-weight: 800; margin: 0 0 12px 0; line-height: 1.35; }
+    .choices  { display: grid; gap: 8px; }
+    .choices button { border-radius: 12px; border-width: 2px; padding: 10px 14px; text-align: left; font-size: 16px; }
+    .choices button:disabled { cursor: default; opacity: 1; color: var(--ink); }
+    .choices button.right { border-color: var(--right); box-shadow: inset 0 0 0 1px var(--right); }
+    .choices button.wrong { border-color: var(--wrong); box-shadow: inset 0 0 0 1px var(--wrong); }
+    .choices button.right::after { content: '  \2713  Correct answer'; color: var(--right); }
+    .choices button.wrong::after { content: '  \2715  Your answer'; color: var(--wrong); }
+    .why      { margin: 12px 0 0 0; min-height: 24px; }
+    .why b.good { color: var(--right); } .why b.bad { color: var(--wrong); }
+    .missed   { margin: 10px 0 0 0; padding-left: 20px; font-size: 15px; }
+    .missed li { margin-bottom: 6px; }
+    .ring     { position: absolute; box-sizing: border-box; border: 4px solid #e6007e; border-radius: 6px; box-shadow: 0 0 0 4px rgba(230, 0, 126, 0.25); pointer-events: none; animation: pulse 1.1s ease-in-out infinite alternate; }
+    @keyframes pulse { to { box-shadow: 0 0 0 10px rgba(230, 0, 126, 0.12); } }
+    @media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+  </style>
+</head>
+<body class="labeling">
+  <div class="pageBar">
+    <div class="titleSide">
+      <nav class="pageNav" aria-label="Other pages">
+        <a class="pageLink" href="index.html" title="Back to the welcome page">&larr; Home</a>
+        <a class="pageLink" href="parts-of-the-ear.html" title="Opens the ear picture with labels you can switch on and off">Parts of the ear</a>
+      </nav>
+      <h1>Ear Quiz</h1>
+    </div>
+    <div class="pageTools">
+      <label>Colors:
+        <select id="themeChoice"><option value="dark">Dark</option><option value="light">Light</option><option value="contrast">High contrast</option></select>
+      </label>
+      <label>Text size:
+        <select id="textChoice"><option value="">Normal</option><option value="big">Large</option></select>
+      </label>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="panel controls">
+      <div class="tiles" id="modeTiles">
+        <button data-mode="label">Label the ear</button>
+        <button data-mode="ask">Questions</button>
+      </div>
+
+      <!-- QUIZ 1: drag the terms onto the blank labels -->
+      <div id="mode-label">
+        <label class="single">Part
+          <select id="partChoice">
+            <option value="all">Whole ear</option>
+            <option value="outer">Outer ear</option>
+            <option value="middle">Middle ear</option>
+            <option value="inner">Inner ear</option>
+          </select>
+        </label>
+        <p class="hint">Drag each term onto a blank label. Or click a term, then click a label. Click a filled label to take the term back.</p>
+        <div class="bank" id="bank" aria-label="Terms to place"></div>
+        <div class="quick">
+          <button class="main" id="checkWork">Check my work</button>
+          <button id="startOver">Start over</button>
+          <button id="showAnswers">Show answers</button>
+        </div>
+        <p class="result" id="labelResult" aria-live="polite"></p>
+      </div>
+
+      <!-- QUIZ 2: multiple choice and true or false -->
+      <div id="mode-ask" hidden>
+        <label class="single">Topic
+          <select id="topicChoice">
+            <option value="mix">A mix of everything</option>
+            <option value="names">Names of structures</option>
+            <option value="where">Outer, middle or inner</option>
+            <option value="types">Types of hearing loss</option>
+            <option value="truefalse">True or false</option>
+          </select>
+        </label>
+        <div id="questionBox" style="margin-top: 10px;">
+          <p class="count" id="askCount"></p>
+          <p class="ask" id="askText"></p>
+          <div class="choices" id="askChoices"></div>
+          <p class="why" id="askWhy" aria-live="polite"></p>
+          <div class="quick"><button class="main" id="askNext" hidden>Next question</button></div>
+        </div>
+        <div id="scoreBox" hidden>
+          <h2 id="scoreLine"></h2>
+          <ol class="missed" id="missedList"></ol>
+          <div class="quick"><button class="main" id="askAgain">New questions</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel stageBox">
+      <div class="stage" id="stage">
+        <img id="img-ear-base" alt="A cutaway drawing of the ear, from the outer ear on the left to the inner ear on the right">
+        <img id="img-ear-outer-boxes"  alt="" hidden>
+        <img id="img-ear-middle-boxes" alt="" hidden>
+        <img id="img-ear-inner-boxes"  alt="" hidden>
+        <div id="targets"></div>
+        <div class="ring" id="ring" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- THE PICTURE LAYERS (the same pictures the Parts of the Ear page uses) ----------
+    const LAYERS = {
+      "ear-base": "ear-base.png",
+      "ear-outer-boxes": "ear-outer-boxes.png",
+      "ear-middle-boxes": "ear-middle-boxes.png",
+      "ear-inner-boxes": "ear-inner-boxes.png"
+};
+    Object.keys(LAYERS).forEach((name) => { document.getElementById('img-' + name).src = LAYERS[name]; });
+    const box = (id) => document.getElementById(id);
+    const PARTS = ['outer', 'middle', 'inner'];
+    const PART_NAME = { outer: 'outer ear', middle: 'middle ear', inner: 'inner ear' };
+
+    // ---------- EVERY LABEL IN THE PICTURE ----------
+    // at: where the label's box sits in the 1920 x 1080 picture (left, top, width, height)
+    const LABELS = [
+      { id: 'outerEar',  part: 'outer',  name: 'Outer Ear',               also: '(external ear)',      at: [408, 48, 345, 101],   heading: true },
+      { id: 'skull',     part: 'outer',  name: 'Skull',                   also: '',                    at: [518, 278, 119, 68] },
+      { id: 'pinna',     part: 'outer',  name: 'Auricle/Pinna',           also: '',                    at: [58, 380, 345, 68] },
+      { id: 'eardrum',   part: 'outer',  name: 'Tympanic Membrane',       also: '(Eardrum)',           at: [937, 828, 210, 126],  twoLines: ['Tympanic', 'Membrane'] },
+      { id: 'canal',     part: 'outer',  name: 'Ear Canal',               also: '',                    at: [639, 948, 277, 65] },
+      { id: 'middleEar', part: 'middle', name: 'Middle Ear',              also: '(tympanic cavity)',   at: [808, 48, 344, 92],    heading: true },
+      { id: 'ossicles',  part: 'middle', name: 'Ossicles (3 small bones)', also: '',                   at: [693, 318, 501, 65] },
+      { id: 'incus',     part: 'middle', name: 'Incus',                   also: '(Anvil)',             at: [864, 403, 74, 49] },
+      { id: 'stapes',    part: 'middle', name: 'Stapes',                  also: '(Stirrup)',           at: [955, 448, 103, 41] },
+      { id: 'malleus',   part: 'middle', name: 'Malleus',                 also: '(Hammer)',            at: [780, 468, 103, 41] },
+      { id: 'tube',      part: 'middle', name: 'Eustachian Tube',         also: '',                    at: [1197, 977, 383, 65] },
+      { id: 'innerEar',  part: 'inner',  name: 'Inner Ear',               also: '(labyrinth)',         at: [1193, 47, 344, 92],   heading: true },
+      { id: 'vestibule', part: 'inner',  name: 'Vestibular Apparatus',    also: '',                    at: [1361, 310, 456, 60] },
+      { id: 'nerve',     part: 'inner',  name: 'Vestibulocochlear Nerve', also: '(Cranial Nerve VIII)', at: [1393, 421, 499, 88] },
+      { id: 'cochlea',   part: 'inner',  name: 'Cochlea',                 also: '',                    at: [1436, 647, 382, 65] }
+    ];
+    const labelFor = (id) => LABELS.find((l) => l.id === id);
+    const fullName = (l) => l.name + (l.also ? ' ' + l.also : '');
+    function shuffled(list) {
+      const a = list.slice();
+      for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+      return a;
+    }
+    function placeAt(el, at, grow) {          // put something over a label's box, measured in percent so it scales with the picture
+      const g = grow || 0;
+      el.style.left = ((at[0] - g) / 19.2) + '%';  el.style.top = ((at[1] - g) / 10.8) + '%';
+      el.style.width = ((at[2] + 2 * g) / 19.2) + '%'; el.style.height = ((at[3] + 2 * g) / 10.8) + '%';
+    }
+
+    // ================= QUIZ 1: LABEL THE EAR =================
+    let mode = 'label';
+    let active = [];        // the labels in play (whole ear, or one part)
+    let order = [];         // the order the terms are listed in
+    let placed = {};        // label id -> the term the student put there
+    let marks = {};         // label id -> 'right' or 'wrong' after checking
+    let held = null;        // the term that was clicked and is waiting for a label
+
+    function startLabeling() {
+      const part = box('partChoice').value;
+      active = LABELS.filter((l) => part === 'all' || l.part === part);
+      order = shuffled(active.map((l) => l.id));
+      placed = {}; marks = {}; held = null;
+      box('labelResult').textContent = '';
+      drawLabeling();
+    }
+
+    function drawLabeling() {
+      // the terms not yet placed
+      const bank = box('bank');
+      bank.innerHTML = '';
+      const used = Object.values(placed);
+      order.filter((id) => !used.includes(id)).forEach((id) => {
+        const b = document.createElement('button');
+        b.className = 'term' + (held === id ? ' held' : '');
+        b.textContent = fullName(labelFor(id));
+        b.dataset.term = id;
+        b.onclick = () => { if (justDragged) { justDragged = false; return; } held = held === id ? null : id; drawLabeling(); };
+        b.onpointerdown = (e) => startDrag(e, id, b);
+        bank.appendChild(b);
+      });
+      if (!bank.children.length) bank.innerHTML = '<span class="hint">All terms are placed.</span>';
+
+      // the blank labels on the picture
+      const holder = box('targets');
+      holder.innerHTML = '';
+      active.forEach((l) => {
+        const t = document.createElement('button');
+        t.className = 'target' + (marks[l.id] ? ' ' + marks[l.id] : '');
+        t.dataset.label = l.id;
+        placeAt(t, l.at, 4);
+        const term = placed[l.id] && labelFor(placed[l.id]);
+        if (term) {
+          const lines = term.twoLines || [term.name];
+          t.innerHTML = lines.map((x) => '<span>' + x + '</span>').join('') + (term.also ? '<small>' + term.also + '</small>' : '');
+          t.title = fullName(term);
+        }
+        t.setAttribute('aria-label', term ? 'Label with ' + fullName(term) + (marks[l.id] ? ', ' + marks[l.id] : '') : 'Blank label');
+        t.disabled = marks[l.id] === 'right';
+        t.onclick = () => clickLabel(l.id);
+        holder.appendChild(t);
+      });
+      fitWords();
+    }
+
+    function put(term, label) {
+      if (marks[label] === 'right') return;
+      delete marks[label];
+      placed[label] = term;
+      held = null;
+      box('labelResult').textContent = '';
+      drawLabeling();
+    }
+    function clickLabel(label) {
+      if (held) put(held, label);
+      else if (placed[label]) { delete placed[label]; delete marks[label]; drawLabeling(); }
+    }
+
+    // Make the words fit inside each label, however big the picture is on this screen
+    function fitWords() {
+      document.querySelectorAll('.target').forEach((t) => {
+        if (!t.children.length) return;
+        const w = t.clientWidth - 4, h = t.clientHeight - 2;
+        let size = h / (t.children.length * 1.05);
+        t.style.fontSize = size + 'px';
+        let widest = 0;
+        Array.from(t.children).forEach((c) => { widest = Math.max(widest, c.scrollWidth); });
+        if (widest > w) size = size * w / widest;
+        t.style.fontSize = Math.max(5, size * 0.94) + 'px';
+      });
+    }
+    window.addEventListener('resize', fitWords);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitWords);
+
+    // Dragging a term with the mouse, a finger or a pen
+    let drag = null, justDragged = false;
+    function startDrag(e, id, button) {
+      if (e.button) return;
+      drag = { id, button, x: e.clientX, y: e.clientY, ghost: null };
+      button.setPointerCapture(e.pointerId);
+      button.onpointermove = moveDrag;
+      button.onpointerup = endDrag;
+      button.onpointercancel = () => { if (drag && drag.ghost) drag.ghost.remove(); drag = null; };
+    }
+    function labelUnder(x, y) {
+      let best = null, bestGap = 26;      // a near miss still counts, which helps with the three tiny bone labels
+      document.querySelectorAll('.target').forEach((t) => {
+        const r = t.getBoundingClientRect();
+        const gap = Math.hypot(Math.max(r.left - x, 0, x - r.right), Math.max(r.top - y, 0, y - r.bottom));
+        if (gap < bestGap) { bestGap = gap; best = t; }
+      });
+      return best;
+    }
+    function moveDrag(e) {
+      if (!drag) return;
+      if (!drag.ghost) {
+        if (Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 6) return;
+        drag.ghost = drag.button.cloneNode(true);
+        drag.ghost.className = 'term held ghost';
+        document.body.appendChild(drag.ghost);
+      }
+      drag.ghost.style.left = e.clientX + 'px'; drag.ghost.style.top = e.clientY + 'px';
+      const over = labelUnder(e.clientX, e.clientY);
+      document.querySelectorAll('.target.over').forEach((t) => { if (t !== over) t.classList.remove('over'); });
+      if (over) over.classList.add('over');
+    }
+    function endDrag(e) {
+      if (!drag) return;
+      const d = drag; drag = null;
+      d.button.onpointermove = null; d.button.onpointerup = null;
+      if (!d.ghost) return;                  // it was a click, not a drag
+      d.ghost.remove();
+      justDragged = true; setTimeout(() => { justDragged = false; }, 0);
+      const over = labelUnder(e.clientX, e.clientY);
+      if (over) put(d.id, over.dataset.label); else drawLabeling();
+    }
+
+    box('checkWork').onclick = () => {
+      let right = 0;
+      active.forEach((l) => {
+        if (!placed[l.id]) { delete marks[l.id]; return; }
+        marks[l.id] = placed[l.id] === l.id ? 'right' : 'wrong';
+        if (marks[l.id] === 'right') right++;
+      });
+      const all = active.length;
+      box('labelResult').textContent = right === all ? 'All ' + all + ' correct!'
+        : right + ' of ' + all + ' correct. ' + (Object.keys(placed).length < all ? 'Fill in the rest and check again.' : 'Move the ones marked with an X and check again.');
+      drawLabeling();
+    };
+    box('startOver').onclick = startLabeling;
+    box('showAnswers').onclick = () => {
+      active.forEach((l) => { placed[l.id] = l.id; marks[l.id] = 'right'; });
+      box('labelResult').textContent = 'These are the answers.';
+      drawLabeling();
+    };
+    box('partChoice').onchange = () => { showMode(); startLabeling(); };
+
+    // ================= QUIZ 2: QUESTIONS =================
+    // Every question: topic, the question, the choices, the right answer, a short reason, and (sometimes) a label to point at.
+    const QUESTIONS = [];
+    const ask = (topic, q, choices, answer, why, extra) => QUESTIONS.push(Object.assign({ topic, q, choices, answer, why }, extra || {}));
+    const TF = ['True', 'False'], SECTIONS = ['Outer ear', 'Middle ear', 'Inner ear'];
+    const TWO = ['Conductive hearing loss', 'Sensorineural hearing loss'];
+    const THREE = ['Conductive hearing loss', 'Sensory hearing loss', 'Neural hearing loss'];
+
+    // Names: point at one label in the picture
+    const structures = LABELS.filter((l) => !l.heading);
+    structures.forEach((l) => {
+      const others = shuffled(structures.filter((o) => o.id !== l.id)).slice(0, 3).map(fullName);
+      ask('names', 'What is the structure that the highlighted label points to?', [fullName(l)].concat(others), fullName(l), 'It is the ' + fullName(l) + '.', { point: l.id, mix: true });
+    });
+    LABELS.filter((l) => l.heading).forEach((l) => {
+      ask('names', 'Which section of the ear does the highlighted label name?', SECTIONS, l.name.replace('Ear', 'ear'), 'It is the ' + PART_NAME[l.part] + ' ' + l.also + '.', { point: l.id });
+    });
+    // Names: other words for the same thing
+    ask('names', 'Another name for the eardrum is the…', ['Tympanic membrane', 'Tympanic cavity', 'Eustachian tube', 'Auricle'], 'Tympanic membrane', 'The eardrum is the tympanic membrane.', { mix: true });
+    ask('names', 'Another name for the auricle is the…', ['Pinna', 'Incus', 'Cochlea', 'Labyrinth'], 'Pinna', 'Auricle and pinna are two names for the part of the ear on the outside of the head.', { mix: true });
+    ask('names', 'The malleus is also called the…', ['Hammer', 'Anvil', 'Stirrup', 'Eardrum'], 'Hammer', 'Malleus = hammer, incus = anvil, stapes = stirrup.', { mix: true });
+    ask('names', 'The incus is also called the…', ['Hammer', 'Anvil', 'Stirrup', 'Eardrum'], 'Anvil', 'Malleus = hammer, incus = anvil, stapes = stirrup.', { mix: true });
+    ask('names', 'The stapes is also called the…', ['Hammer', 'Anvil', 'Stirrup', 'Eardrum'], 'Stirrup', 'Malleus = hammer, incus = anvil, stapes = stirrup.', { mix: true });
+    ask('names', 'The inner ear is also called the…', ['Labyrinth', 'Tympanic cavity', 'External ear', 'Ossicles'], 'Labyrinth', 'The inner ear is the labyrinth.', { mix: true });
+    ask('names', 'The middle ear is also called the…', ['Labyrinth', 'Tympanic cavity', 'External ear', 'Ossicles'], 'Tympanic cavity', 'The middle ear is the tympanic cavity.', { mix: true });
+    ask('names', 'The outer ear is also called the…', ['Labyrinth', 'Tympanic cavity', 'External ear', 'Ossicles'], 'External ear', 'The outer ear is the external ear.', { mix: true });
+    ask('names', 'The vestibulocochlear nerve is which cranial nerve?', ['Cranial nerve II', 'Cranial nerve V', 'Cranial nerve VIII', 'Cranial nerve X'], 'Cranial nerve VIII', 'The vestibulocochlear nerve is cranial nerve VIII (eight).');
+    ask('names', 'How many ossicles are in the middle ear?', ['2', '3', '4', '5'], '3', 'There are three: the malleus, the incus and the stapes.');
+    ask('names', 'Which of these is NOT one of the ossicles?', ['Malleus', 'Incus', 'Stapes', 'Cochlea'], 'Cochlea', 'The ossicles are the malleus, incus and stapes. The cochlea is in the inner ear.', { mix: true });
+
+    // Outer, middle or inner
+    [['Auricle/Pinna', 'outer', 'pinna'], ['Ear Canal', 'outer', 'canal'], ['Ossicles', 'middle', 'ossicles'], ['Malleus', 'middle', 'malleus'], ['Incus', 'middle', 'incus'],
+     ['Stapes', 'middle', 'stapes'], ['Eustachian Tube', 'middle', 'tube'], ['Cochlea', 'inner', 'cochlea'], ['Vestibular Apparatus', 'inner', 'vestibule'],
+     ['Vestibulocochlear Nerve', 'inner', 'nerve']].forEach(([name, part]) => {
+      const plural = name === 'Ossicles';
+      ask('where', 'Which section of the ear ' + (plural ? 'are' : 'is') + ' the ' + name.toLowerCase().replace('eustachian', 'Eustachian') + ' in?', SECTIONS,
+          SECTIONS[PARTS.indexOf(part)], 'The ' + name.toLowerCase().replace('eustachian', 'Eustachian') + (plural ? ' are' : ' is') + ' in the ' + PART_NAME[part] + '.');
+    });
+
+    // Types of hearing loss: which structure goes with which type
+    [['the ear canal', 0], ['the eardrum', 0], ['the ossicles', 0], ['the middle ear space', 0], ['the Eustachian tube', 0],
+     ['the cochlea', 1], ['the stereocilia', 1], ['cranial nerve VIII', 1]].forEach(([thing, type]) => {
+      ask('types', 'A problem with ' + thing + ' can cause which type of hearing loss?', TWO, TWO[type],
+          type === 0 ? 'Conductive hearing loss can involve the ear canal, eardrum, ossicles, middle ear space or Eustachian tube.'
+                     : 'Sensorineural hearing loss can involve the cochlea, the stereocilia or cranial nerve VIII.');
+    });
+    [['the cochlea', 1], ['the stereocilia', 1], ['the vestibulocochlear nerve', 2]].forEach(([thing, type]) => {
+      ask('types', 'When hearing loss is split into three types, damage to ' + thing + ' is which type?', THREE, THREE[type],
+          type === 1 ? 'Sensory hearing loss involves the cochlea or the stereocilia.' : 'Neural hearing loss involves the vestibulocochlear nerve (cranial nerve VIII).');
+    });
+    // Types of hearing loss: what each type means
+    ask('types', 'Which type of hearing loss is caused by a structural or mechanical blockage of the hearing system?', TWO, TWO[0], 'A blockage is conductive hearing loss.');
+    ask('types', 'Which type of hearing loss is caused by damage to the cellular or neural pathways of the hearing system?', TWO, TWO[1], 'Damage to the cells or the nerve is sensorineural hearing loss.');
+    ask('types', 'Which type of hearing loss is caused by damage to the microscopic cellular processors of the inner ear?', THREE, THREE[1], 'That is sensory hearing loss.');
+    ask('types', 'Which type of hearing loss is caused by damage to the neural pathways of the hearing system?', THREE, THREE[2], 'That is neural hearing loss.');
+    ask('types', 'When hearing loss is split into three types, sensorineural hearing loss is divided into which two?', ['Sensory and neural', 'Conductive and sensory', 'Conductive and neural', 'Outer and inner'], 'Sensory and neural', 'Sensorineural = sensory + neural.');
+    // Types of hearing loss: what happened, and which type is it
+    [['The cochlea did not form fully.', 1, 'The cochlea is in the inner ear, so this is sensorineural hearing loss.'],
+     ['Earwax is blocking the ear canal.', 0, 'A blocked ear canal is a mechanical blockage, so this is conductive hearing loss.'],
+     ['There is a hole in the eardrum.', 0, 'The eardrum is one of the structures involved in conductive hearing loss.'],
+     ['The ossicles are stiff and cannot move well.', 0, 'The ossicles are in the middle ear, so this is conductive hearing loss.'],
+     ['The ear canal did not form fully.', 0, 'A structural problem in the ear canal is conductive hearing loss.'],
+     ['Fluid has filled the middle ear space.', 0, 'A blocked middle ear space is conductive hearing loss.'],
+     ['The stereocilia in the cochlea are damaged.', 1, 'The stereocilia are in the inner ear, so this is sensorineural hearing loss.'],
+     ['The vestibulocochlear nerve is damaged.', 1, 'Damage to cranial nerve VIII is sensorineural hearing loss.']].forEach(([what, type, why]) => {
+      ask('types', what + ' Which type of hearing loss is this?', TWO, TWO[type], why);
+    });
+    ask('types', 'The cochlea did not form fully. When hearing loss is split into three types, which type is this?', THREE, THREE[1], 'The cochlea is part of the sensory group.');
+
+    // True or false
+    [['The cochlea is part of the inner ear.', true, 'The cochlea is in the inner ear.'],
+     ['The ossicles are in the outer ear.', false, 'The ossicles are in the middle ear.'],
+     ['The auricle is part of the inner ear.', false, 'The auricle (pinna) is part of the outer ear.'],
+     ['The Eustachian tube is part of the middle ear.', true, 'The Eustachian tube is in the middle ear group.'],
+     ['The stapes is also called the stirrup.', true, 'Stapes = stirrup.'],
+     ['The malleus is also called the anvil.', false, 'The malleus is the hammer. The incus is the anvil.'],
+     ['There are four ossicles.', false, 'There are three: the malleus, the incus and the stapes.'],
+     ['Pinna is another name for the eardrum.', false, 'Pinna is another name for the auricle. The eardrum is the tympanic membrane.'],
+     ['The inner ear is also called the labyrinth.', true, 'Inner ear = labyrinth.'],
+     ['The vestibulocochlear nerve is cranial nerve VIII.', true, 'It is cranial nerve VIII (eight).'],
+     ['Conductive hearing loss is caused by a structural or mechanical blockage of the hearing system.', true, 'That is what conductive hearing loss means.'],
+     ['Damage to the cochlea causes conductive hearing loss.', false, 'Damage to the cochlea causes sensorineural hearing loss.'],
+     ['A problem in the ear canal can cause conductive hearing loss.', true, 'The ear canal is one of the structures involved in conductive hearing loss.'],
+     ['Sensorineural hearing loss can involve the cochlea, the stereocilia or cranial nerve VIII.', true, 'Those are the structures involved in sensorineural hearing loss.'],
+     ['Neural hearing loss involves the vestibulocochlear nerve.', true, 'Neural hearing loss involves the vestibulocochlear nerve (cranial nerve VIII).'],
+     ['Sensory hearing loss and neural hearing loss are both kinds of sensorineural hearing loss.', true, 'Sensorineural = sensory + neural.'],
+     ['A problem with the ossicles causes sensorineural hearing loss.', false, 'A problem with the ossicles causes conductive hearing loss.']].forEach(([statement, truth, why]) => {
+      ask('truefalse', 'True or false? ' + statement, TF, truth ? 'True' : 'False', why);
+    });
+
+    const QUIZ_LENGTH = 10;
+    let quiz = [], at = 0, score = 0, missed = [];
+
+    function startQuestions() {
+      const topic = box('topicChoice').value;
+      quiz = shuffled(QUESTIONS.filter((Q) => topic === 'mix' || Q.topic === topic)).slice(0, QUIZ_LENGTH);
+      at = 0; score = 0; missed = [];
+      box('scoreBox').hidden = true; box('questionBox').hidden = false;
+      showQuestion();
+    }
+    function showQuestion() {
+      const Q = quiz[at];
+      box('askCount').textContent = 'Question ' + (at + 1) + ' of ' + quiz.length;
+      box('askText').textContent = Q.Q;
+      box('askWhy').textContent = '';
+      box('askNext').hidden = true;
+      const holder = box('askChoices');
+      holder.innerHTML = '';
+      (Q.mix ? shuffled(Q.choices) : Q.choices).forEach((choice) => {
+        const B = document.createElement('button');
+        B.textContent = choice;
+        B.onclick = () => answer(choice);
+        holder.appendChild(B);
+      });
+      showMode();
+    }
+    function answer(choice) {
+      const Q = quiz[at], good = choice === Q.answer;
+      if (good) score++; else missed.push(Q);
+      box('askChoices').querySelectorAll('button').forEach((B) => {
+        B.disabled = true;
+        if (B.textContent === Q.answer) B.classList.add('right');
+        else if (B.textContent === choice) B.classList.add('wrong');
+      });
+      box('askWhy').innerHTML = (good ? '<b class="good">Correct.</b> ' : '<b class="bad">Not quite.</b> ') + Q.why;
+      const next = box('askNext');
+      next.textContent = at + 1 < quiz.length ? 'Next question' : 'See my score';
+      next.hidden = false; next.focus();
+    }
+    box('askNext').onclick = () => {
+      at++;
+      if (at < quiz.length) return showQuestion();
+      box('questionBox').hidden = true; box('scoreBox').hidden = false;
+      box('scoreLine').textContent = 'You got ' + score + ' of ' + quiz.length + '.';
+      box('missedList').innerHTML = missed.map((Q) => '<li>' + Q.Q + '<br><b>' + Q.answer + '.</b> ' + Q.why + '</li>').join('');
+      box('missedList').hidden = !missed.length;
+      showMode();
+      box('askAgain').focus();
+    };
+    box('askAgain').onclick = startQuestions;
+    box('topicChoice').onchange = startQuestions;
+
+    // ================= WHICH QUIZ IS SHOWING, AND WHAT THE PICTURE SHOWS =================
+    function showMode() {
+      const labeling = mode === 'label';
+      document.body.classList.toggle('labeling', labeling);
+      document.querySelectorAll('#modeTiles button').forEach((B) => B.classList.toggle('on', B.dataset.mode === mode));
+      box('mode-label').hidden = !labeling;
+      box('mode-ask').hidden = labeling;
+      box('targets').hidden = !labeling;
+
+      const Q = !labeling && !box('questionBox').hidden ? quiz[at] : null;
+      const pointing = Q && Q.point ? labelFor(Q.point) : null;
+      const part = box('partChoice').value;
+      PARTS.forEach((P) => { box('img-ear-' + P + '-boxes').hidden = labeling ? !(part === 'all' || part === P) : !pointing; });
+      box('ring').hidden = !pointing;
+      if (pointing) placeAt(box('ring'), pointing.at, 10);
+      if (labeling) fitWords();
+    }
+    document.querySelectorAll('#modeTiles button').forEach((B) => { B.onclick = () => { mode = B.dataset.mode; showMode(); }; });
+
+    // ---------- COLORS AND TEXT SIZE (shared with the other pages) ----------
+    const themeChoice = box('themeChoice'), textChoice = box('textChoice');
+    function remember(key, value) { try { localStorage.setItem(key, value); } catch (E) { /* not allowed here */ } }
+    function recall(key)          { try { return localStorage.getItem(key); } catch (E) { return null; } }
+    function showLook() {
+      document.body.classList.toggle('dark', themeChoice.value === 'dark');
+      document.body.classList.toggle('contrast', themeChoice.value === 'contrast');
+      document.body.classList.toggle('big', textChoice.value === 'big');
+      fitWords();
+    }
+    themeChoice.onchange = () => { remember('simulatorColors', themeChoice.value); showLook(); };
+    textChoice.onchange  = () => { remember('simulatorText', textChoice.value); showLook(); };
+    if (recall('simulatorColors')) themeChoice.value = recall('simulatorColors');
+    if (recall('simulatorText'))   textChoice.value  = recall('simulatorText');
+    if (!themeChoice.value) themeChoice.value = 'dark';
+    showLook();
+
+    // ---------- START ----------
+    startLabeling();
+    startQuestions();
+    showMode();
+  </script>
+</body>
+</html>
