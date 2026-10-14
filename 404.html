@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Moved to asl.cool</title>
+  <!-- Hearing and the Ear moved to asl.cool. This tiny site lives at the OLD address (colleenelyse.github.io/Hearingandcis/...)
+       only to send old links to the matching asl.cool page. GitHub shows this same page (as 404.html) for every old address,
+       so one script covers them all, keeping anything after the ? or the #. -->
+  <script>
+    (function () {
+      var path = location.pathname.replace(/^\/Hearingandcis\/?/i, '');
+      var name = path.replace(/\.html$/, '');
+      var query = location.search, where;
+      var lite = function (to) { return to + (query ? query + '&lite' : '?lite'); };
+      if (name === '' || name === 'index') where = '/';
+      else if (name === 'hearing-loss-simulator') where = '/hearing/' + query;
+      else if (name === 'hearing-loss-lite') where = lite('/hearing/');
+      else if (name === 'cochlear-implant-simulator') where = '/ci/' + query;
+      else if (name === 'cochlear-implant-lite') where = lite('/ci/');
+      else if (name === 'ear-quiz' || name === 'parts-of-the-ear') where = '/ear/' + query;
+      else if (/^fingerspelling(\/|$)/.test(path)) where = '/' + path.replace(/index\.html$/, '') + query;
+      else where = '/hearing/' + name + query;
+      location.replace('https://asl.cool' + where + location.hash);
+    })();
+  </script>
+  <style>
+    body { background: #1d1930; color: #f4effa; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; margin: 40px 20px; text-align: center; }
+    a    { color: #ff6fb1; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <p>This page moved to asl.cool&hellip;</p>
+  <p><a href="https://asl.cool/">Click here if it does not open</a></p>
+</body>
+</html>
